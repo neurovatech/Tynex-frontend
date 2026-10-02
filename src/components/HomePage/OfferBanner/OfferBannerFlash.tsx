@@ -1,0 +1,65 @@
+import Image from "next/image";
+import Banner from "@/images/o_banner.png";
+import { api, rethrowIfTransient } from "@/lib/api";
+
+interface WebBanner {
+  bannerUUID: string;
+  imageURL: string;
+  mediaInfo: string;
+  openNewTab: boolean;
+}
+
+interface WebBannerResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  data: WebBanner[];
+}
+
+interface OfferBannerProps {
+  apiEndpoint?: string;
+  height?: string;
+}
+
+export default async function OfferBannerFlash({
+  apiEndpoint,
+  height,
+}: OfferBannerProps) {
+  let banners: WebBanner[] = [];
+
+  try {
+    const bannerRes = await api.get<WebBannerResponse>(
+      `/web-banner/${apiEndpoint}`,
+      { next: { revalidate: 60 } },
+    );
+
+    banners = Array.isArray(bannerRes?.data) ? bannerRes.data : [];
+  } catch (error) {
+    rethrowIfTransient(error);
+    console.error(`Error fetching ${apiEndpoint} banners SSR:`, error);
+  }
+
+  return (
+    <div className="grid md:grid-cols-2 grid-cols-2 md:gap-4 gap-2 py-6 cursor-pointer rounded-xl">
+      {banners.map((banner, i) => (
+        <div key={i} className="overflow-hidden rounded-xl lg:h-96.25">
+          <Image
+            src={banner?.imageURL}
+            // 1080x590 = the real ratio of the banner files — see OfferBanner.tsx
+            // (declared 500x200 reserved 74px, the loaded image is 102px tall).
+            width={1080}
+            height={590}
+            alt="Offer banner"
+            loading="lazy"
+            // Always 2 columns => each banner is at most ~half the viewport. Without
+            // `sizes` Next assumes 100vw and served a 1080px file (41 KiB) into a
+            // ~186px slot (Lighthouse "Improve image delivery").
+            sizes="50vw"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}

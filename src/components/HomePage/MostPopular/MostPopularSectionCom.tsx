@@ -1,0 +1,141 @@
+import React from "react";
+import MostPopular from "./MostPopular";
+import Link from "next/link";
+import { api, rethrowIfTransient } from "@/lib/api";
+import { sortInStockFirst } from "@/lib/sortProducts";
+
+interface ShowcaseThumbnail {
+  fileUuid: string;
+  mediaFileUrl: string;
+}
+
+interface ShowcaseItem {
+  productUuid: string;
+  productCode: string;
+  productName: string;
+  productSlug: string;
+  productBadge: string;
+  isTba: boolean;
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+  regularPrice: number;
+  discountedPrice: number;
+  disRate: number;
+  thumbnails: ShowcaseThumbnail;
+}
+
+interface ShowcaseItemsResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: ShowcaseItem[];
+}
+
+export interface ProductCardItem {
+  uuid: string;
+  title: string;
+  slug: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  badge: string;
+  isBestDeal: boolean;
+  inStock: boolean;
+  image: string;
+}
+
+interface WebBanner {
+  bannerUUID: string;
+  imageURL: string;
+  mediaInfo: string;
+  openNewTab: boolean;
+}
+
+interface WebBannerResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  data: WebBanner[];
+}
+
+async function fetchProducts(): Promise<ProductCardItem[]> {
+  try {
+    const res = await api.get<ShowcaseItemsResponse>(
+      "/showcase-items?showcaseSlug=most-popular&limit=5",
+      { next: { revalidate: 60 } },
+    );
+
+    const list = Array.isArray(res?.data) ? res.data : [];
+
+    return sortInStockFirst(list).map((item) => ({
+      uuid: item.productUuid,
+      title: item.productName,
+      slug: item.productSlug,
+      price: item.discountedPrice,
+      originalPrice: item.regularPrice,
+      discount: Math.round(item.disRate),
+      badge: item.productBadge,
+      isBestDeal: false,
+      inStock: !item.isTba,
+      image: item.thumbnails?.mediaFileUrl ?? "/images/product.png",
+      isTba:            item.isTba,
+      endOfLife:        item.endOfLife        ?? false,
+      allowPreOrder:    item.allowPreOrder    ?? false,
+      recognitionBadge: item.recognitionBadge ?? "",
+    }));
+  } catch (error) {
+    rethrowIfTransient(error);
+    console.error("Error fetching feature products SSR:", error);
+    return [];
+  }
+}
+
+async function fetchBanners(): Promise<WebBanner[]> {
+  try {
+    const bannerRes = await api.get<WebBannerResponse>(
+      "/web-banner/most-popular-below",
+      { next: { revalidate: 60 } },
+    );
+
+    return Array.isArray(bannerRes?.data) ? bannerRes.data : [];
+  } catch (error) {
+    rethrowIfTransient(error);
+    console.error("Error fetching most-popular-below banners SSR:", error);
+    return [];
+  }
+}
+
+export default async function MostPopularSectionCom() {
+  // Independent requests — run concurrently instead of paying their
+  // latencies back to back, same as FlashSale/NewArrivals below on this page.
+  const [products, banners] = await Promise.all([
+    fetchProducts(),
+    fetchBanners(),
+  ]);
+
+  return (
+    <div>
+      <div className=" px-4 lg:px-0">
+        <div className="flex justify-between items-center ">
+          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+            Most Popular
+          </h3>
+          <Link href="/most-popular" className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 ">
+            See all
+          </Link>
+        </div>
+        <MostPopular
+            products={products}
+            banners={banners}
+        />
+      </div>
+    </div>
+  );
+}

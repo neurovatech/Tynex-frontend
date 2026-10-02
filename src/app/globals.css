@@ -1,0 +1,401 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+:root {
+  --font-urbanist: "Urbanist", sans-serif;
+
+  /* Light theme */
+  --background: #ffffff;
+  --light_background: #f8f8f8;
+  --drak_background: #fff;
+  --foreground: #111111;
+
+  --primary: #000000;
+  --gold: #d1a77d;
+  --them_text_color: #000000;
+}
+
+/* Manual dark mode */
+.dark {
+  --background: #2e2b28;
+  --light_background: #393430;
+  --foreground: #ededed;
+  --primary: #ffffff;
+  --them_text_color: #ffffff;
+  --gold: #d1a77d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-gold: var(--gold);
+  --color-primary_color: var(--them_text_color);
+  --color-light_bg: var(--light_background);
+
+  --font-sans: "Urbanist", sans-serif;
+  --font-urbanist: "Urbanist", sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-urbanist);
+  /* padding: 0 5px; */
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* style for profile colored button start */
+@keyframes border-move {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.animate-border-glow {
+  background-size: 200% 200% !important;
+  animation: border-move 2s linear infinite;
+  -webkit-animation: border-move 2s linear infinite;
+}
+
+/* .swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+.i_slider .swiper-button-prev,
+.i_slider .swiper-button-next {
+  display: none !important;
+} */
+
+.gradient-text {
+  background: linear-gradient(90deg, #d1a77d, #d1a77d 43%, #d1a77d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.e_slider .swiper-pagination {
+  display: none !important;
+}
+.e_slider .swiper-button-prev::after,
+.e_slider .swiper-button-next::after {
+  font-family: swiper-icons;
+  font-size: 20px;
+  letter-spacing: 0;
+  font-variant: initial;
+  line-height: 1;
+  text-transform: none !important;
+}
+.e_slider .swiper-button-prev,
+.e_slider .swiper-button-next {
+  cursor: pointer;
+  color: #000000;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mySwiper .swiper-pagination {
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ── Individual bullet ── */
+.mySwiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d1d5db; /* neutral-300 */
+  opacity: 1;
+  transition:
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.35s ease,
+    transform 0.2s ease;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+/* ── Active bullet — pill shape with gold gradient ── */
+.mySwiper .swiper-pagination-bullet-active {
+  width: 28px;
+  background: linear-gradient(90deg, #d4a017 0%, #f5c842 50%, #d4a017 100%);
+  box-shadow: 0 0 8px rgba(212, 160, 23, 0.55);
+  transform: scaleY(1.1);
+}
+
+/* ── Hover on inactive bullets ── */
+.mySwiper
+  .swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
+  background: #9ca3af;
+  transform: scale(1.2);
+}
+
+/* ── Navigation arrows (optional polish) ── */
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+  color: #d4a017;
+  --swiper-navigation-size: 24px;
+}
+
+.mySwiper .swiper-button-next:after,
+.mySwiper .swiper-button-prev:after {
+  font-weight: 900;
+}
+.swiper-scrollbar {
+  margin-top: 30px;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marquee-rtl 60s linear infinite;
+}
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+
+.mySwiper .swiper-button-next, .mySwiper .swiper-button-prev {
+	color: #d4a017 !important;
+	--swiper-navigation-size: 16px !important;
+	margin-top: -40px !important;
+}
+
+/* ─── Skeleton shimmer animation ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ─── Responsive Utilities ────────────────────────────────────────────────── */
+
+/* Prevent horizontal overflow on all devices */
+html {
+  overflow-x: clip;
+}
+body {
+  width: 100%;
+}
+
+/* Responsive section padding helper */
+.section-px {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+@media (min-width: 640px) {
+  .section-px {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+@media (min-width: 768px) {
+  .section-px {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-px {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* Better touch targets on mobile */
+@media (max-width: 639px) {
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Prevent image overflow */
+img {
+  max-width: 100%;
+}
+
+/* Mobile footer spacing (so content doesn't hide behind fixed bottom nav) */
+@media (max-width: 1023px) {
+  body {
+    /* padding-bottom: 4.5rem; */
+  }
+}
+
+
+/* ── Dark mode: force override inline styles inside dangerouslySetInnerHTML HTML ── */
+.dark .dark-html-content * {
+  color: #e5e5e5 !important;
+  background-color: transparent !important;
+  border-color: #3a2f28 !important;
+}
+
+.dark .dark-html-content table {
+  background-color: #1a1613 !important;
+}
+
+.dark .dark-html-content thead,
+.dark .dark-html-content th {
+  background-color: #2a211c !important;
+  color: #f0f0f0 !important;
+  border-color: #3a2f28 !important;
+}
+
+.dark .dark-html-content td {
+  background-color: #221a16 !important;
+  color: #e0e0e0 !important;
+  border-color: #3a2f28 !important;
+}
+
+.dark .dark-html-content tr:nth-child(even) td {
+  background-color: #1e1712 !important;
+}
+
+.dark .dark-html-content a {
+  color: #d1a77d !important;
+}
+
+.dark .dark-html-content strong,
+.dark .dark-html-content b {
+  color: #ffffff !important;
+}
+
+.dark .dark-html-content h1,
+.dark .dark-html-content h2,
+.dark .dark-html-content h3,
+.dark .dark-html-content h4,
+.dark .dark-html-content h5,
+.dark .dark-html-content h6 {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+/* ─── Homepage Categories: pre-JS layout == post-JS layout ───────────────────
+   Before Swiper initialises every category slide is a full-width square, so the
+   server HTML was ~140px TALLER than the hydrated grid (486px vs 346px on a 412px
+   phone). When Swiper (Grid, 2 rows) kicked in the section collapsed and pulled
+   Flash Sale up into the viewport: the ~0.27 layout shift Lighthouse reported.
+   The Grid module lays slides out ROW-MAJOR (n slides => ceil(n/2) columns; slide
+   i sits at row floor(i/cols)) and each row is as tall as its tallest tile,
+   including tiles scrolled off-screen. A CSS grid with the same column count
+   (--cat-cols, set by CategoriesCard) reproduces that exactly, using the same
+   slides-per-view / gap per breakpoint as the Swiper config. Only applies while
+   the Swiper has NOT initialised. */
+.categories-swiper { container-type: inline-size; }
+.categories-swiper:not(.swiper-initialized) { --cat-gap: 10px; --cat-w: calc((100cqw - 30px) / 4); }
+.categories-swiper:not(.swiper-initialized) .swiper-wrapper {
+  display: grid;
+  grid-template-columns: repeat(var(--cat-cols, 4), var(--cat-w));
+  grid-template-rows: auto auto;
+  gap: var(--cat-gap);
+  width: max-content;
+}
+.categories-swiper:not(.swiper-initialized) .swiper-slide { width: var(--cat-w); margin: 0; }
+@media (min-width: 480px) { .categories-swiper:not(.swiper-initialized) { --cat-gap: 12px; --cat-w: calc((100cqw - 12px) / 2); } }
+@media (min-width: 640px) { .categories-swiper:not(.swiper-initialized) { --cat-gap: 14px; --cat-w: calc((100cqw - 14px) / 2); } }
+@media (min-width: 768px) { .categories-swiper:not(.swiper-initialized) { --cat-gap: 16px; --cat-w: calc((100cqw - 16px) / 2); } }
+@media (min-width: 1024px) {
+  .categories-swiper:not(.swiper-initialized) { --cat-gap: 16px; --cat-w: calc((100cqw - 112px) / 8); }
+  .categories-swiper:not(.swiper-initialized) .swiper-wrapper { display: flex; flex-wrap: nowrap; gap: 0; width: auto; }
+  .categories-swiper:not(.swiper-initialized) .swiper-slide { margin-right: var(--cat-gap); }
+}
+
+/* ─── Single-row homepage carousels: pre-JS slide width == Swiper's ───────────
+   Before Swiper initialises its slides have no width, so cards/logos render
+   full-width and the section is far taller than after hydration (Clip To Cart
+   1164px -> 686px, Shop by Brand 1250px -> 602px on a phone): everything below
+   jumps when JS lands. Same slides-per-view / gap per breakpoint as each Swiper
+   config, expressed with container-query units so it is exact. Only applies
+   while the Swiper has NOT initialised. */
+.pre-swiper { container-type: inline-size; }
+.pre-swiper:not(.swiper-initialized) .swiper-slide { width: var(--pw); margin-right: var(--pg); flex-shrink: 0; }
+/* Clip To Cart: 1.2 / 1.5 / 2 / 2 / 5 */
+.pre-clip:not(.swiper-initialized) { --pg: 10px; --pw: calc((100cqw - 2px) / 1.2); }
+@media (min-width: 480px) { .pre-clip:not(.swiper-initialized) { --pg: 12px; --pw: calc((100cqw - 6px) / 1.5); } }
+@media (min-width: 640px) { .pre-clip:not(.swiper-initialized) { --pg: 14px; --pw: calc((100cqw - 14px) / 2); } }
+@media (min-width: 768px) { .pre-clip:not(.swiper-initialized) { --pg: 16px; --pw: calc((100cqw - 16px) / 2); } }
+@media (min-width: 1024px) { .pre-clip:not(.swiper-initialized) { --pg: 10px; --pw: calc((100cqw - 40px) / 5); } }
+/* Shop by Brand logo row: 4 / 2 / 2 / 2 / 8 */
+.pre-brand:not(.swiper-initialized) { --pg: 6px; --pw: calc((100cqw - 18px) / 4); }
+@media (min-width: 480px) { .pre-brand:not(.swiper-initialized) { --pg: 2px; --pw: calc((100cqw - 2px) / 2); } }
+@media (min-width: 1024px) { .pre-brand:not(.swiper-initialized) { --pg: 10px; --pw: calc((100cqw - 70px) / 8); } }
+
+/* Hero banner, pre-hydration fallback (Bannerslider.tsx). The real Swiper uses
+   slidesPerView 1 below 768px and 1.5 from 768px, with spaceBetween 20 (md) and
+   24 (lg), i.e. first-slide width = (row - 0.5 * gap) / 1.5. Mirror that here so
+   the hero image keeps the same box when Swiper mounts (no layout shift). */
+.hero-pre {
+  container-type: inline-size;
+}
+@media (min-width: 768px) {
+  .hero-pre .hero-pre-slide {
+    width: calc((100cqw - 10px) / 1.5);
+  }
+}
+@media (min-width: 1024px) {
+  .hero-pre .hero-pre-slide {
+    width: calc((100cqw - 12px) / 1.5);
+  }
+}
+
+/* Most Popular banner strip (MostPopular.tsx): slidesPerView 2 (gap 8/16/20) below
+   1024px, 3 (gap 10) from 1024px. Before Swiper initialises its slides are 100%
+   wide, so a 500x500 banner used to render ~1200px tall and then collapse to a
+   third of that — mirror the real slide width here so nothing moves. */
+.pre-mostpop:not(.swiper-initialized) { --pg: 8px; --pw: calc((100cqw - 8px) / 2); }
+@media (min-width: 640px) { .pre-mostpop:not(.swiper-initialized) { --pg: 16px; --pw: calc((100cqw - 16px) / 2); } }
+@media (min-width: 768px) { .pre-mostpop:not(.swiper-initialized) { --pg: 20px; --pw: calc((100cqw - 20px) / 2); } }
+@media (min-width: 1024px) { .pre-mostpop:not(.swiper-initialized) { --pg: 10px; --pw: calc((100cqw - 20px) / 3); } }

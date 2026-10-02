@@ -1,0 +1,121 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Brand } from "@/app/(public)/brands/page";
+
+// ✅ Move constant outside component — stable reference, no SSR/client mismatch
+const ALPHABET = ["All", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
+
+function BrandCard({ brands }: { brands: Brand[] }) {
+  const [search, setSearch] = useState("");
+  const [selectedLetter, setSelectedLetter] = useState("All");
+
+  const filteredBrands = useMemo(() => {
+    return brands.filter((brand) => {
+      const isActive = brand.is_active === true;
+      const matchesSearch = brand.label
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchesLetter =
+        selectedLetter === "All"
+          ? true
+          : brand.label.toUpperCase().startsWith(selectedLetter);
+
+      return isActive && matchesSearch && matchesLetter;
+    });
+  }, [brands, search, selectedLetter]);
+
+  return (
+    <div className="w-full py-4">
+      {/* Top Filter Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 mb-6 gap-4">
+        {/* Search */}
+        <div className="lg:col-span-4 w-full">
+          <input
+            type="text"
+            placeholder="Search brand..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="
+              w-full h-12 rounded-xl border border-gray-300 text-[16px] dark:border-gray-700
+              bg-white dark:bg-[#1A1A1A] px-4 text-sm text-black dark:text-white
+              placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none
+              focus:border-[#d1a77d] dark:focus:border-[#d1a77d]
+            "
+          />
+        </div>
+
+        {/* A–Z Filter */}
+        <div className="lg:col-span-8 flex flex-wrap gap-2">
+          {/* ✅ Use flex-wrap instead of grid — avoids invalid nesting & layout mismatch */}
+          {ALPHABET.map((letter) => (
+            <button
+              key={letter}
+              onClick={() => setSelectedLetter(letter)}
+              className={`
+                min-w-9 h-9 px-3 rounded-lg text-sm font-medium border transition-all duration-300
+                ${
+                  selectedLetter === letter
+                    ? "bg-black text-white border-black dark:bg-[#d1a77d] dark:text-black dark:border-[#d1a77d]"
+                    : "bg-white text-black border-gray-300 hover:border-black dark:bg-[#1A1A1A] dark:text-white dark:border-gray-700 dark:hover:border-[#d1a77d]"
+                }
+              `}
+            >
+              {letter}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Brand Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 lg:gap-4 gap-2">
+        {filteredBrands.length > 0 ? (
+          filteredBrands.map((brand, i) => (
+            <Link
+              key={i}
+              href={`/brands/${brand.slug}`}
+              className="
+                flex w-full flex-col items-center justify-center gap-2
+                py-4 px-2 rounded-xl border border-gray-200 dark:border-gray-700
+                bg-white  hover:border-[#d1a77d]
+                dark:hover:border-[#d1a77d] transition-all duration-300
+              "
+            >
+              <div className="relative h-16 w-40">
+                {brand.logo ? (
+                  <Image
+                    src={brand.logo}
+                    alt={brand.label}
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 20vw, 160px"
+                    className="object-contain"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+                    <span className="text-xs text-gray-400 dark:text-black text-center px-1 leading-tight">
+                      No image available
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <span className="text-[16px] font-medium text-black dark:text-black ">
+                {brand.label}
+              </span>
+            </Link>
+          ))
+        ) : (
+          <div className="col-span-full flex justify-center py-10">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              No brands found
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default BrandCard;

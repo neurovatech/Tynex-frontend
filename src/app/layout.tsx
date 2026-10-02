@@ -1,0 +1,206 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { Urbanist } from "next/font/google";
+import "./globals.css";
+import { dehydrate } from "@tanstack/react-query";
+import { ThemeProvider } from "@/context/ThemeContext";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import MobileFooter from "@/components/layout/MobileFooter";
+import NextTopLoader from "nextjs-toploader";
+import QueryProvider from "@/app/providers/QueryProvider";
+import ReduxProvider from "@/app/providers/ReduxProvider";
+import { Toaster } from "react-hot-toast";
+import FacebookPixel, { FacebookPixelNoScript } from "@/components/analytics/FacebookPixel";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import TikTokPixel from "@/components/analytics/TikTokPixel";
+import TawkToChat from "@/components/analytics/TawkToChat";
+import RouteChangeTracker from "@/components/analytics/RouteChangeTracker";
+import WishlistSync from "@/components/WishlistSync";
+import ConsoleBanner from "@/components/ConsoleBanner";
+import { getSiteSettings, stripHtml, stripHeavyFields } from "@/lib/getSiteSettings";
+import { getQueryClient } from "@/lib/query-client";
+import type { SiteSettingsData } from "@/store/slices/siteSettingsSlice";
+import JsonLd from "@/components/share/JsonLd";
+import {
+  buildJsonLd,
+  organizationSchema,
+  webSiteSchema,
+  localBusinessSchema,
+} from "@/lib/structured-data";
+import {
+  SITE_NAME,
+  OG_LOCALE,
+  SITE_URL,
+  DEFAULT_OG_IMAGE,
+} from "@/lib/seo-config";
+
+const urbanist = Urbanist({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-urbanist",
+});
+const FALLBACK_ICON = "https://dazzle.sgp1.cdn.digitaloceanspaces.com/32680/logo.png";
+const FALLBACK_TITLE = "Best Mobile, Laptop and Gadget Shop In Bangladesh ";
+const FALLBACK_DESCRIPTION =
+  "Shop the best mobile phones, laptops, and gadgets in Bangladesh at Tynex. Exclusive deals, genuine products, fast delivery.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+
+  
+
+
+  const title = settings.metaTitle || settings.siteTitle || FALLBACK_TITLE;
+  // const title =  FALLBACK_TITLE;
+  const description = stripHtml(settings.metaDescription) || FALLBACK_DESCRIPTION;
+  // const siteName = settings.siteTitle || SITE_NAME;
+  const siteName = "";
+
+  const iconUrl = settings.favicon || FALLBACK_ICON;
+
+  // Site-level share image. Deliberately NOT run through buildOgImage(): that
+  // helper assumes a CDN *content* photo (1200x1263), whereas `siteLogo` is the
+  // wordmark logo. Declaring product dimensions for a logo would be a lie that
+  // makes crawlers lay the preview out wrong. When siteLogo matches the known
+  // logo we use its real measured size; anything else ships without width/height
+  // so the crawler measures it itself rather than trusting a wrong number.
+  const ogImage =
+    !settings.siteLogo || settings.siteLogo === DEFAULT_OG_IMAGE.url
+      ? DEFAULT_OG_IMAGE
+      : { url: settings.siteLogo, alt: siteName };
+
+  return {
+    title: {
+      default: title,
+      template: `%s `,
+    },
+    description,
+    keywords: settings.metaKeywords || undefined,
+    metadataBase: new URL(SITE_URL),
+    alternates: { canonical: "/" },
+    icons: {
+      icon: iconUrl,
+      shortcut: iconUrl,
+      apple: iconUrl,
+    },
+    openGraph: {
+      siteName,
+      locale: OG_LOCALE,
+      type: "website",
+      url: SITE_URL,
+      title,
+      description,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@dazzlebd",
+      title,
+      description,
+      images: [ogImage.url],
+    },
+  };
+}
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  // Prefetch site settings here so Footer/MainNav's useSiteSettings() hydrates
+  // instantly on the client instead of firing a second, duplicate fetch.
+  // getSiteSettings() is wrapped in React's cache(), so this reuses the same
+  // in-flight/resolved request already made above for generateMetadata().
+  //
+  // IMPORTANT: only the stripped ("lite") settings are dehydrated. The raw
+  // object is ~783 KB — mostly a giant metaDescription plus the about/terms
+  // HTML — and dehydrating it shipped all of that into every page's RSC
+  // payload. See stripHeavyFields() for the full breakdown.
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["siteSettings"],
+    queryFn: async (): Promise<SiteSettingsData> =>
+      stripHeavyFields(await getSiteSettings()) as SiteSettingsData,
+  });
+  const dehydratedState = dehydrate(queryClient);
+
+  // Sitewide structured data. getSiteSettings() is React-cached, so this reuses
+  // the same request already made for generateMetadata and the prefetch above.
+  const settings = await getSiteSettings();
+  const siteJsonLd = buildJsonLd(
+    organizationSchema(settings),
+    webSiteSchema(settings),
+    localBusinessSchema(settings),
+  );
+
+  return (
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${urbanist.variable}  h-full antialiased`}
+    >
+      <head>
+        {/* Preconnect to CDN hosts the browser actually fetches images from.
+            The real API host is deliberately NOT preconnected here — all
+            client requests go through the same-origin /api/proxy route,
+            which is what keeps the backend host out of page source. */}
+        <link rel="preconnect" href="https://dazzle.sgp1.cdn.digitaloceanspaces.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://dazzle.sgp1.cdn.digitaloceanspaces.com" />
+        {/* (dzl.sgp1 preconnect removed: nothing on the homepage requests that
+            host directly — product images go through /_next/image — and
+            Lighthouse flagged it as an unused preconnect that costs a TLS
+            handshake on the critical path.) */}
+        {/* Google Tag Manager REMOVED (Meta tracking migration handoff — see
+            docs/meta-tracking-frontend-audit.txt): "Google Tag Manager must
+            not be required". Meta Pixel, GA4 and TikTok are now each loaded
+            directly, one controlled implementation per tracker, no GTM
+            container in between. */}
+        <FacebookPixel />
+        <GoogleAnalytics />
+        <TikTokPixel />
+        <TawkToChat />
+      </head>
+      <body>
+        <FacebookPixelNoScript />
+        <ConsoleBanner />
+        <Suspense fallback={null}>
+          <RouteChangeTracker />
+        </Suspense>
+        <JsonLd id="ld-site" data={siteJsonLd} />
+        <ThemeProvider>
+          <ReduxProvider>
+            <QueryProvider state={dehydratedState}>
+              <WishlistSync />
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerStyle={{ zIndex: 9999999 }}
+              />
+              <NextTopLoader
+                color="#d1a77d"
+                initialPosition={0.08}
+                crawlSpeed={200}
+                height={3}
+                crawl={true}
+                showSpinner={false}
+                easing="ease"
+                speed={200}
+              />
+              <Header />
+              {/* Landmark for assistive tech and agentic/AI browsers: it marks
+                  where the page's primary content starts, so they can skip the
+                  header/nav. Lighthouse flagged "Document does not have a main
+                  landmark" without this. Pages must NOT nest their own <main>. */}
+              <main id="main-content">{children}</main>
+              <Footer />
+              <div className="lg:hidden block ">
+                <MobileFooter />
+              </div>
+            </QueryProvider>
+          </ReduxProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,287 @@
+import React from "react";
+import Link from "next/link";
+import { CompareIcon } from "@/icon";
+import ProductImage from "@/images/product.png";
+import ProductCardImage from "./ProductCardImage";
+import ProductCardWishlist from "./ProductCardWishlist";
+import ProductCardBuy from "./ProductCardBuy";
+export type { DefaultVariantResponse } from "./ProductCardBuy";
+
+export interface ProductCardProps {
+  productUuid?: string;
+  image?: string;
+  discount?: number;
+  badge?: string;
+  title?: string;
+  inStock?: boolean;
+  price?: number;
+  originalPrice?: number;
+  isBestDeal?: boolean;
+  slug?: string;
+  uuid?: string;
+  minBookingPrice?: number;
+  isTba?: boolean;
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+  /** Skips lazy-loading for this card's image — pass true for the first row or two of a grid so above-the-fold product photos aren't left waiting on the browser's lazy-load heuristic. */
+  priority?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  allProduct?: any; // Add this line to accept the allProduct prop
+}
+
+const formatPrice = (val: number) =>
+  val > 0 ? "" + val.toLocaleString("en-IN") : "0";
+
+const ProductCard: React.FC<ProductCardProps> = ({
+  productUuid,
+  image = "",
+  discount = 0,
+  badge,
+  title = "Product",
+  inStock = true,
+  price = 0,
+  originalPrice = 0,
+  isBestDeal = false,
+  slug,
+  uuid,
+  minBookingPrice = 0,
+  isTba,
+  endOfLife = false,
+  allowPreOrder = false,
+  recognitionBadge,
+  priority = false,
+  allProduct,
+}) => {
+  const itemId = productUuid || uuid || "";
+  const showTbaFlag = isTba ?? !inStock;
+  const resolvedSlug = slug || title?.toLowerCase().replace(/\s+/g, "-");
+  const href = `/product/${resolvedSlug}`;
+  const compareHref = `/product-compare/${resolvedSlug}`;
+
+  const isendOfLifeDisabled = allProduct
+    ? allProduct.endOfLife === true
+    : endOfLife === true;
+  return (
+    <div
+      data-product-uuid={itemId}
+      className={`group relative bg-white rounded-2xl sm:rounded-3xl cursor-pointer w-full h-full flex flex-col shadow-lg transition-all duration-500 hover:shadow-sm select-none ${
+        endOfLife ? "opacity-75" : ""
+      }`}
+    >
+      <div className="bg-white p-2 sm:p-3 lg:p-4 pb-0! rounded-2xl sm:rounded-3xl relative">
+        {/* Top Badges */}
+        <div className="flex justify-between items-start mb-2 sm:mb-3 h-5 sm:h-6 absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 z-40">
+          {/* Discount % — left */}
+          {!endOfLife && discount > 0 ? (
+            <span className="bg-[#ff7575] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+              {discount}%
+            </span>
+          ) : endOfLife ? (
+            <span className="bg-gray-500 text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+              End of Life
+            </span>
+          ) : (
+            <span />
+          )}
+
+          {/* Right badges: productBadge */}
+          {badge ? (
+            <span className="bg-[linear-gradient(93.36deg,#000000_-28.88%,#000000_93.21%)] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md max-w-[80%]">
+              {badge}
+            </span>
+          ) : (
+            <span />
+          )}
+        </div>
+
+        {/* Recognition badge — below top badge row */}
+        {recognitionBadge && (
+          <div className="absolute top-8 sm:top-10 right-2 sm:right-3 z-40">
+            <span className="bg-[linear-gradient(90deg,#000000_0%,#d1a77d_100%)] text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2.5 py-0.5 rounded-full shadow-md">
+              {recognitionBadge}
+            </span>
+          </div>
+        )}
+
+        {/* Product Image */}
+        {/* prefetch={false} on every Link in this card: it's rendered dozens
+            of times per homepage/category/listing page, and Next.js's
+            default viewport-triggered prefetch fires an RSC-payload request
+            PER link the moment it scrolls near-view — with this many cards
+            on one page that was 100+ concurrent prefetch requests on first
+            load (confirmed live on staging via the Network panel), which
+            saturates the main thread and was the dominant cause of the
+            site's failing INP/TBT and of homepage sections taking many
+            seconds to reveal their real content at all. A normal click
+            still navigates instantly via a regular fetch; only the
+            speculative pre-navigation fetch is skipped. */}
+        <Link href={href} prefetch={false} className="block px-2 pt-2">
+          <div className="relative flex justify-center items-center h-42 transition-all duration-500">
+            <div className="relative z-10 w-full h-full transition-transform duration-500 group-hover:scale-105">
+              <ProductCardImage
+                src={image || ProductImage}
+                alt={title || "Product image"}
+                priority={priority}
+              />
+            </div>
+          </div>
+        </Link>
+
+        {/* Action Row */}
+        <div className="flex items-center justify-between relative z-40">
+          {allProduct?.recognitionBadge && (
+            <button className="ml-auto bg-[#087400] text-white text-[8px] sm:text-xs font-bold px-1 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md lg:w-[50%]! w-[80%] flex justify-center items-center gap-1">
+              <span className="pt-.5 lg:pt-0">
+                {" "}
+                {allProduct?.recognitionBadge}{" "}
+              </span>
+            </button>
+          )}
+
+          <div
+            className="flex gap-1 sm:gap-2 ml-auto p-1 -mr-2 sm:-mr-2 lg:-mr-4 bg-[#F5F5F5] pl-2 [--r:20px] sm:[--r:26px] w-[110px]"
+            style={{
+              clipPath: `shape(from 0 100%,curve by var(--r) calc(-1 * var(--r)) with var(--r) 0,vline to var(--r),curve by var(--r) calc(-1 * var(--r)) with 0 calc(-1 * var(--r)),hline to 100%,vline to 100%,hline to 0)`,
+            }}
+          >
+            <ProductCardWishlist
+              productUuid={itemId}
+              title={title || ""}
+              slug={slug || ""}
+              image={image || ""}
+              price={price}
+              originalPrice={originalPrice}
+              discount={discount}
+              badge={badge || ""}
+              inStock={inStock}
+              isBestDeal={isBestDeal}
+              disabled={isendOfLifeDisabled}
+            />
+            <Link
+              href={isendOfLifeDisabled ? "#" : compareHref}
+              prefetch={false}
+              onClick={(e) => {
+                if (isendOfLifeDisabled) e.preventDefault();
+              }}
+              aria-disabled={isendOfLifeDisabled}
+              tabIndex={isendOfLifeDisabled ? -1 : undefined}
+              className={`w-8 h-8 mt-1 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                isendOfLifeDisabled
+                  ? "bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed opacity-60 pointer-events-none"
+                  : "border-gray-200 bg-white text-gray-500 hover:border-purple-300 hover:text-purple-500 hover:scale-110 active:scale-95"
+              }`}
+              aria-label="Compare"
+            >
+              <CompareIcon />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-2 sm:p-3 lg:p-4 flex flex-col flex-1 bg-[#F5F5F5] rounded-tl-2xl rounded-b-2xl">
+        {/* Title & Stock */}
+        <div className="text-left">
+          <Link href={href} prefetch={false}>
+            <h3
+              className="font-semibold dark:text-[#000000] text-[15px] leading-[1.5] line-clamp-2 h-11 text-[#575757] max-[640px]:text-[13px]"
+              title={title}
+            >
+              <span className="hidden sm:inline">
+                {title.length > 40 ? title.slice(0, 40) + "..." : title}
+              </span>
+              <span className="inline sm:hidden">
+                {title.length > 30 ? title.slice(0, 30) + "..." : title}
+              </span>
+
+              {/* endOfLife → no stock label */}
+              {!showTbaFlag &&
+                !endOfLife &&
+                (inStock ? (
+                  <span className="text-[#03A000] font-bold"> In Stock </span>
+                ) : (
+                  <span className="text-[#f00]"> Out Of Stock </span>
+                ))}
+            </h3>
+          </Link>
+          <div
+            role="tooltip"
+            className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-[60] w-max max-w-[220px] whitespace-normal rounded-lg bg-gray-900 text-white text-[10px] sm:text-xs px-2.5 py-1.5 shadow-lg opacity-0 scale-95 origin-bottom transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"
+          >
+            {title}
+            <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+          </div>
+        </div>
+
+        {/* Price */}
+      
+          <Link
+            href={href}
+            prefetch={false}
+            className="flex items-baseline gap-2 sm:gap-2 mb-2 sm:mb-4"
+          >
+            {showTbaFlag && !endOfLife ? (
+                <div className="h-7.5">
+              <div className="bg-[#000000] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+                To Be Announced
+              </div>
+              </div>
+            ) : (
+              <>
+                <span className="items-center flex gap-1 font-bold text-[20px] leading-[1.6] tracking-[0%] text-gray-900">
+                  <svg
+                    width="12"
+                    height="14"
+                    viewBox="0 0 12 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1.05292 0.00767491C0.539583 -0.0591029 0.0729167 0.317281 0.0116667 0.848469C-0.0495833 1.37966 0.309167 1.86835 0.819583 1.93513L1.05 1.96548C1.51667 2.02619 1.86667 2.439 1.86667 2.93072V3.88686H0.7C0.312083 3.88686 0 4.21164 0 4.61535C0 5.01905 0.312083 5.34383 0.7 5.34383H1.86667V10.6861C1.86667 12.2948 3.12083 13.6 4.66667 13.6H5.6C8.69167 13.6 11.2 10.9896 11.2 7.77212V6.8008C11.2 5.19206 9.94583 3.88686 8.4 3.88686H7.93333C7.41708 3.88686 7 4.32092 7 4.85817C7 5.39543 7.41708 5.82949 7.93333 5.82949H8.4C8.91625 5.82949 9.33333 6.26354 9.33333 6.8008V7.77212C9.33333 9.91811 7.66208 11.6574 5.6 11.6574H4.66667C4.15042 11.6574 3.73333 11.2233 3.73333 10.6861V5.34383H4.9C5.28792 5.34383 5.6 5.01905 5.6 4.61535C5.6 4.21164 5.28792 3.88686 4.9 3.88686H3.73333V2.93072C3.73625 1.45858 2.68625 0.217114 1.28333 0.0349929L1.05292 0.00463937V0.00767491Z"
+                      fill="#000000"
+                    />
+                  </svg>
+                  {formatPrice(price)}
+                </span>
+                {originalPrice > 0 && originalPrice !== price && (
+                  <span className="text-gray-400 text-[14px] font-normal leading-[1.6] line-through flex items-center gap-1 pl-1">
+                    <svg
+                      width="9"
+                      height="10"
+                      viewBox="0 0 9 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0.789687 0.0055311C0.404687 -0.0425939 0.0546875 0.228656 0.00875003 0.611468C-0.0371875 0.994281 0.231875 1.34647 0.614687 1.39459L0.7875 1.41647C1.1375 1.46022 1.4 1.75772 1.4 2.11209V2.80116H0.525C0.234062 2.80116 0 3.03522 0 3.32616C0 3.61709 0.234062 3.85116 0.525 3.85116H1.4V7.70116C1.4 8.86053 2.34063 9.80116 3.5 9.80116H4.2C6.51875 9.80116 8.4 7.91991 8.4 5.60116V4.90116C8.4 3.74178 7.45937 2.80116 6.3 2.80116H5.95C5.56281 2.80116 5.25 3.11397 5.25 3.50116C5.25 3.88834 5.56281 4.20116 5.95 4.20116H6.3C6.68719 4.20116 7 4.51397 7 4.90116V5.60116C7 7.14772 5.74656 8.40116 4.2 8.40116H3.5C3.11281 8.40116 2.8 8.08834 2.8 7.70116V3.85116H3.675C3.96594 3.85116 4.2 3.61709 4.2 3.32616C4.2 3.03522 3.96594 2.80116 3.675 2.80116H2.8V2.11209C2.80219 1.05116 2.01469 0.156468 0.9625 0.0252185L0.789687 0.00334347V0.0055311Z"
+                        fill="#747474"
+                      />
+                    </svg>
+                    {formatPrice(originalPrice)}
+                  </span>
+                )}
+              </>
+            )}
+          </Link>
+   
+
+        {/* Bottom Actions — all disabled when endOfLife=true */}
+        <ProductCardBuy
+          itemId={itemId}
+          title={title || "Product"}
+          slug={slug || ""}
+          image={image || ""}
+          price={price}
+          originalPrice={originalPrice}
+          inStock={inStock}
+          minBookingPrice={minBookingPrice}
+          showTbaFlag={showTbaFlag}
+          endOfLife={isendOfLifeDisabled}
+          allowPreOrder={allProduct ? allProduct?.allowPreOrder : allowPreOrder}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ProductCard;

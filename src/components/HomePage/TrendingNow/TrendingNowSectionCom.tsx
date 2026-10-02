@@ -1,0 +1,154 @@
+"use client";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import TrendingNowHomePage from "./TrendingNowHomePage";
+import { sortInStockFirst } from "@/lib/sortProducts";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface ProductCardItem {
+  uuid: string;
+  title: string;
+  slug: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  badge: string;
+  isBestDeal: boolean;
+  inStock: boolean;
+  isTba?: boolean;
+  image: string;
+  minBookingPrice?: number;
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+}
+
+interface ShowcaseItem {
+  productUuid: string;
+  productCode: string;
+  productName: string;
+  productSlug: string;
+  productBadge: string;
+  isTba: boolean;
+  regularPrice: number;
+  discountedPrice: number;
+  disRate: number;
+  thumbnails: { fileUuid: string; mediaFileUrl: string };
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+}
+
+interface ShowcaseItemsResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: ShowcaseItem[];
+}
+
+type TabSlug =
+  | "trending-now-newest"
+  | "trending-now-best-seller"
+  | "trending-now-best-value";
+
+const TABS: { label: string; slug: TabSlug }[] = [
+  { label: "Newest", slug: "trending-now-newest" },
+  { label: "Best Seller", slug: "trending-now-best-seller" },
+  { label: "Best Value", slug: "trending-now-best-value" },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function mapItems(data: ShowcaseItem[]): ProductCardItem[] {
+  return data.map((item) => ({
+    uuid:             item.productUuid,
+    title:            item.productName,
+    slug:             item.productSlug,
+    price:            item.discountedPrice,
+    originalPrice:    item.regularPrice,
+    discount:         Math.round(item.disRate),
+    badge:            item.productBadge,
+    isBestDeal:       false,
+    inStock:          !item.isTba,
+    isTba:            item.isTba,
+    image:            item.thumbnails?.mediaFileUrl ?? "/images/product.png",
+    endOfLife:        item.endOfLife        ?? false,
+    allowPreOrder:    item.allowPreOrder    ?? false,
+    recognitionBadge: item.recognitionBadge ?? "",
+  }));
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function TrendingNowSectionCom() {
+  const [activeSlug, setActiveSlug] = useState<TabSlug>("trending-now-newest");
+
+  const { data, isLoading } = useQuery<ProductCardItem[]>({
+    queryKey: ["trending-now", activeSlug],
+    queryFn: async () => {
+      const res = await api.get<ShowcaseItemsResponse>(
+        `/showcase-items?showcaseSlug=${activeSlug}`
+      );
+      return mapItems(sortInStockFirst(Array.isArray(res?.data) ? res.data : []));
+    },
+    staleTime: 15 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const products = data ?? [];
+
+  return (
+    <div className="w-full">
+      {/* ── Tab buttons ── */}
+      <div className="flex flex-wrap gap-2 pb-4">
+        {TABS.map((tab) => (
+          <button
+            key={tab.slug}
+            onClick={() => setActiveSlug(tab.slug)}
+            className={`px-4 py-2 lg:text-sm text-[13px] md:text-base font-bold rounded-lg transition-all duration-300 ${
+              activeSlug === tab.slug
+                ? "bg-[#d1a77d7a] text-primary"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Content ── */}
+      <div className="min-h-[200px]">
+        {isLoading && products.length === 0 ? (
+          // Sized to match the real carousel that replaces it (measured live:
+          // one row of cards — 2 across below lg, 5 at lg — ~372px tall on
+          // mobile / ~404px from md, plus the ~30px Swiper scrollbar gap).
+          // It used to be five 220px boxes wrapping to THREE rows on mobile
+          // (~676px) which collapsed to ~402px once the data arrived, pushing
+          // every section below it up — a large layout shift on every load.
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-4 pb-[30px]">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className={`animate-pulse bg-gray-100 dark:bg-[#2e2b28] rounded-2xl h-[372px] md:h-[404px] ${
+                  i >= 2 ? "hidden lg:block" : ""
+                }`}
+              />
+            ))}
+          </div>
+        ) : (
+          <TrendingNowHomePage products={products} />
+        )}
+      </div>
+    </div>
+  );
+}

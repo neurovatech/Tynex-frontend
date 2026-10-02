@@ -1,0 +1,1815 @@
+/* eslint-disable react-hooks/purity */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Breadcrumb from "@/components/share/Breadcrumb";
+import Link from "next/link";
+import {
+  CreditCard, Truck, Check, ShieldCheck,
+  MapPin, Lock, Loader2, AlertTriangle, Plus, Minus,
+  Ticket, ChevronRight, X as XIcon, Navigation, Info,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import Bikask from "@/images/bKash-Logo.svg";
+import SSl from "@/images/ssl-logo.svg";
+import Image from "next/image";
+import AddCouponModal, { type Coupon, couponDiscountFor, COUPONS } from "./AddCouponModal";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { increaseQty, decreaseQty, clearCart, patchMinBookingPrice } from "@/store/slices/cartSlice";
+import { useQuery, useQueries, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import {
+  trackInitiateCheckout,
+  trackAddPaymentInfo,
+  trackPurchase,
+  trackPaymentMethodSelected,
+  trackPaymentFailed,
+  trackCouponApplied,
+  trackCouponRemoved,
+  trackShippingInfoSubmitted,
+  generateEventId,
+  sendServerPurchaseEvent,
+  savePendingPurchase,
+  type TrackedProduct,
+} from "@/lib/analytics/pixelEvents";
+import { getClickIds, readTrackingCookie } from "@/lib/analytics/clickIds";
+import { calculateCodDetails } from "@/lib/cod-calculator";
+
+// ─── API Types ────────────────────────────────────────────────────────────────
+interface CreateInvoiceResponse { statusCode: number; status: string; message: string; data?: { orderToken: string; orderNo: string }; errors?: string[]; }
+interface CreateOrderProductResponse { statusCode: number; status: string; message: string; errors?: string[]; }
+interface ExecuteOrderResponse {
+  statusCode: number;
+  status: string;
+  message: string;
+  data?: {
+    orderToken: string;
+    orderNo: string;
+    fullName?: string;
+    isHomeDelivery?: boolean;
+    isStorePickup?: boolean;
+    isBkashPay?: boolean;
+    isSSLCommerzPay?: boolean;
+    isCashOnDelivery?: boolean;
+    isFullPaymentAtStore?: boolean;
+    orderStatus?: string;
+    productCount?: number;
+    productPrice?: number;
+    deliveryFee?: number;
+    discount?: number;
+    subTotal?: number;
+    paidAmount?: number;
+    codCharge?: number;
+    roundOff?: number;
+    grandTotal?: number;
+    total?: number;
+    isFullPaid?: boolean;
+  };
+  errors?: string[];
+}
+interface SslPayResponse {
+  statusCode: number;
+  status: string;
+  /** Confirmed live (2026-09-16): our own backend's real field is
+   * lowercase-g `gatewayPageURL`, not SSLCommerz's own `GatewayPageURL` —
+   * a plain case mismatch was silently failing every SSLCommerz checkout. */
+  gatewayPageURL?: string;
+  GatewayPageURL?: string;
+  message?: string;
+  /** SSLCommerz's own initiate-session API names its failure reason this,
+   * not `message` — when their side rejects the session (bad credentials,
+   * validation, sandbox down), this is where the real reason actually is. */
+  failedreason?: string;
+}
+interface BkashPayResponse {
+  statusCode: number;
+  status: string;
+  bkashURL?: string;
+  message?: string;
+  /** bKash's own API names its failure text this, not `message` (see the
+   * /bkash-verify response shape, which uses the same convention). */
+  statusMessage?: string;
+}
+interface AddressBookItem { addressUuid: string; fullName: string; mobileNo: string; addressLabel?: string; addressLine1: string; addressLine2?: string; isDefault: boolean; isActive: boolean; districtID: number; policeStationID: number; }
+interface AddressListResponse { statusCode: number; status: string; message: string; count: number; data: AddressBookItem[]; }
+interface AreaItem {
+  isActive: boolean;
+  isExtremeDelivery: any;
+  extremeDeliveryPriority: number;
+  extremeDeliveryMinMinutes: number;
+  extremeDeliveryMaxMinutes: number;
+  extremeDeliveryCharge: number;
+  isExpressDelivery: any;
+  expressDeliveryPriority: number;
+  expressDeliveryHours: number;
+  expressDeliveryCharge: number;
+  isSameDayDelivery: any;
+  sameDayDeliveryPriority: number;
+  sameDayDeliveryDays: number;
+  sameDayDeliveryCharge: number;
+  isRegularDelivery: any;
+  regularDeliveryPriority: number;
+  regularDeliveryMinDays: number;
+  regularDeliveryMaxDays: number;
+  regularDeliveryCharge: number;
+  isFullPaymentAllowed: any;
+  isBkashAllowed: any;
+  isSSLCommerzAllowed: any;
+  isBookingMoneyAllowed: boolean;
+  isCashOnDeliveryAllowed: boolean;
+  codChargePercentage: number;
+  codFixedCharge: number; areaID: number; areaName: string; 
+}
+interface DistrictItem { distID: number; districtName: string; area: AreaItem[]; }
+interface AreaListResponse { statusCode: number; status: string; message: string; count: number; data: DistrictItem[]; }
+interface StoreItem {
+  uuid: string;
+  branchName: string;
+  slug: string;
+  address: string;
+  /** /stores already returns coordinates, so no second lookup is needed to rank by distance. */
+  latitude?: string;
+  longitude?: string;
+  abroadBranch?: boolean;
+  /** true = store pickup is NOT offered here → the card is rendered disabled. */
+  allowStorePickup?: boolean;
+}
+
+/** One branch's stock answer for a single product+variant pair. */
+interface BranchStock {
+  uuid: string;
+  branchName: string;
+  latitude: string;
+  longitude: string;
+  status: string;
+}
+interface StockAvailabilityResponse { data: BranchStock[] }
+
+/** Haversine distance in km. */
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/** Centre of Dhaka — used when the browser will not give us a fix. */
+const DHAKA = { lat: 23.7771, lon: 90.4262 };
+
+/**
+ * /check-stock-availability's `status` is free text from the backend —
+ * "Instant", "Usually ready in 3 Days", "Usually ready in 2 hour", etc. —
+ * not a plain "available"/"in stock" enum, so a positive keyword match
+ * against those two phrases misses nearly every real value and undercounts
+ * stock everywhere. Only the genuinely negative case ("Out of Stock" and
+ * its variants) means the branch can't fulfil the order; anything else,
+ * however long the wait, is stock the branch actually has.
+ */
+const isInStock = (status: string) => {
+  const s = (status || "").toLowerCase();
+  return !(
+    s.includes("out of stock") ||
+    s.includes("not available") ||
+    s.includes("unavailable")
+  );
+};
+
+// ─── Constants (unused — kept for reference) ──────────────────────────────────
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+type DeliveryType  = "home" | "pickup";
+type ServiceLevel  = "regular" | "same_day" | "express" | "extreme";
+type PaymentOption = "full_online" | "booking" | "cod" | "full_at_store";
+
+// ─── Helper: radio button ──────────────────────────────────────────────────────
+function Radio({ checked, onChange, label, sub, badge, disabled }: {
+  checked: boolean; onChange: () => void; label: string; sub?: string; badge?: string; disabled?: boolean;
+}) {
+  const isFPO = badge === "Full Payment Only";
+  return (
+    <button type="button" onClick={onChange}
+      disabled={disabled}
+      className={`w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all text-left ${
+        disabled ? "opacity-50 cursor-not-allowed" : checked ? "border-[#d1a77d] bg-amber-50/10 dark:bg-amber-950/10" : "border-gray-200 dark:border-zinc-800"
+      }`}
+    >
+      <div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`text-sm font-bold ${checked ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}>{label}</span>
+          {badge && (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+              isFPO
+                ? "bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300"
+                : "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+            }`}>{badge}</span>
+          )}
+        </div>
+        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+      </div>
+      <div className={`shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center ${checked ? "border-[#d1a77d]" : "border-gray-300 dark:border-zinc-700"}`}>
+        {checked && <div className="w-2 h-2 rounded-full bg-[#d1a77d]" />}
+      </div>
+    </button>
+  );
+}
+
+/**
+ * One pickup-store option, styled to match the branch cards in the
+ * "Check Availability" modal (StoreAvailabilityModal): store name +
+ * "Nearest Store" badge + distance pill on one line, a readiness line
+ * underneath — using the backend's own status text ("Instant", "Usually
+ * ready in 3 Days", "Usually ready in 2 hour", ...) exactly as Check
+ * Availability shows it, not a made-up estimate. Only a genuine
+ * "Out of Stock" renders in red; every other real status is green.
+ */
+function PickupStoreCard({
+  checked,
+  onChange,
+  name,
+  address,
+  km,
+  isNearest,
+  stock,
+  stockLoading,
+  disabled,
+}: {
+  checked: boolean;
+  onChange: () => void;
+  name: string;
+  address?: string;
+  km?: number;
+  isNearest: boolean;
+  stock?: { label: string; outOfStock: boolean };
+  stockLoading?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={disabled ? undefined : onChange}
+      disabled={disabled}
+      className={`w-full text-left p-3.5 rounded-2xl border-2 transition-all ${
+        disabled
+          ? "opacity-50 grayscale cursor-not-allowed border-gray-200 dark:border-zinc-800"
+          : checked
+          ? "border-[#d1a77d] bg-amber-50/10 dark:bg-amber-950/10"
+          : "border-gray-200 dark:border-zinc-800"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`text-sm font-bold ${checked ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}>
+              {name}
+            </span>
+            {isNearest && !disabled && (
+              <span className="text-[9px] bg-[#E6A817] text-white font-extrabold px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                <MapPin size={8} /> Nearest Store
+              </span>
+            )}
+            {stock && !disabled && (
+  <span
+    className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-0.5 text-white ${
+      stock.label === "Stock Out" ? "bg-red-600" : "bg-green-600"
+    }`}
+  >
+    {stock.label}
+  </span>
+)}
+            {disabled && (
+              <span className="text-[9px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded-full">
+                Pickup Unavailable
+              </span>
+            )}
+          </div>
+          {address && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug">
+              {address}
+            </p>
+          )}
+          {/* {stock && !disabled && (
+            <p
+              className={`text-xs font-semibold ${
+                stock.label === "Stock Out"
+                  ? "text-red-500 dark:text-red-400"
+                  : "text-emerald-600 dark:text-emerald-400"
+              }`}
+            >
+              {stock.label}
+            </p>
+          )} */}
+          {stockLoading && !disabled && !stock && (
+            <p className="text-xs font-semibold text-gray-400 flex items-center gap-1">
+              <Loader2 size={12} className="animate-spin" /> Checking availability...
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {km !== undefined && (
+            <span className="text-xs font-bold text-[#8a5a1e] dark:text-[#f0cd97] bg-[#d1a77d] dark:bg-[#5a3d1f] py-1 px-2.5 rounded-lg">
+              {km} km away
+            </span>
+          )}
+          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${checked ? "border-[#d1a77d]" : "border-gray-300 dark:border-zinc-700"}`}>
+            {checked && <div className="w-2 h-2 rounded-full bg-[#d1a77d]" />}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// ─── Section Card ──────────────────────────────────────────────────────────────
+function Section({ step, title, children }: { step: number; title: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white dark:bg-[#1C1A17] rounded-3xl border border-gray-100 dark:border-zinc-800 p-6 sm:p-8 shadow-sm space-y-5">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-[#d1a77d] flex items-center justify-center text-[#d1a77d] font-bold text-sm shrink-0">{step}</div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title} <span className="text-[#f00]"> * </span></h2>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────────
+export default function CheckoutPageCom() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const cartItems = useAppSelector((s) => s.cart.items);
+  /*
+   * Store Pickup shows the branch list inline rather than in a modal: the list
+   * is already Step 2 of the form, so a dialog would just cover the thing the
+   * reader has to choose from. Selecting pickup quietly asks for a location and
+   * reorders that list nearest-first.
+   */
+  const [storeDistances, setStoreDistances] = useState<Record<string, number>>({});
+  const [nearestBranchId, setNearestBranchId] = useState<string | null>(null);
+  const [isLocatingStores, setIsLocatingStores] = useState(false);
+  const [locError, setLocError] = useState<string | null>(null);
+  // Stops the nearest store from overriding a choice the reader made by hand.
+  const storePickedByUser = useRef(false);
+  const { isAuthenticated, token, apiKey, user } = useAppSelector((s) => s.auth);
+  const authHeader = token ? (token.startsWith("Bearer ") ? token : `Bearer ${token}`) : "";
+
+  // ── Step 1: Delivery Type ──────────────────────────────────────────────────
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>("home");
+
+  const [addressTab, setAddressTab] = useState<"existing" | "new">("existing");
+  const [selectedAddressUuid, setSelectedAddressUuid] = useState("");
+  const [selectedStoreUuid, setSelectedStoreUuid] = useState("");
+  const [newAddr, setNewAddr] = useState({
+    fullName: "", mobile: "", email: "",
+    addressLabel: "Home", addressLine1: "", districtId: 0, areaId: 0,
+  });
+
+  useEffect(() => {
+    if (user) setNewAddr((p) => ({ ...p, fullName: p.fullName || "", email: p.email || "" }));
+  }, [user]);
+
+  // Reaching this page IS the "began checkout" signal — fired once per visit,
+  // not re-fired as the reader edits delivery/payment options below.
+  // checkoutTrackedRef keeps it to one event even under React StrictMode (dev),
+  // which runs mount effects twice.
+  const checkoutTrackedRef = useRef(false);
+  useEffect(() => {
+    if (cartItems.length === 0 || checkoutTrackedRef.current) return;
+    checkoutTrackedRef.current = true;
+    trackInitiateCheckout(
+      cartItems.map((i) => ({ id: i.productUuid || i.id, name: i.name, price: i.price, quantity: i.quantity, brand: i.brand || undefined })),
+      cartItems.reduce((s, i) => s + i.price * i.quantity, 0),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
+  const [serviceLevel, setServiceLevel] = useState<ServiceLevel>("regular");
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>("full_online");
+  const [paymentGateway, setPaymentGateway] = useState<"bkash" | "ssl">("bkash");
+  const [couponModalOpen, setCouponModalOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+
+  // ── Misc ──────────────────────────────────────────────────────────────────
+  const [remarks, setRemarks] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; total: number } | null>(null);
+
+  // Checkout only makes sense with something in the cart — a direct link, a
+  // refresh after checking out, or a cart cleared in another tab all leave it
+  // empty. `orderConfirmed` guards the one case where the cart is SUPPOSED to
+  // be empty here: right after this page's own successful order, which also
+  // clears the cart before showing the confirmation screen below.
+  useEffect(() => {
+    if (cartItems.length === 0 && !orderConfirmed) {
+      router.push("/cart");
+    }
+  }, [cartItems.length, orderConfirmed, router]);
+
+  // ── API fetches ────────────────────────────────────────────────────────────
+  const { data: addressListRes } = useQuery<AddressListResponse>({
+    queryKey: ["addressList", apiKey],
+    queryFn: () => api.get<AddressListResponse>("address-list", { headers: { "X-API-Key": apiKey || "", Authorization: authHeader } }),
+    enabled: !!isAuthenticated && !!apiKey && !!token,
+  });
+  const savedAddresses = addressListRes?.data || [];
+
+  useEffect(() => {
+    if (savedAddresses.length > 0 && !selectedAddressUuid) {
+      const def = savedAddresses.find((a) => a.isDefault) || savedAddresses[0];
+      if (def) setSelectedAddressUuid(def.addressUuid);
+    }
+  }, [savedAddresses, selectedAddressUuid]);
+
+  // "Existing Address" defaults to selected, but it's useless with nothing in
+  // it — jump straight to "New Address" so the reader isn't staring at an
+  // empty tab. Guests can never have saved addresses; logged-in readers need
+  // the address-list call to actually resolve before we know it's empty.
+  const autoSwitchedNoAddress = useRef(false);
+  useEffect(() => {
+    if (autoSwitchedNoAddress.current) return;
+    if (!isAuthenticated) {
+      autoSwitchedNoAddress.current = true;
+      setAddressTab("new");
+      return;
+    }
+    if (addressListRes && savedAddresses.length === 0) {
+      autoSwitchedNoAddress.current = true;
+      setAddressTab("new");
+    }
+  }, [isAuthenticated, addressListRes, savedAddresses]);
+
+  const { data: areaListRes } = useQuery<AreaListResponse>({
+    queryKey: ["areaList"],
+    queryFn: () => api.get<AreaListResponse>("area-list", { headers: { "X-API-Key": apiKey || "", Authorization: authHeader } }),
+  });
+  const districts = areaListRes?.data || [];
+  const selectedDistObj = districts.find((d) => d.distID === Number(newAddr.districtId));
+  const availableAreas = useMemo(
+    () => (selectedDistObj?.area || []).filter((a) => a.isActive),
+    [selectedDistObj]
+  );
+
+  // Auto-select first active area when district changes (so services show immediately)
+  useEffect(() => {
+    if (availableAreas.length > 0 && !newAddr.areaId) {
+      setNewAddr((p) => ({ ...p, areaId: availableAreas[0].areaID }));
+    }
+  }, [availableAreas, newAddr.areaId]);
+
+  const { data: storeListRes } = useQuery<{ data: StoreItem[] }>({
+    queryKey: ["storeList"],
+    queryFn: () => api.get<{ data: StoreItem[] }>("/stores"),
+  });
+  const storeList = useMemo(
+    // allowStorePickup=true means this branch DOES accept pickup — show it.
+    // allowStorePickup=false (or undefined/null) means pickup not offered — hide it.
+    // abroadBranch always hidden.
+    () => (storeListRes?.data || []).filter((s) => !s.abroadBranch && s.allowStorePickup === true),
+    [storeListRes],
+  );
+
+  /*
+   * Stock per branch for everything in the cart.
+   *
+   * /check-stock-availability answers for one product+variant pair at a time, so
+   * each cart line is its own query and the answers are merged by branch below.
+   * Only runs once Store Pickup is chosen — nobody on Home Delivery needs it.
+   */
+  /**
+   * Stock per branch — per cart item + per store.
+   *
+   * /check-stock-availability?productUUID=...&variantUUID=...&branchUUID=...
+   *
+   * Only runs when Store Pickup is selected AND stores + cart items are ready.
+   * Results are merged by branchUUID → { available, total, label, outOfStock }.
+   */
+  const checkableItems = useMemo(
+    () => cartItems.filter((i) => i.productUuid && i.variantUuid),
+    [cartItems],
+  );
+
+  // 1. Initial query: fetch all branches and their base stock availability
+  const stockQueries = useQueries({
+    queries:
+      deliveryType === "pickup"
+        ? checkableItems.map((item) => ({
+            queryKey: ["pickup-stock-all", item.productUuid, item.variantUuid],
+            queryFn: () =>
+              api.get<StockAvailabilityResponse>("/check-stock-availability", {
+                params: {
+                  productUUID: item.productUuid!,
+                  variantUUID: item.variantUuid!,
+                },
+              }),
+            enabled: deliveryType === "pickup",
+            staleTime: 2 * 60 * 1000,
+          }))
+        : [],
+  });
+
+  // 2. Nearest branch query: re-verifies stock with branchUUID when nearest branch is identified
+  const nearestBranchQueries = useQueries({
+    queries:
+      deliveryType === "pickup" && nearestBranchId
+        ? checkableItems.map((item) => ({
+            queryKey: [
+              "pickup-stock-nearest",
+              item.productUuid,
+              item.variantUuid,
+              nearestBranchId,
+            ],
+            queryFn: () =>
+              api.get<StockAvailabilityResponse>("/check-stock-availability", {
+                params: {
+                  productUUID: item.productUuid!,
+                  variantUUID: item.variantUuid!,
+                  branchUUID: nearestBranchId,
+                },
+              }),
+            enabled: deliveryType === "pickup" && !!nearestBranchId,
+            staleTime: 2 * 60 * 1000,
+          }))
+        : [],
+  });
+
+  const isStockLoading = stockQueries.some((q) => q.isLoading);
+  const isNearestStockLoading = nearestBranchQueries.some(
+    (q) => q.isLoading || q.isFetching,
+  );
+
+  /**
+   * branch uuid → real stock status for the whole cart at that branch.
+   *
+   * Base query provides stock for all branches.
+   * When nearestBranchQueries resolves with branchUUID data, it overrides
+   * that branch's status with real-time branch data.
+   */
+  const stockByStore = useMemo(() => {
+    const map: Record<
+      string,
+      { available: number; total: number; label: string; outOfStock: boolean }
+    > = {};
+    if (checkableItems.length === 0) return map;
+
+    const statusesByBranch: Record<string, string[]> = {};
+
+    // Base query answers for all branches
+    stockQueries.forEach((res) => {
+      (res.data?.data ?? []).forEach((branch) => {
+        const cur = map[branch.uuid] ?? {
+          available: 0,
+          total: 0,
+          label: "",
+          outOfStock: false,
+        };
+        cur.total += 1;
+        if (isInStock(branch.status)) cur.available += 1;
+        map[branch.uuid] = cur;
+        (statusesByBranch[branch.uuid] ??= []).push(branch.status || "");
+      });
+    });
+
+    // Branch-specific stock overrides from branchUUID query
+    if (nearestBranchId) {
+      const nearestStatuses: string[] = [];
+      let nearestAvailable = 0;
+      let nearestTotal = 0;
+
+      nearestBranchQueries.forEach((res) => {
+        (res.data?.data ?? []).forEach((branch) => {
+          if (branch.uuid === nearestBranchId) {
+            nearestTotal += 1;
+            if (isInStock(branch.status)) nearestAvailable += 1;
+            nearestStatuses.push(branch.status || "");
+          }
+        });
+      });
+
+      if (nearestStatuses.length > 0) {
+        statusesByBranch[nearestBranchId] = nearestStatuses;
+        map[nearestBranchId] = {
+          available: nearestAvailable,
+          total: nearestTotal,
+          label: "",
+          outOfStock: false,
+        };
+      }
+    }
+
+    Object.entries(statusesByBranch).forEach(([uuid, statuses]) => {
+      const outOfStock = statuses.find((s) =>
+        s.toLowerCase().includes("out of stock"),
+      );
+      const delayed = statuses.find(
+        (s) => s.trim().toLowerCase() !== "instant",
+      );
+      if (map[uuid]) {
+        map[uuid].label = outOfStock || delayed || statuses[0] || "Instant";
+        map[uuid].outOfStock = !!outOfStock;
+      }
+    });
+
+    return map;
+  }, [stockQueries, nearestBranchQueries, nearestBranchId, checkableItems.length]);
+
+  /**
+   * Nearest branch first once a location is known; the API's own order until then.
+   * Branches without usable coordinates sink to the bottom rather than jumping
+   * to the top on a NaN comparison.
+   */
+  const sortedStoreList = useMemo(() => {
+    if (Object.keys(storeDistances).length === 0) return storeList;
+    return [...storeList].sort(
+      (a, b) =>
+        (storeDistances[a.uuid] ?? Infinity) - (storeDistances[b.uuid] ?? Infinity),
+    );
+  }, [storeList, storeDistances]);
+
+  const locateNearestStore = useCallback(() => {
+    setIsLocatingStores(true);
+    setLocError(null);
+
+    const computeAll = (lat: number, lon: number) => {
+      const next: Record<string, number> = {};
+      storeList.forEach((store) => {
+        const sLat = parseFloat(store.latitude ?? "");
+        const sLon = parseFloat(store.longitude ?? "");
+        if (!isNaN(sLat) && !isNaN(sLon)) {
+          next[store.uuid] = parseFloat(distanceKm(lat, lon, sLat, sLon).toFixed(2));
+        }
+      });
+      setStoreDistances(next);
+      setIsLocatingStores(false);
+
+      // Preselect the closest branch & trigger branchUUID stock check
+      if (Object.keys(next).length > 0) {
+        const nearestEntry = Object.entries(next).sort((a, b) => a[1] - b[1])[0];
+        if (nearestEntry) {
+          const nearestId = nearestEntry[0];
+          setNearestBranchId(nearestId);
+          if (!storePickedByUser.current) {
+            setSelectedStoreUuid(nearestId);
+          }
+        }
+      }
+    };
+
+    if (!navigator.geolocation) {
+      setLocError("Geolocation is not supported by your browser.");
+      computeAll(DHAKA.lat, DHAKA.lon);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => computeAll(pos.coords.latitude, pos.coords.longitude),
+      (err) => {
+        console.error("Geolocation error:", err);
+        setLocError("Location access denied. Using center coordinates of Dhaka.");
+        computeAll(DHAKA.lat, DHAKA.lon);
+      },
+    );
+  }, [storeList]);
+
+  useEffect(() => {
+    if (selectedStoreUuid) return;
+    // storeList already excludes pickup-disallowed branches entirely.
+    if (storeList[0]) setSelectedStoreUuid(storeList[0].uuid);
+  }, [storeList, selectedStoreUuid]);
+
+  // ── Fetch minBookingPrice for cart items that are missing it ────────────────
+  useEffect(() => {
+    const missing = cartItems.filter(
+      (item) => (item.minBookingPrice === undefined || item.minBookingPrice === null) && item.productUuid
+    );
+    if (missing.length === 0) return;
+
+    missing.forEach(async (item) => {
+      try {
+        const res = await api.get<{ data?: { minBookingPrice?: number } }>(
+          `/product/${item.productUuid}`
+        );
+        const mbp = res?.data?.minBookingPrice ?? 0;
+        if (mbp > 0) {
+          dispatch(patchMinBookingPrice({ id: item.id, minBookingPrice: mbp }));
+        }
+      } catch {
+        // silently ignore
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems.length]);
+
+  /**
+   * Booking money for the whole order — the deposit is PER UNIT, so it scales
+   * with quantity.
+   *
+   * This used to sum minBookingPrice once per cart line regardless of how many
+   * units it held, so ordering four phones at a ৳15,000 deposit each still asked
+   * for ৳15,000 instead of ৳60,000 — three units effectively booked for free.
+   */
+  const totalBookingMoney = useMemo(
+    () =>
+      cartItems.reduce(
+        (s, item) => s + (item.minBookingPrice || 0) * (item.quantity || 1),
+        0,
+      ),
+    [cartItems]
+  );
+
+  // ── Selected Area from API ─────────────────────────────────────────────────
+  // Works for both existing address (districtID + policeStationID) and new address form
+  const selectedAreaObj = useMemo((): AreaItem | undefined => {
+    if (deliveryType === "pickup") return undefined;
+
+    let targetDistrictId = 0;
+    let targetAreaId = 0;
+
+    if (addressTab === "existing") {
+      const addr = savedAddresses.find((a) => a.addressUuid === selectedAddressUuid);
+      if (!addr) return undefined;
+      targetDistrictId = Number(addr.districtID);
+      targetAreaId = Number(addr.policeStationID);
+    } else {
+      targetDistrictId = Number(newAddr.districtId);
+      targetAreaId = Number(newAddr.areaId);
+    }
+
+    if (!targetDistrictId || !targetAreaId) return undefined;
+    const dist = districts.find((d) => d.distID === targetDistrictId);
+    return dist?.area.find((a) => a.areaID === targetAreaId && a.isActive);
+  }, [deliveryType, addressTab, selectedAddressUuid, savedAddresses, newAddr.districtId, newAddr.areaId, districts]);
+
+
+  // ── Service levels — from API data, sorted by priority ───────────────────
+  const visibleServices = useMemo((): { value: ServiceLevel; label: string; sub: string; charge: number; badge?: string }[] => {
+    if (deliveryType === "pickup") return [];
+    if (!selectedAreaObj) return [];
+
+    const services: { value: ServiceLevel; label: string; sub: string; charge: number; badge?: string; priority: number }[] = [];
+
+    if (selectedAreaObj.isExtremeDelivery) {
+      services.push({
+        value: "extreme", priority: selectedAreaObj.extremeDeliveryPriority ?? 1,
+        label: "Extreme Delivery",
+        sub: `${selectedAreaObj.extremeDeliveryMinMinutes ?? 15} – ${selectedAreaObj.extremeDeliveryMaxMinutes ?? 60} minutes`,
+        charge: Number(selectedAreaObj.extremeDeliveryCharge ?? 0),
+        badge: "Full Payment Only",
+      });
+    }
+    if (selectedAreaObj.isExpressDelivery) {
+      services.push({
+        value: "express", priority: selectedAreaObj.expressDeliveryPriority ?? 2,
+        label: "Express Delivery",
+        sub: `${selectedAreaObj.expressDeliveryHours ?? 4} hours`,
+        charge: Number(selectedAreaObj.expressDeliveryCharge ?? 0),
+        badge: "Full Payment Only",
+      });
+    }
+    if (selectedAreaObj.isSameDayDelivery) {
+      services.push({
+        value: "same_day", priority: selectedAreaObj.sameDayDeliveryPriority ?? 3,
+        label: "Same Day Delivery",
+        sub: `${selectedAreaObj.sameDayDeliveryDays ?? 1} day`,
+        charge: Number(selectedAreaObj.sameDayDeliveryCharge ?? 0),
+        badge: "Full Payment Only",
+      });
+    }
+    if (selectedAreaObj.isRegularDelivery) {
+      // Show which payment methods are available for regular delivery
+      const regularBadgeParts: string[] = [];
+      if (selectedAreaObj.isCashOnDeliveryAllowed) regularBadgeParts.push("Cash on Delivery");
+
+      services.push({
+        value: "regular", priority: selectedAreaObj.regularDeliveryPriority ?? 4,
+        label: "Regular Delivery",
+        sub: `${selectedAreaObj.regularDeliveryMinDays ?? 1} – ${selectedAreaObj.regularDeliveryMaxDays ?? 3} days`,
+        charge: Number(selectedAreaObj.regularDeliveryCharge ?? 0),
+        badge: regularBadgeParts.length > 0 ? regularBadgeParts.join(" · ") : undefined,
+      });
+    }
+
+    // Sort by priority ascending
+    return services.sort((a, b) => a.priority - b.priority);
+  }, [deliveryType, selectedAreaObj]);
+
+  // Auto-fix serviceLevel when visibleServices change
+  useEffect(() => {
+    if (deliveryType === "pickup") return;
+    if (visibleServices.length === 0) return;
+    const validValues = visibleServices.map((s) => s.value);
+    if (!validValues.includes(serviceLevel)) {
+      // Default to regular if available, otherwise first
+      setServiceLevel(validValues.includes("regular") ? "regular" : validValues[0]);
+    }
+  }, [visibleServices, serviceLevel, deliveryType]);
+
+  // ── Full payment only for extreme/express/same_day ────────────────────────
+  const isFullPaymentOnly = deliveryType === "home" &&
+    (serviceLevel === "extreme" || serviceLevel === "express" || serviceLevel === "same_day");
+
+  // ── Payment options — from API data ───────────────────────────────────────
+  const paymentOptions = useMemo((): { value: PaymentOption; label: string; sub?: string; disabled?: boolean }[] => {
+    if (deliveryType === "pickup") {
+      return [
+        { value: "full_online",   label: "Full Payment Online",  sub: "SSL / bKash" },
+        { value: "booking",       label: "Booking Money",        sub: `Min. Booking: ৳ ${totalBookingMoney.toLocaleString("en-IN")}`, disabled: totalBookingMoney === 0 },
+        { value: "full_at_store", label: "Full Payment at Store" },
+      ];
+    }
+
+    if (!selectedAreaObj) return [];
+    const opts: { value: PaymentOption; label: string; sub?: string; disabled?: boolean }[] = [];
+
+    // Full Payment Online
+    if (selectedAreaObj.isFullPaymentAllowed) {
+      const gateways = [
+        selectedAreaObj.isBkashAllowed ? "bKash" : null,
+        selectedAreaObj.isSSLCommerzAllowed ? "SSL" : null,
+      ].filter(Boolean).join(" / ");
+      opts.push({
+        value: "full_online",
+        label: "Full Payment Online",
+        sub: isFullPaymentOnly
+          ? `${gateways} — required for this delivery type`
+          : gateways || "SSL / bKash",
+      });
+    }
+
+    // Booking Money (only for Regular delivery)
+    if (!isFullPaymentOnly && selectedAreaObj.isBookingMoneyAllowed) {
+      opts.push({
+        value: "booking",
+        label: "Booking Money",
+        sub: `Min. Booking: ৳ ${totalBookingMoney.toLocaleString("en-IN")}`,
+        disabled: totalBookingMoney === 0,
+      });
+    }
+
+    // Cash on Delivery (only for Regular delivery)
+    if (!isFullPaymentOnly && selectedAreaObj.isCashOnDeliveryAllowed) {
+      const pct = selectedAreaObj.codChargePercentage || 0;
+      const fixed = selectedAreaObj.codFixedCharge || 0;
+      const chargeParts = [
+        pct > 0 ? `${pct}%` : null,
+        fixed > 0 ? `৳ ${fixed}` : null,
+      ].filter(Boolean);
+      const chargeText = chargeParts.length > 0
+        ? ` (COD charge: ${chargeParts.join(" + ")})`
+        : " (no extra COD charge)";
+      opts.push({
+        value: "cod",
+        label: "Cash on Delivery",
+        sub: chargeText,
+      });
+    }
+
+    return opts;
+  }, [deliveryType, selectedAreaObj, isFullPaymentOnly, totalBookingMoney]);
+
+  // Auto-fix paymentOption when options change
+  useEffect(() => {
+    const validNonDisabled = paymentOptions.filter((p) => !p.disabled).map((p) => p.value);
+    if (validNonDisabled.length > 0 && !validNonDisabled.includes(paymentOption)) {
+      setPaymentOption(validNonDisabled[0]);
+    }
+  }, [paymentOptions, paymentOption]);
+
+  // When switching to pickup → always default to full_online
+  useEffect(() => {
+    if (deliveryType === "pickup") {
+      setPaymentOption("full_online");
+    }
+  }, [deliveryType]);
+
+  // ── Price Calculations — all from API data ────────────────────────────────
+  const subtotal = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+
+  // Coupon deals here are frontend-only mock data (see AddCouponModal) — no
+  // backend endpoint validates a code or applies it to the order, so this
+  // discount only affects what's shown/charged on this page, not anything
+  // sent to the order-creation API.
+  const couponDiscount = appliedCoupon
+    ? couponDiscountFor(appliedCoupon, subtotal)
+    : 0;
+
+  // Already folded into each item's own `price` (so Subtotal/Total need no
+  // change) — tracked separately only so the receipt can show it as its own,
+  // highlighted line instead of a single lump sum.
+  const careTotal = cartItems.reduce(
+    (sum, item) => sum + (item.carePlanPrice ?? 0) * item.quantity,
+    0,
+  );
+
+  const deliveryFee = useMemo(() => {
+    if (deliveryType === "pickup") return 0;
+    const svc = visibleServices.find((s) => s.value === serviceLevel);
+    return svc ? svc.charge : 0;
+  }, [deliveryType, visibleServices, serviceLevel]);
+
+  // Total products + Tynex Care
+  const totalProductsWithCare = subtotal;
+
+  const codDetails = useMemo(() => {
+    if (paymentOption !== "cod" || !selectedAreaObj) {
+      return { codCharge: 0, grandTotal: subtotal + deliveryFee, roundOff: 0, initialGrandTotal: subtotal + deliveryFee, diff: 0 };
+    }
+    const baseForCod = subtotal + deliveryFee;
+    const pct = selectedAreaObj.codChargePercentage || 0;
+    const fixed = Number(selectedAreaObj.codFixedCharge || 0);
+    return calculateCodDetails(baseForCod, pct, fixed);
+  }, [paymentOption, selectedAreaObj, subtotal, deliveryFee]);
+
+  const codCharge = codDetails.codCharge;
+  const codRoundOff = codDetails.roundOff;
+
+  const total = useMemo(() => {
+    if (paymentOption === "cod" && selectedAreaObj) {
+      return codDetails.grandTotal - couponDiscount;
+    }
+    return subtotal + deliveryFee + codCharge - couponDiscount;
+  }, [paymentOption, selectedAreaObj, codDetails, subtotal, deliveryFee, codCharge, couponDiscount]);
+
+  const amountDue =
+    paymentOption === "full_online"     ? subtotal + deliveryFee - couponDiscount
+    : paymentOption === "booking"       ? totalBookingMoney
+    : paymentOption === "cod"           ? total
+    : paymentOption === "full_at_store" ? 0
+    : subtotal + deliveryFee - couponDiscount;
+
+  const fmt = (v: number) => "৳" + v.toLocaleString("en-IN");
+
+  // ── Save new address to address book — called inside handleConfirmOrder ──────
+  const saveNewAddressToBook = async (isPickupArg: boolean) => {
+    if (isPickupArg || addressTab !== "new") return;
+    if (!newAddr.fullName.trim() || !newAddr.mobile.trim() || !newAddr.districtId || !newAddr.areaId) return;
+    try {
+      const payload: Record<string, unknown> = {
+        fullName:        newAddr.fullName.trim(),
+        mobileNo:        newAddr.mobile.trim(),
+        addressLabel:    newAddr.addressLabel || "Home",
+        addressLine1:    newAddr.addressLine1.trim(),
+        districtID:      Number(newAddr.districtId),
+        policeStationID: Number(newAddr.areaId),
+        isDefault:       false,
+        isActive:        true,
+      };
+      // email is optional — only include if provided
+      if (newAddr.email.trim()) {
+        payload.email = newAddr.email.trim();
+      }
+      await api.post(
+        "new-address-book",
+        payload,
+        { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } }
+      );
+    } catch {
+      // Silently ignore — address save failure should not block order success
+    }
+  };
+
+  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Cart", href: "/cart" }, { label: "Checkout", href: "#" }];
+
+  // ── Order Submit ──────────────────────────────────────────────────────────
+  const handleConfirmOrder = async () => {
+    if (!isAuthenticated || !token || !apiKey) { toast.error("Please log in to checkout."); return; }
+    if (cartItems.length === 0) { toast.error("Your cart is empty."); return; }
+    if (!termsAccepted) { toast.error("Please accept the Terms & Conditions."); return; }
+    if (deliveryType === "pickup" && !selectedStoreUuid) { toast.error("Please select a pickup store."); return; }
+
+    const isPickup = deliveryType === "pickup";
+    let userFullName = "", email = "", mobile = "", addressLabel = "Home", districtId = 0, areaId = 0;
+
+    if (!isPickup) {
+      if (addressTab === "existing") {
+        const addr = savedAddresses.find((a) => a.addressUuid === selectedAddressUuid) || savedAddresses[0];
+        if (!addr) { toast.error("Please select or add a delivery address."); return; }
+        userFullName = addr.fullName || user?.userFullName || "";
+        email = user?.email || "";
+        mobile = addr.mobileNo || "";
+        addressLabel = addr.addressLabel || "Home";
+        districtId = Number(addr.districtID);
+        areaId = Number(addr.policeStationID);
+      } else {
+        if (!newAddr.fullName.trim() || !newAddr.mobile.trim() || !newAddr.districtId || !newAddr.areaId) {
+          toast.error("Please fill in all required address fields."); return;
+        }
+        userFullName = newAddr.fullName.trim(); email = newAddr.email.trim() || user?.email || "";
+        mobile = newAddr.mobile.trim(); addressLabel = newAddr.addressLabel;
+        districtId = Number(newAddr.districtId); areaId = Number(newAddr.areaId);
+      }
+    }
+
+    setIsSubmitting(true);
+    try {
+      const browserToken = `web-session-${apiKey}-${Date.now()}`;
+
+      // Shared with the Purchase pixel call below (COD/pay-at-store path) so
+      // Meta can dedupe against the server-side Conversions API event the
+      // backend fires from this same trackingMeta — see
+      // docs/tracking-backend-requirements.txt.
+      //
+      // Field names here are camelCase (utmSource, not utm_source) to match
+      // the backend's actual create-order-invoice contract exactly — the
+      // backend deserializes this into a typed C# object, so a snake_case
+      // mismatch means the field is silently dropped, not just renamed.
+      // getClickIds() itself keeps snake_case internally (it's this app's own
+      // cookie/storage format, unrelated to any backend contract), so its
+      // fields are mapped one by one below rather than spread wholesale.
+      // `undefined` values are dropped by JSON.stringify, matching "every
+      // field except eventId is OPTIONAL" in
+      // docs/tracking-backend-requirements.txt.
+      const purchaseEventId = generateEventId();
+      const clickIds = getClickIds();
+      const trackingMeta = {
+        eventId: purchaseEventId,
+        eventSourceUrl: typeof window !== "undefined" ? window.location.href : undefined,
+        fbp: readTrackingCookie("_fbp") || undefined,
+        fbc: readTrackingCookie("_fbc") || undefined,
+        fbclid: clickIds.fbclid,
+        gclid: clickIds.gclid,
+        ttclid: clickIds.ttclid,
+        utmSource: clickIds.utm_source,
+        utmMedium: clickIds.utm_medium,
+        utmCampaign: clickIds.utm_campaign,
+        utmContent: clickIds.utm_content,
+        utmTerm: clickIds.utm_term,
+      };
+
+      // One full product list reused by every tracking call below
+      // (AddPaymentInfo now, Purchase later — inline for COD, or parked in
+      // localStorage across the gateway round-trip for bKash/SSLCommerz).
+      const trackedProducts: TrackedProduct[] = cartItems.map((i) => ({
+        id: i.productUuid || i.id,
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+        brand: i.brand || undefined,
+      }));
+      const paymentType =
+        paymentOption === "full_online" || paymentOption === "booking"
+          ? paymentGateway === "ssl" ? "sslcommerz" : "bkash"
+          : paymentOption === "cod" ? "cash_on_delivery" : "pay_at_store";
+      trackAddPaymentInfo(trackedProducts, total, paymentType);
+
+      // ── New API: all boolean flags ────────────────────────────────────────
+      const invoicePayload: any = {
+        usersCommUuid: apiKey,
+        browserToken,
+        remarks: remarks.trim() || undefined,
+        trackingMeta,
+
+        // Delivery type flags
+        isShopPickup:    isPickup,
+        isHomeDelivery:  !isPickup,
+
+        // Delivery service flags (mutually exclusive)
+        isRegularDelivery:  !isPickup && serviceLevel === "regular",
+        isExtremeDelivery:  !isPickup && serviceLevel === "extreme",
+        isExpressDelivery:  !isPickup && serviceLevel === "express",
+        isSameDayDelivery:  !isPickup && serviceLevel === "same_day",
+
+        // Payment type flags
+        isFullPayment:       paymentOption === "full_online",
+        isBookingMoney:      paymentOption === "booking",
+        isCashOnDelivery:    paymentOption === "cod",
+        isFullPaymentAtStore: paymentOption === "full_at_store",
+
+        // Payment gateway flags
+        isBkashPay:      (paymentOption === "full_online" || paymentOption === "booking") && paymentGateway === "bkash",
+        isSSLCommerzPay: (paymentOption === "full_online" || paymentOption === "booking") && paymentGateway === "ssl",
+      };
+
+      // Pickup-specific fields
+      if (isPickup) {
+        invoicePayload.storeUuid = selectedStoreUuid;
+      } else {
+        // Home delivery address fields
+        invoicePayload.mobile        = mobile;
+        invoicePayload.addressLabel  = addressLabel;
+        invoicePayload.addressLine1  = newAddr.addressLine1 || (savedAddresses.find(a => a.addressUuid === selectedAddressUuid)?.addressLine1 ?? "");
+        invoicePayload.addressLine2  = savedAddresses.find(a => a.addressUuid === selectedAddressUuid)?.addressLine2 || undefined;
+        invoicePayload.districtId    = districtId;
+        invoicePayload.areaId        = areaId;
+      }
+
+      const resInvoice = await api.post<CreateInvoiceResponse>("/api/tokenized/v1/create-order-invoice", invoicePayload,
+        { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } });
+      if (!resInvoice || resInvoice.status !== "success" || !resInvoice.data?.orderToken) {
+        toast.error(resInvoice?.errors?.join(", ") || resInvoice?.message || "Failed to create invoice."); setIsSubmitting(false); return;
+      }
+      const orderToken = resInvoice.data.orderToken;
+
+      for (const item of cartItems) {
+        const accessoriesUuid = item.accessoriesUuid?.trim();
+
+        for (let q = 0; q < item.quantity; q++) {
+          const basePayload: any = {
+            productUuid:   item.productUuid || item.id,
+            variantUuid:   item.variantUuid || item.id,
+            usersCommUuid: apiKey,
+            orderToken,
+          };
+
+          // Base product line — always sent without accessoriesUuid, even
+          // when this item has a Tynex Care plan attached.
+          const res = await api.post<CreateOrderProductResponse>(
+            "/api/tokenized/v1/create-order-product",
+            basePayload,
+            { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } }
+          );
+          if (!res || res.status !== "success") {
+            toast.error(res?.errors?.join(", ") || res?.message || "Failed to add product.");
+            setIsSubmitting(false);
+            return;
+          }
+
+          // Tynex Care / accessory line — a SECOND, separate call for the
+          // same product+variant, this time carrying accessoriesUuid, so the
+          // backend registers the care plan's own price as its own order
+          // line instead of folding it into the single call above.
+          if (accessoriesUuid) {
+            const carePayload: any = { ...basePayload, accessoriesUuid };
+            const resCare = await api.post<CreateOrderProductResponse>(
+              "/api/tokenized/v1/create-order-product",
+              carePayload,
+              { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } }
+            );
+            if (!resCare || resCare.status !== "success") {
+              toast.error(resCare?.errors?.join(", ") || resCare?.message || "Failed to add Tynex Care plan.");
+              setIsSubmitting(false);
+              return;
+            }
+          }
+        }
+      }
+
+      const resEx = await api.post<ExecuteOrderResponse>("/api/tokenized/v1/execute-order", { orderToken },
+        { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } });
+      if (!resEx || resEx.status !== "success") {
+        const reason = resEx?.errors?.join(", ") || "Failed to execute order.";
+        trackPaymentFailed(paymentOption, reason);
+        toast.error(reason);
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (paymentOption === "full_online" || paymentOption === "booking") {
+        if (paymentGateway === "ssl") {
+          const r = await api.post<SslPayResponse>("/api/tokenized/v1/sslcommerz-pay", { orderToken }, { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } });
+          const gatewayUrl = r?.gatewayPageURL || r?.GatewayPageURL;
+          if (gatewayUrl) {
+            await saveNewAddressToBook(isPickup);
+            trackShippingInfoSubmitted(trackedProducts, resEx.data?.total || total);
+            savePendingPurchase({ eventId: purchaseEventId, orderNo: resInvoice.data.orderNo, value: resEx.data?.total || total, products: trackedProducts });
+            dispatch(clearCart());
+            window.location.href = gatewayUrl;
+            return;
+          }
+          console.error("[Checkout] sslcommerz-pay did not return a gatewayPageURL:", r);
+          trackPaymentFailed("sslcommerz", r?.message || r?.failedreason);
+          toast.error(r?.message || r?.failedreason || "SSLCommerz failed.");
+        } else {
+          const r = await api.post<BkashPayResponse>("/api/tokenized/v1/bkash-pay", { orderToken }, { headers: { Authorization: authHeader, "X-API-Key": apiKey || "" } });
+          if (r?.bkashURL) {
+            await saveNewAddressToBook(isPickup);
+            trackShippingInfoSubmitted(trackedProducts, resEx.data?.total || total);
+            savePendingPurchase({ eventId: purchaseEventId, orderNo: resInvoice.data.orderNo, value: resEx.data?.total || total, products: trackedProducts });
+            dispatch(clearCart());
+            window.location.href = r.bkashURL;
+            return;
+          }
+          console.error("[Checkout] bkash-pay did not return a bkashURL:", r);
+          trackPaymentFailed("bkash", r?.message || r?.statusMessage);
+          toast.error(r?.message || r?.statusMessage || "bKash failed.");
+        }
+      } else {
+        await saveNewAddressToBook(isPickup);
+        trackShippingInfoSubmitted(trackedProducts, resEx.data?.total || total);
+        const purchaseTotal = resEx.data?.total || total;
+        const purchaseOrderNo = resInvoice.data.orderNo || `DZL-${Date.now()}`;
+        // trackPurchase returns null if this orderId's Purchase already fired
+        // (defensive here too, even though this branch normally runs once).
+        const firedEventId = trackPurchase(purchaseOrderNo, trackedProducts, purchaseTotal, purchaseEventId);
+        if (firedEventId) {
+          sendServerPurchaseEvent({
+            eventId: firedEventId,
+            orderId: purchaseOrderNo,
+            value: purchaseTotal,
+            products: cartItems.map((i) => ({ id: i.productUuid || i.id, quantity: i.quantity })),
+          });
+        }
+        dispatch(clearCart());
+        // Profile → Orders caches order-list for 5 minutes (the app's default
+        // staleTime) — without this, landing there right after checkout still
+        // shows the pre-order list until that cache expires or the page is
+        // hard-reloaded, since a fresh mount alone doesn't force a refetch.
+        queryClient.invalidateQueries({ queryKey: ["order-list"] });
+        setConfirmedOrder({ orderNo: purchaseOrderNo, total: purchaseTotal });
+        setOrderConfirmed(true);
+        toast.success("Order placed successfully!");
+      }
+    } catch (err: any) {
+      console.error("[Checkout]", err);
+      try { const p = JSON.parse(err.message); toast.error(p?.errors?.join(", ") || p?.message || "Order failed."); }
+      catch { toast.error(err?.message || "Order failed."); }
+    } finally { setIsSubmitting(false); }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fffbf6] dark:bg-[#2e2b28] dark:bg-[#111] py-6 sm:py-8 font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <Breadcrumb items={breadcrumbItems} />
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-4 mb-6">Checkout</h1>
+
+        {!isAuthenticated && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0" />
+              <div>
+                <h4 className="text-sm font-bold text-amber-900 dark:text-amber-200">Login Required</h4>
+                <p className="text-xs text-amber-700 dark:text-amber-300">You must log in to place an order.</p>
+              </div>
+            </div>
+            <Link href="/auth/login?redirect=/checkout" className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl">LOG IN NOW</Link>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+
+            {/* ── Step 1: Delivery Method ── */}
+            <Section step={1} title="Delivery Method">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Radio checked={deliveryType === "home"} onChange={() => setDeliveryType("home")} label="🏠 Home Delivery" sub="Delivered to your doorstep" />
+                <Radio
+                  checked={deliveryType === "pickup"}
+                  onChange={() => {
+                    setDeliveryType("pickup");
+                    locateNearestStore();
+                  }}
+                  label="🏪 Store Pickup"
+                  sub="Pick up from any Tynex store"
+                />
+              </div>
+            </Section>
+
+            {/* ── Step 2: Address (Home Delivery only) ── */}
+            {deliveryType === "home" && (
+              <Section step={2} title="Delivery Address">
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => setAddressTab("existing")}
+                    className={`py-2 px-4 rounded-xl text-xs font-bold border transition cursor-pointer ${addressTab === "existing" ? "bg-white border-gray-300 text-gray-900 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white" : "bg-gray-50 border-transparent text-gray-400 dark:bg-zinc-900"}`}>
+                    Existing Address ({savedAddresses.length})
+                  </button>
+                  <button type="button" onClick={() => setAddressTab("new")}
+                    className={`py-2 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${addressTab === "new" ? "bg-[#d1a77d] text-white" : "bg-gray-50 text-gray-400 dark:bg-zinc-900"}`}>
+                    New Address
+                  </button>
+                </div>
+
+                {addressTab === "existing" ? (
+                  <div className="space-y-3">
+                    {savedAddresses.map((addr) => (
+                      <div key={addr.addressUuid} onClick={() => setSelectedAddressUuid(addr.addressUuid)}
+                        className={`border rounded-2xl p-4 cursor-pointer transition relative ${selectedAddressUuid === addr.addressUuid ? "border-[#d1a77d] bg-amber-50/20 dark:bg-zinc-800" : "border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/40 hover:border-amber-200"}`}>
+                        <div className="flex items-center gap-2 text-xs font-bold text-gray-800 dark:text-white">
+                          <MapPin size={14} className="text-[#d1a77d]" />
+                          <span>{addr.fullName} ({addr.mobileNo})</span>
+                          {addr.addressLabel && <span className="bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] px-2 py-0.5 rounded-full">{addr.addressLabel}</span>}
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ""}</p>
+                        {selectedAddressUuid === addr.addressUuid && <div className="absolute top-4 right-4 bg-[#d1a77d] text-white rounded-full p-1"><Check size={12} /></div>}
+                      </div>
+                    ))}
+                    {savedAddresses.length === 0 && <p className="text-xs text-gray-400 border border-dashed rounded-xl p-4 text-center">No saved addresses. Use New Address tab.</p>}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Full Name & Mobile — required */}
+                    {[["Full Name", "fullName", "text", "Full Name"], ["Mobile", "mobile", "tel", "01700000000"]].map(([label, key, type, placeholder]) => (
+                      <div key={key}>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{label} <span className="text-red-500"> * </span></label>
+                        <input type={type} value={(newAddr as any)[key]} placeholder={placeholder}
+                          onChange={(e) => setNewAddr((p) => ({ ...p, [key]: e.target.value }))}
+                          className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#d1a77d]" />
+                      </div>
+                    ))}
+                    {/* Email — optional */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                        Email <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={newAddr.email}
+                        placeholder="email@example.com"
+                        onChange={(e) => setNewAddr((p) => ({ ...p, email: e.target.value }))}
+                        className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#d1a77d]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Full Address <span className="text-red-500"> * </span></label>
+                      <textarea rows={2} value={newAddr.addressLine1} placeholder="House, Road, Area" onChange={(e) => setNewAddr((p) => ({ ...p, addressLine1: e.target.value }))}
+                        className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] dark:text-white resize-none" />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">District <span className="text-red-500"> * </span></label>
+                        <select value={newAddr.districtId} onChange={(e) => setNewAddr((p) => ({ ...p, districtId: Number(e.target.value), areaId: 0 }))}
+                          className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] dark:text-white cursor-pointer">
+                          <option value={0}>Select District</option>
+                          {districts.map((d) => <option key={d.distID} value={d.distID}>{d.districtName}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Police Station / Area <span className="text-red-500"> * </span></label>
+                        <select value={newAddr.areaId} onChange={(e) => setNewAddr((p) => ({ ...p, areaId: Number(e.target.value) }))} disabled={!newAddr.districtId}
+                          className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] dark:text-white cursor-pointer disabled:opacity-50">
+                          <option value={0}>Select Area</option>
+                          {availableAreas.map((a) => <option key={a.areaID} value={a.areaID}>{a.areaName}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Section>
+            )}
+
+            {/* ── Step 2 (Pickup): Store Selection ── */}
+            {deliveryType === "pickup" && (
+              <Section step={2} title="Select Pickup Store">
+                <div className="space-y-3">
+                  {/* Find Nearest Branch Store button */}
+                  <button
+                    type="button"
+                    onClick={locateNearestStore}
+                    disabled={isLocatingStores || isNearestStockLoading}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#FBF3E7] dark:bg-amber-950/20 border border-[#F0DFC4] dark:border-amber-900/40 text-[#000000] dark:text-[#E0B888] font-bold text-xs hover:bg-[#F7EBD9] dark:hover:bg-amber-950/30 transition disabled:opacity-50 cursor-pointer"
+                  >
+                    <Navigation
+                      size={14}
+                      className={isLocatingStores || isNearestStockLoading ? "animate-spin" : ""}
+                    />
+                    {isLocatingStores
+                      ? "Locating Your Device..."
+                      : isNearestStockLoading
+                      ? "Checking Nearest Branch Stock..."
+                      : "Find Nearest Branch Store"}
+                  </button>
+
+                  {locError && (
+                    <div className="flex items-start gap-2 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 p-2.5 rounded-lg text-xs border border-amber-100 dark:border-amber-900/40">
+                      <Info size={14} className="flex-shrink-0 mt-0.5" />
+                      <span>{locError}</span>
+                    </div>
+                  )}
+
+                  {sortedStoreList.map((store, i) => {
+                    const km = storeDistances[store.uuid];
+                    const stock = stockByStore[store.uuid];
+                    const isNearest = nearestBranchId ? store.uuid === nearestBranchId : (km !== undefined && i === 0);
+                    const pickupDisabled = store.allowStorePickup === false;
+                    // Loading: queries running but no data yet for this store
+                    const isLoadingStock =
+                      deliveryType === "pickup" &&
+                      !stock &&
+                      (isStockLoading || (isNearestStockLoading && store.uuid === nearestBranchId));
+
+                    return (
+                      <PickupStoreCard
+                        key={store.uuid}
+                        checked={selectedStoreUuid === store.uuid}
+                        onChange={() => {
+                          storePickedByUser.current = true;
+                          setSelectedStoreUuid(store.uuid);
+                        }}
+                        name={store.branchName}
+                        address={store.address}
+                        km={km}
+                        isNearest={isNearest}
+                        stock={isLoadingStock ? undefined : stock}
+                        stockLoading={isLoadingStock}
+                        disabled={pickupDisabled}
+                      />
+                    );
+                  })}
+                  {storeList.length === 0 && <p className="text-xs text-gray-400">Loading stores...</p>}
+                </div>
+              </Section>
+            )}
+
+            {/* ── Step 3: Delivery Service & Payment ── */}
+            <Section step={3} title="Delivery Service & Payment">
+
+              {/* Service Level (Home Delivery only) */}
+              {deliveryType === "home" && (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"><Truck size={16} /> Delivery Service</p>
+
+                  {/* No area selected yet */}
+                  {deliveryType === "home" && !selectedAreaObj && (
+                    <div className="text-xs text-gray-400 bg-gray-50 dark:bg-zinc-800/50 rounded-xl px-3 py-2">
+                      ⚠️ Please select your district and area to see available delivery options.
+                    </div>
+                  )}
+
+                  {/* Area selected but no services available */}
+                  {deliveryType === "home" && selectedAreaObj && visibleServices.length === 0 && (
+                    <div className="text-xs text-red-500 bg-red-50 dark:bg-red-950/20 rounded-xl px-3 py-2">
+                      No delivery services available for this area. Please contact support.
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {visibleServices.map((s) => (
+                      <Radio key={s.value} checked={serviceLevel === s.value} onChange={() => setServiceLevel(s.value)}
+                        label={s.label}
+                        sub={`${s.sub}${s.charge > 0 ? ` — ৳ ${s.charge}` : " — Free"}`}
+                        badge={s.badge}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Apply Coupon Code */}
+              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between gap-3 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40 px-4 py-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-[#000000] flex items-center justify-center text-white shrink-0">
+                        <Ticket size={15} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{appliedCoupon.code} applied</p>
+                        <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">You saved {fmt(couponDiscount)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        trackCouponRemoved(appliedCoupon.code);
+                        setAppliedCoupon(null);
+                      }}
+                      aria-label="Remove coupon"
+                      className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+                    >
+                      <XIcon size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setCouponModalOpen(true)}
+                    className="w-full hidden rounded-2xl bg-[#FBF3E7] dark:bg-amber-950/20 border border-[#F0DFC4] dark:border-amber-900/40 px-4 py-3 text-left transition hover:bg-[#F7EBD9] dark:hover:bg-amber-950/30"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-full bg-[#000000] flex items-center justify-center text-white shrink-0">
+                          <Ticket size={15} />
+                        </div>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white">Apply Coupon Code</span>
+                      </div>
+                      <ChevronRight size={18} className="text-gray-400 shrink-0" />
+                    </div>
+                    {COUPONS[0] && (
+                      <div className="mt-2.5 ml-10.5 inline-flex items-center gap-1.5 bg-white dark:bg-[#1c1917] rounded-lg px-2.5 py-1 text-xs font-semibold text-[#000000] dark:text-[#d1a77d] border border-[#F0DFC4] dark:border-amber-900/40">
+                        <Ticket size={11} />
+                        {COUPONS[0].description}
+                      </div>
+                    )}
+                  </button>
+                )}
+              </div>
+
+              
+            </Section>
+
+
+            <Section step={4} title=" Payment Method">
+
+              {/* Payment Option */}
+              <div className="space-y-3 pt-4 border-t border-gray-100 dark:border-zinc-800">
+                {/* <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"><CreditCard size={16} /> Payment Method</p> */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {paymentOptions.map((opt) => (
+                    <Radio key={opt.value} checked={paymentOption === opt.value}
+                      onChange={() => {
+                        if (opt.disabled) return;
+                        setPaymentOption(opt.value);
+                        trackPaymentMethodSelected(opt.value);
+                      }}
+                      label={opt.label} sub={opt.sub} disabled={opt.disabled}
+                    />
+                  ))}
+                </div>
+
+
+                {/* {paymentOption === "booking" && totalBookingMoney > 0 && (
+                  <div className="text-xs bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 rounded-xl px-3 py-2 text-blue-700 dark:text-blue-400">
+                    📌 Total Booking Money in your cart: <strong>৳{totalBookingMoney.toLocaleString("en-IN")}</strong>
+                    <br />Partial Payment can be made after Order Confirmation from the panel. Once order is shifted, Partial Payment is not available.
+                  </div>
+                )} */}
+
+                {paymentOption === "cod" && codCharge > 0 && (
+                  <div className="text-xs bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl px-3 py-2 text-amber-700 dark:text-amber-400">
+                    💰 COD Charge: <strong>৳ {codCharge.toLocaleString("en-IN")}</strong>
+                    {selectedAreaObj && (
+                      <>
+                        {selectedAreaObj.codChargePercentage > 0 && ` (${selectedAreaObj.codChargePercentage}% COD charge)`}
+                        {selectedAreaObj.codFixedCharge > 0 && ` + ৳ ${selectedAreaObj.codFixedCharge} fixed charge`}
+                      </>
+                    )}
+                  </div>
+                )}
+
+
+                {/* {(paymentOption === "full_online" || paymentOption === "booking") && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    {(deliveryType === "pickup" || !selectedAreaObj || selectedAreaObj.isBkashAllowed) && (
+                    <button type="button" onClick={() => setPaymentGateway("bkash")}
+                      className={`flex items-center justify-between p-4 rounded-2xl border-2 h-16 transition-all cursor-pointer ${paymentGateway === "bkash" ? "border-[#e2136e] bg-pink-50/20" : "border-gray-200 dark:border-zinc-800"}`}>
+                      <Image src={Bikask} alt="bKash" className="w-32" />
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${paymentGateway === "bkash" ? "border-[#e2136e]" : "border-gray-300"}`}>
+                        {paymentGateway === "bkash" && <div className="w-2 h-2 rounded-full bg-[#e2136e]" />}
+                      </div>
+                    </button>
+                    )}
+                    {(deliveryType === "pickup" || !selectedAreaObj || selectedAreaObj.isSSLCommerzAllowed) && (
+                    <button type="button" onClick={() => setPaymentGateway("ssl")}
+                      className={`flex items-center justify-between p-4 rounded-2xl border-2 h-16 transition-all cursor-pointer ${paymentGateway === "ssl" ? "border-[#d1a77d] bg-amber-50/20" : "border-gray-200 dark:border-zinc-800"}`}>
+                      <Image src={SSl} alt="SSLCommerz" className="w-32" />
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${paymentGateway === "ssl" ? "border-[#d1a77d]" : "border-gray-300"}`}>
+                        {paymentGateway === "ssl" && <div className="w-2 h-2 rounded-full bg-[#d1a77d]" />}
+                      </div>
+                    </button>
+                    )}
+                  </div>
+                )} */}
+
+
+                {/* {paymentOption === "full_at_store" && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-zinc-800 rounded-xl px-3 py-2">
+                    ✅ No delivery address required. Pay in full at the store.
+                  </p>
+                )} */}
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Remarks / Delivery Instructions (Optional)</label>
+                <input type="text" value={remarks} onChange={(e) => setRemarks(e.target.value)} placeholder="e.g. Call before delivery"
+                  className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] dark:text-white" />
+              </div>
+
+              
+            </Section>
+
+
+
+
+            <Section step={5} title="Payment Gateway">
+
+              {/* Payment Option */}
+              <div className="space-y-3 pt-4 border-t border-gray-100 dark:border-zinc-800">
+                
+
+                {/* Booking Money info */}
+                {paymentOption === "booking" && totalBookingMoney > 0 && (
+                  <div className="text-xs bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 rounded-xl px-3 py-2 text-blue-700 dark:text-blue-400">
+                    📌 Total Booking Money in your cart: <strong>৳ {totalBookingMoney.toLocaleString("en-IN")}</strong>
+                    <br />Partial Payment can be made after Order Confirmation from the panel. Once order is shifted, Partial Payment is not available.
+                  </div>
+                )}
+
+                {/* COD charge info — dynamic from API */}
+                {paymentOption === "cod" && codCharge > 0 && (
+                  <div className="text-xs bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl px-3 py-2 text-amber-700 dark:text-amber-400">
+                    💰 COD Charge: <strong>৳{codCharge.toLocaleString("en-IN")}</strong>
+                    {selectedAreaObj && (
+                      <>
+                        {selectedAreaObj.codChargePercentage > 0 && ` (${selectedAreaObj.codChargePercentage}% COD charge)`}
+                        {selectedAreaObj.codFixedCharge > 0 && ` + ৳ ${selectedAreaObj.codFixedCharge} fixed charge`}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Gateway selector (online / booking) */}
+                {(paymentOption === "full_online" || paymentOption === "booking") && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    {/* bKash — only show if allowed */}
+                    {(deliveryType === "pickup" || !selectedAreaObj || selectedAreaObj.isBkashAllowed) && (
+                    <button type="button" onClick={() => setPaymentGateway("bkash")}
+                      className={`flex items-center justify-between p-4 rounded-2xl border-2 h-16 transition-all cursor-pointer ${paymentGateway === "bkash" ? "border-[#e2136e] bg-pink-50/20" : "border-gray-200 dark:border-zinc-800"}`}>
+                      <Image src={Bikask} alt="bKash" className="w-32" />
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${paymentGateway === "bkash" ? "border-[#e2136e]" : "border-gray-300"}`}>
+                        {paymentGateway === "bkash" && <div className="w-2 h-2 rounded-full bg-[#e2136e]" />}
+                      </div>
+                    </button>
+                    )}
+                    {/* SSL — only show if allowed */}
+                    {(deliveryType === "pickup" || !selectedAreaObj || selectedAreaObj.isSSLCommerzAllowed) && (
+                    <button type="button" onClick={() => setPaymentGateway("ssl")}
+                      className={`flex items-center justify-between p-4 rounded-2xl border-2 h-16 transition-all cursor-pointer ${paymentGateway === "ssl" ? "border-[#d1a77d] bg-amber-50/20" : "border-gray-200 dark:border-zinc-800"}`}>
+                      <Image src={SSl} alt="SSLCommerz" className="w-32" />
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${paymentGateway === "ssl" ? "border-[#d1a77d]" : "border-gray-300"}`}>
+                        {paymentGateway === "ssl" && <div className="w-2 h-2 rounded-full bg-[#d1a77d]" />}
+                      </div>
+                    </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Full at store info */}
+                {paymentOption === "full_at_store" && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-zinc-800 rounded-xl px-3 py-2">
+                    ✅ No delivery address required. Pay in full at the store.
+                  </p>
+                )}
+              </div>
+            </Section>
+          </div>
+
+          {/* ── Right: Order Summary ── */}
+          <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-6 lg:self-start">
+            <div className="bg-white dark:bg-[#1C1A17] rounded-3xl border border-gray-100 dark:border-zinc-800 p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full border-2 border-[#d1a77d] flex items-center justify-center text-[#d1a77d] font-bold text-sm shrink-0">6</div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Order ({cartItems.length})</h2>
+              </div>
+
+              {/* Cart Items */}
+              <div className="bg-gray-50 dark:bg-zinc-900/30 rounded-2xl p-4 divide-y divide-gray-100 dark:divide-zinc-800/80 max-h-96 overflow-y-auto">
+                {cartItems.map((item, i) => (
+                  <div key={item.id} className="flex gap-4 py-4 first:pt-0 last:pb-0 items-start">
+                    <span className="text-xs font-bold text-gray-400 mt-1">{i + 1}</span>
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-white border border-gray-100 flex-shrink-0 flex items-center justify-center p-1">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.image} alt={item.name} className="object-contain max-h-full max-w-full" />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      {/* Cart-added Tynex Care/protection plans are baked into
+                          `name` as a second line after "\n" (see ProductInfo/
+                          StickyPurchaseBar's cartName) — split it out and
+                          highlight it the same way the real cart page
+                          (CartItem.tsx) already does, instead of running it
+                          into the product name as one plain line. */}
+                      {(() => {
+                        const newlineIdx = item.name.indexOf("\n");
+                        if (newlineIdx === -1) {
+                          return (
+                            <h4 className="text-xs font-semibold text-gray-800 dark:text-zinc-200 leading-snug line-clamp-2">
+                              {item.name}
+                            </h4>
+                          );
+                        }
+                        const productLine = item.name.slice(0, newlineIdx);
+                        const carePlanLine = item.name.slice(newlineIdx + 1);
+                        return (
+                          <>
+                            <h4 className="text-xs font-semibold text-gray-800 dark:text-zinc-200 leading-snug line-clamp-2">
+                              {productLine}
+                            </h4>
+                            <p className="text-[11px] font-bold italic text-[#000000] dark:text-[#d1a77d] leading-snug">
+                              {carePlanLine}
+                            </p>
+                          </>
+                        );
+                      })()}
+                      <div className="flex items-center justify-between gap-2 pt-2">
+                        <div className="flex items-center border border-gray-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-white dark:bg-zinc-900">
+                          <button type="button" onClick={() => dispatch(decreaseQty(item.id))} className="p-1.5 hover:bg-gray-50 dark:hover:bg-zinc-800 transition"><Minus size={10} className="text-gray-500" /></button>
+                          <span className="px-2 text-xs font-bold text-gray-800 dark:text-white">{item.quantity}</span>
+                          <button type="button" onClick={() => dispatch(increaseQty(item.id))} className="p-1.5 hover:bg-gray-50 dark:hover:bg-zinc-800 transition"><Plus size={10} className="text-gray-500" /></button>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white">{fmt(item.price * item.quantity)}</span>
+                          {/* Line total, matching the price above it — the
+                              per-unit figure is spelled out when it differs, so
+                              the deposit can still be checked against the
+                              product's own booking price. */}
+                          {(item.minBookingPrice ?? 0) > 0 && (
+                            <p className="text-[10px] text-amber-600 font-semibold mt-0.5">
+                              Booking: {fmt(item.minBookingPrice! * item.quantity)}
+                              {item.quantity > 1 && (
+                                <span className="font-medium text-amber-600/80">
+                                  {" "}({fmt(item.minBookingPrice!)} × {item.quantity})
+                                </span>
+                              )}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {cartItems.length === 0 && <p className="text-sm text-gray-400 py-6 text-center italic">Cart is empty</p>}
+              </div>
+
+              {/* Totals */}
+              <div className="space-y-3 pt-4 border-t border-gray-100 dark:border-zinc-800/80 text-sm font-semibold">
+                {/* Subtotal shown here is product-only (full `subtotal` minus
+                    the care total below) — `subtotal` itself still carries
+                    the care amount for booking/COD/coupon math further down,
+                    this just makes "Subtotal + Tynex Care + Delivery Fee =
+                    Total" an arithmetic identity the receipt itself proves,
+                    instead of Total silently already including Care while
+                    the Care line looked like a separate, unadded amount. */}
+                <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>{fmt(subtotal - careTotal)}</span></div>
+                {careTotal > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Tynex Care</span>
+                    <span className="font-semibold text-[#000000] dark:text-[#d1a77d]">+{fmt(careTotal)}</span>
+                  </div>
+                )}
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+                    <span>Coupon ({appliedCoupon?.code})</span>
+                    <span>-{fmt(couponDiscount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between"><span className="text-gray-500">Delivery Fee</span><span>{fmt(deliveryFee)}</span></div>
+                {codCharge > 0 && (
+                  <div className="flex justify-between text-amber-600">
+                    <span>
+                      COD Charge
+                      {(selectedAreaObj?.codChargePercentage ?? 0) > 0 && ` (${selectedAreaObj?.codChargePercentage ?? 0}%)`}
+                      {(selectedAreaObj?.codFixedCharge ?? 0) > 0 && ` + ৳ ${selectedAreaObj?.codFixedCharge} fixed`}
+                    </span>
+                    <span>{fmt(codCharge)}</span>
+                  </div>
+                )}
+                {codRoundOff !== 0 && paymentOption === "cod" && (
+                  <div className="flex justify-between text-gray-400 text-xs">
+                    <span>Round Off</span>
+                    <span>{codRoundOff > 0 ? "+" : ""}{fmt(codRoundOff)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-3 border-t border-dashed border-gray-200 dark:border-zinc-800">
+                  <span className="text-base font-bold text-gray-900 dark:text-white">Total</span>
+                  <span className="text-lg font-black text-gray-900 dark:text-white">{fmt(total)}</span>
+                </div>
+                {(paymentOption === "booking" || paymentOption === "cod") && (
+                  <div className="flex justify-between pt-1">
+                    <span className="text-[#d1a77d] font-bold">{paymentOption === "booking" ? "Pay Now (Booking)" : "Pay Now"}</span>
+                    <span className="text-[#d1a77d] font-bold">{fmt(amountDue)}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Terms */}
+              <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} className="w-4 h-4 rounded border-gray-300 text-[#d1a77d] focus:ring-[#d1a77d] mt-0.5 cursor-pointer" />
+                <span className="text-xs text-gray-600 dark:text-zinc-400 leading-normal">
+                  I accept the <Link href="/terms-conditions" className="text-[#d1a77d] hover:underline">Terms & Conditions</Link>, <Link href="/delivery-policy" className="text-[#d1a77d] hover:underline">Delivery</Link>, <Link href="/refund-policy" className="text-[#d1a77d] hover:underline">Refund</Link> & <Link href="/cancellation-policy" className="text-[#d1a77d] hover:underline">Cancellation</Link> policies.
+                </span>
+              </label>
+
+              <button onClick={handleConfirmOrder} disabled={isSubmitting || cartItems.length === 0}
+                className={`w-full flex items-center justify-center gap-2 bg-amber-50 hover:bg-[#d1a77d]/10 text-[#a0743b] border-2 border-[#d1a77d] font-bold px-8 py-3.5 rounded-xl transition text-xs uppercase tracking-widest lg:text-[14px] text-[16px] ${isSubmitting || cartItems.length === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
+                {isSubmitting ? (<><Loader2 className="w-4 h-4 animate-spin" /><span>PROCESSING...</span></>) : `CONFIRM ORDER — ${fmt(amountDue || total)}`}
+              </button>
+
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                <Lock size={12} /> <span>Secured by SSL Encryption</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AddCouponModal
+        isOpen={couponModalOpen}
+        onClose={() => setCouponModalOpen(false)}
+        onApply={(coupon: Coupon) => {
+          trackCouponApplied(coupon.code, couponDiscountFor(coupon, subtotal));
+          setAppliedCoupon(coupon);
+          setCouponModalOpen(false);
+        }}
+      />
+
+      {/* Success Modal */}
+      {orderConfirmed && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-[#1C1A17] rounded-3xl max-w-md w-full p-6 text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+            <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center mx-auto text-white"><ShieldCheck size={36} /></div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Order Placed Successfully! 🎉</h3>
+            <p className="text-[14px] text-gray-500 dark:text-gray-400">Order No: <strong className="text-gray-800 dark:text-white">{confirmedOrder?.orderNo}</strong><br />Total: ৳ { (confirmedOrder?.total || total)}</p>
+            <Link href="/profile" className="inline-block w-full py-3 bg-[#d1a77d] text-white font-bold rounded-xl hover:bg-[#c89a6b] transition text-xs tracking-wider">VIEW ORDER HISTORY</Link>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}

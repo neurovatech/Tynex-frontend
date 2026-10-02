@@ -1,0 +1,241 @@
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import ProductCard from "@/components/share/GlobalProductCard";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import NoImg from "@/images/no_images.png";
+
+export interface Brand {
+  id: string;
+  label: string;
+  logo: string;
+  slug: string;
+  is_active: boolean;
+}
+
+interface ProductItem {
+  productUuid: string;
+  productCode?: string;
+  productName: string;
+  productSlug: string;
+  productBadge: string;
+  isTba: boolean;
+  regularPrice: number;
+  discountedPrice: number;
+  disRate: number;
+  thumbnails: { mediaFileUrl: string } | null;
+}
+
+interface ProductListResponse {
+  data: ProductItem[];
+  totalCount: number;
+}
+
+interface Props {
+  brands: Brand[];
+}
+
+export default function ShopBrand({ brands }: Props) {
+  // First brand default active
+  const [activeBrandSlug, setActiveBrandSlug] = useState<string>(
+    brands[0]?.slug ?? "",
+  );
+
+  // Fetch products for active brand
+  const { data: productRes, isLoading } = useQuery<ProductListResponse>({
+    queryKey: ["brand-products", activeBrandSlug],
+    staleTime: 15 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    queryFn: () =>
+      api.get<ProductListResponse>(
+        `/products?brandSlug=${activeBrandSlug}&limit=12&page=1`,
+      ),
+    enabled: !!activeBrandSlug,
+  });
+
+  // Safely extract products array
+  const products: ProductItem[] = Array.isArray(productRes?.data)
+    ? productRes.data
+    : Array.isArray(productRes)
+      ? (productRes as unknown as ProductItem[])
+      : [];
+
+  const activeBrand =
+    brands.find((b) => b.slug === activeBrandSlug) || brands[0];
+
+  return (
+    <div className="">
+      {/* ── Outer Container ── */}
+      <div className="bg-[#FFFBF7] lg:dark:bg-[#1a1816] dark:bg-[#2e2b28] rounded-3xl lg:px-4 dark:border-zinc-800 lg:py-6">
+        
+
+        {/* ── Brand Slider / Grid ── */}
+        <div className="mb-6 shop_brand">
+          <Swiper
+            className="pre-swiper pre-brand"
+            slidesPerView={4}
+            spaceBetween={6}
+            breakpoints={{
+              480: { slidesPerView: 2, spaceBetween: 2 },
+              640: { slidesPerView: 2, spaceBetween: 2 },
+              768: { slidesPerView: 2, spaceBetween: 2 },
+              1024: { slidesPerView: 8, spaceBetween: 10 },
+            }}
+          >
+            {brands.map((brand) => {
+              const isActive = activeBrandSlug === brand.slug;
+              return (
+                <SwiperSlide key={brand.id}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveBrandSlug(brand.slug)}
+                    className="w-full flex flex-col items-center gap-2 group focus:outline-none cursor-pointer mt-3"
+                  >
+                    <div
+                      className={`
+                        w-full aspect-square rounded-[28px] transition-all duration-300
+                        flex items-center justify-center p-3 sm:p-4
+                        ${
+                          isActive
+                            ? "bg-[#FFF4E8] border border-[#d1a77d] shadow-sm dark:bg-[#342a20] dark:border-[#000000]"
+                            : "bg-[#F3F3F5] border border-transparent dark:bg-zinc-800/80 hover:bg-[#F0ECF8]"
+                        }
+                      `}
+                    >
+                      <div className="relative w-full aspect-square p-3 md:p-8 transition-all duration-300 hover:scale-105">
+                        <Image
+                          src={brand.logo || NoImg}
+                          alt={brand.label}
+                          fill
+                          sizes="(max-width: 768px) 25vw, 20vw"
+                          className=" object-contain transition-transform duration-300 hover:scale-110"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src =
+                              NoImg.src;
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Brand Label */}
+                    <span
+                      className={`text-[11px] lg:text-xs font-semibold text-center leading-tight transition-colors ${
+                        isActive
+                          ? "text-[#000000] dark:text-white"
+                          : "text-gray-600 dark:text-gray-400"
+                      }`}
+                    >
+                      {brand.label}
+                    </span>
+                  </button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
+
+        {/* ── Active Brand Products ── */}
+        {activeBrandSlug && (
+          <div>
+            {isLoading ? (
+              // Sized like the carousel that replaces it (one row: 2 cards
+              // across below lg, 5 at lg; card ~372px tall on a phone, ~404px
+              // from md; + ~30px Swiper scrollbar gap — measured). It used to
+              // be six 3:4 boxes wrapping to several rows (~960px section vs
+              // ~602px once loaded), which pulled everything below it up.
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-[6px] md:gap-5 lg:gap-2.5 pb-[30px]">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-2xl bg-gray-100 dark:bg-zinc-800 animate-pulse h-[372px] md:h-[404px] ${
+                      i >= 2 ? "hidden lg:block" : ""
+                    }`}
+                  />
+                ))}
+              </div>
+            ) : products.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 px-4 bg-white/50 dark:bg-zinc-900/40 rounded-2xl border border-dashed border-gray-200 dark:border-zinc-800">
+                <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                  {activeBrand?.label
+                    ? `No products found for ${activeBrand.label}`
+                    : "No products found"}
+                </p>
+              </div>
+            ) : (
+              // Same Swiper configuration as the homepage's Flash Sale
+              // slider — this carousel previously had none of Flash Sale's
+              // modules wired in at all, so it never showed pagination dots,
+              // never auto-advanced, and had no draggable scrollbar, making
+              // it look and behave like a plain static row rather than the
+              // same kind of slider as the rest of the homepage.
+              <Swiper
+                key={activeBrandSlug}
+                modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+                loop={products.length >= 10}
+                pagination={{ clickable: true }}
+                autoplay={{ delay: 3000, disableOnInteraction: false }}
+                scrollbar={{ draggable: true }}
+                slidesPerView={2}
+                spaceBetween={6}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 2,
+                    spaceBetween: 6,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                  },
+                  1024: {
+                    slidesPerView: 5,
+                    spaceBetween: 10,
+                  },
+                }}
+                className="mySwiper w-full"
+              >
+                {products.map((product, idx) => (
+                  <SwiperSlide key={product.productUuid ?? idx}>
+                    <ProductCard
+                      productUuid={product.productUuid}
+                      slug={product.productSlug}
+                      title={product.productName}
+                      price={product.discountedPrice}
+                      originalPrice={product.regularPrice}
+                      discount={Math.round(product.disRate)}
+                      badge={product.productBadge}
+                      isBestDeal={false}
+                      inStock={!product.isTba}
+                      isTba={product.isTba}
+                      image={product.thumbnails?.mediaFileUrl ?? ""}
+                      // See ProductList.tsx's ProductCard for why: Swiper
+                      // repositions slides via transform after mount, which
+                      // can leave the browser thinking an actually-visible
+                      // slide's image is offscreen and never load it under
+                      // native `loading="lazy"`.
+                      priority={idx < 5}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

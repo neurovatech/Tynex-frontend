@@ -1,0 +1,419 @@
+"use client";
+
+import { useState, useEffect, useRef, useCallback } from "react";
+import ProductCard from "@/components/share/GlobalProductCard";
+import ProductGridSkeleton from "@/components/Skeleton/ProductCardSkeleton";
+import NoImg from "@/images/no_images.png";
+import { api } from "@/lib/api";
+import {
+  scrollSession,
+  restoreScrollY,
+  scrollToProduct,
+  setManualScrollRestoration,
+} from "@/hooks/useScrollRestoration";
+
+const LIMIT = 12;
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface ProductItem {
+  productUuid: string;
+  productCode: string;
+  productName: string;
+  productSlug: string;
+  productBadge: string;
+  isTba: boolean;
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+  regularPrice: number;
+  discountedPrice: number;
+  disRate: number;
+  thumbnails: { fileUuid: string; mediaFileUrl: string } | null;
+}
+
+export interface ProductListResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: ProductItem[];
+}
+
+interface Props {
+  brandSlug: string;
+  categorySlug?: string;
+  /**
+   * Top-level category the visitor arrived from (mega menu `?category=`).
+   *
+   * Sent as `categorySlug`, which the API expands to every sub-category under
+   * it — distinct from the chip row above, whose slugs are sub-categories and
+   * go out as `subCategorySlug`. Cleared as soon as a chip is picked.
+   */
+  topCategorySlug?: string | null;
+  /** Called when topCategorySlug yields nothing, so the parent can fall back to All. */
+  onTopCategoryEmpty?: () => void;
+  selectedAttributes?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  stockStatus?: string | null;
+  currentPage: number;
+  currentSort?: string;
+  onPageChange: (page: number) => void;
+  onClearFilter: () => void;
+  initialProducts: ProductItem[];
+  initialTotalCount: number;
+  initialTotalPages: number;
+  filterApplyKey?: number;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function BrandProductListClient({
+  brandSlug,
+  categorySlug,
+  topCategorySlug,
+  onTopCategoryEmpty,
+  selectedAttributes = [],
+  minPrice,
+  maxPrice,
+  stockStatus,
+  currentSort,
+  onClearFilter,
+  initialProducts,
+  initialTotalCount,
+  initialTotalPages,
+  filterApplyKey,
+}: Props) {
+  // ── Scroll-session key — unique per brand (+optional category filter) ──────
+  const scrollKey = `brand_${brandSlug}`;
+
+  const [allProducts, setAllProducts]     = useState<ProductItem[]>(initialProducts);
+  const [page, setPage]                   = useState(1);
+  const [totalCount, setTotalCount]       = useState(initialTotalCount);
+  const [hasMore, setHasMore]             = useState(initialTotalPages > 1);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [isFirstLoad, setIsFirstLoad]     = useState(false);
+  // true while silently re-fetching previously-loaded pages on restore
+  const [isRestoring, setIsRestoring]     = useState(false);
+  const loaderRef      = useRef<HTMLDivElement>(null);
+  const didRestoreRef  = useRef(false);
+  /** The arrival category the SSR props were rendered for — see the effect below. */
+  const initialTopCategoryRef = useRef(topCategorySlug ?? null);
+
+  // ── Build query params ────────────────────────────────────────────────────
+  const buildParams = useCallback((pageNum: number) => {
+    const qp = new URLSearchParams({
+      brandSlug,
+      page:  String(pageNum),
+      limit: String(LIMIT),
+    });
+    if (categorySlug)                  qp.set("subCategorySlug",    categorySlug);
+    // A chip selection is more specific, so it wins over the arrival category.
+    else if (topCategorySlug)          qp.set("categorySlug",       topCategorySlug);
+    if (selectedAttributes.length > 0) qp.set("attributes",         selectedAttributes.join(","));
+    if (minPrice !== undefined)        qp.set("minDiscountedPrice", String(minPrice));
+    if (maxPrice !== undefined)        qp.set("maxDiscountedPrice", String(maxPrice));
+    if (stockStatus)                   qp.set("stockStatus",        stockStatus);
+    if (currentSort === "newest")           qp.set("latest",           "1");
+    else if (currentSort === "price_asc")   qp.set("discountedPrice",  "low-to-high");
+    else if (currentSort === "price_desc")  qp.set("discountedPrice",  "high-to-low");
+    return qp.toString();
+  }, [brandSlug, categorySlug, topCategorySlug, selectedAttributes, minPrice, maxPrice, stockStatus, currentSort]);
+
+  // ── Session restore on first mount ────────────────────────────────────────
+  // Only runs once, only when NO filters are active (fresh landing / reload / back).
+  // Reads { loadedPages, scrollY }, silently fetches pages 2..N, then scrolls.
+  useEffect(() => {
+    if (didRestoreRef.current) return;
+    didRestoreRef.current = true;
+
+    // Take scroll restoration off the browser before it can jump to the stale
+    // raw Y and cancel the anchor-based restore below.
+    setManualScrollRestoration();
+
+    const hasActiveFilters = Boolean(
+      categorySlug ||
+      selectedAttributes.length > 0 ||
+      minPrice !== undefined ||
+      maxPrice !== undefined ||
+      stockStatus
+    );
+    if (hasActiveFilters) return;
+
+    const saved = scrollSession.read(scrollKey);
+    if (!saved) return;
+
+    const { loadedPages, scrollY, productUuid } = saved;
+
+    // Page-1 only — no fetch needed, just scroll to product
+    if (loadedPages <= 1) {
+      if (productUuid) scrollToProduct(productUuid);
+      else if (scrollY > 0) restoreScrollY(scrollY);
+      return;
+    }
+
+    const restore = async () => {
+      setIsRestoring(true);
+      try {
+        let accumulated: ProductItem[] = [...initialProducts];
+        let lastTotalPages = initialTotalPages;
+
+        for (let p = 2; p <= loadedPages; p++) {
+          const res = await api.get<ProductListResponse>(`/products?${buildParams(p)}`);
+          const items = res?.data ?? [];
+          accumulated = [...accumulated, ...items];
+          lastTotalPages = res?.totalPages ?? lastTotalPages;
+        }
+
+        setAllProducts(accumulated);
+        setTotalCount(accumulated.length);
+        setPage(loadedPages);
+        setHasMore(loadedPages < lastTotalPages);
+      } catch (err) {
+        console.error("[BrandProductListClient] session restore failed:", err);
+      } finally {
+        setIsRestoring(false);
+        if (productUuid) scrollToProduct(productUuid);
+        else restoreScrollY(scrollY);
+      }
+    };
+
+    restore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount only
+
+  // ── Save session state (beforeunload + visibilitychange + link click) ──────
+  useEffect(() => {
+    const save = () => scrollSession.save(scrollKey, page, window.scrollY);
+
+    window.addEventListener("beforeunload", save);
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") save();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const onLinkClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href") ?? "";
+      if (href && !href.startsWith("#") && href !== window.location.pathname) {
+        const card = (e.target as HTMLElement).closest("[data-product-uuid]");
+        const uuid = card?.getAttribute("data-product-uuid") ?? undefined;
+        scrollSession.save(scrollKey, page, window.scrollY, uuid);
+      }
+    };
+    document.addEventListener("click", onLinkClick, true);
+
+    return () => {
+      window.removeEventListener("beforeunload", save);
+      document.removeEventListener("visibilitychange", onVisibility);
+      document.removeEventListener("click", onLinkClick, true);
+    };
+  }, [scrollKey, page]);
+
+  // ── Filter key — when any filter changes, reset and re-fetch from page 1 ──
+  const filterKey = [
+    brandSlug,
+    categorySlug ?? "",
+    // Without this, arriving from one mega-menu category and then another left
+    // the effect below asleep and the previous category's products on screen.
+    topCategorySlug ?? "",
+    selectedAttributes.join(","),
+    minPrice ?? "",
+    maxPrice ?? "",
+    stockStatus ?? "",
+    currentSort ?? "",
+    filterApplyKey ?? 0,
+  ].join("|");
+
+  useEffect(() => {
+    // Guards against a stale response overwriting a newer one when two
+    // filter changes fire in quick succession and resolve out of order.
+    let cancelled = false;
+
+    const fetchPage1 = async () => {
+      setIsFirstLoad(true);
+      setAllProducts([]);
+      setPage(1);
+      setHasMore(false);
+      try {
+        const res = await api.get<ProductListResponse>(`/products?${buildParams(1)}`);
+        if (cancelled) return;
+        const items = res?.data ?? [];
+
+        // The brand may stock nothing in the category the visitor arrived from
+        // (Apple has no home appliances). Drop the filter and let the parent
+        // fall back to All rather than showing an empty page.
+        if (items.length === 0 && topCategorySlug && !categorySlug) {
+          onTopCategoryEmpty?.();
+          return;
+        }
+
+        setAllProducts(items);
+        setTotalCount(res?.totalCount ?? items.length);
+        setPage(1);
+        setHasMore(1 < (res?.totalPages ?? 1));
+      } catch (err) {
+        if (!cancelled) console.error("[BrandProductListClient] page 1 fetch failed:", err);
+      } finally {
+        if (!cancelled) setIsFirstLoad(false);
+      }
+    };
+
+    // On first render with no filters, use SSR data (restore handled separately above)
+    const isDefaultState =
+      !categorySlug &&
+      selectedAttributes.length === 0 &&
+      minPrice === undefined &&
+      maxPrice === undefined &&
+      !stockStatus &&
+      (!currentSort || currentSort === "recommend");
+
+    /*
+     * The arrival category is the one input the SSR props cannot be trusted for
+     * after the first paint.
+     *
+     * Going Tablet → Apple and then Phones → Apple stays on /brands/apple, so
+     * the router replays its cached payload rather than re-rendering the server
+     * component: `initialProducts` still holds the tablets. The state above was
+     * "default" (no chip, no filters), so this effect kept re-seeding from those
+     * stale props and never issued a request — the URL read phones while 25
+     * iPads stayed on screen.
+     *
+     * So: trust SSR only while the category is still the one the page was
+     * rendered with; fetch as soon as it changes.
+     */
+    const topCategoryChanged = topCategorySlug !== initialTopCategoryRef.current;
+
+    if (isDefaultState && !topCategoryChanged) {
+      // Only reset to SSR data if we are NOT in the middle of a restore
+      if (!didRestoreRef.current || !scrollSession.read(scrollKey)) {
+        setAllProducts(initialProducts);
+        setTotalCount(initialTotalCount);
+        setPage(1);
+        setHasMore(initialTotalPages > 1);
+      }
+    } else {
+      fetchPage1();
+    }
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterKey]);
+
+  // ── Fetch next page ───────────────────────────────────────────────────────
+  const fetchNextPage = useCallback(async () => {
+    if (isFetchingMore || !hasMore || isRestoring) return;
+    const nextPage = page + 1;
+    setIsFetchingMore(true);
+    try {
+      const res = await api.get<ProductListResponse>(`/products?${buildParams(nextPage)}`);
+      const newItems = res?.data ?? [];
+      if (newItems.length > 0) {
+        setAllProducts((prev) => [...prev, ...newItems]);
+        setPage(nextPage);
+        setHasMore(nextPage < (res?.totalPages ?? 1));
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error("[BrandProductListClient] infinite scroll fetch failed:", err);
+    } finally {
+      setIsFetchingMore(false);
+    }
+  }, [isFetchingMore, hasMore, isRestoring, page, buildParams]);
+
+  // ── Intersection Observer ─────────────────────────────────────────────────
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingMore && !isFirstLoad && !isRestoring) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    const el = loaderRef.current;
+    if (el) observer.observe(el);
+    return () => { if (el) observer.unobserve(el); };
+  }, [fetchNextPage, hasMore, isFetchingMore, isFirstLoad, isRestoring]);
+
+  const hasActiveFilters = Boolean(
+    categorySlug ||
+    selectedAttributes.length > 0 ||
+    minPrice !== undefined ||
+    maxPrice !== undefined ||
+    stockStatus
+  );
+
+  return (
+    <div>
+      {/* Title */}
+      <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+        Products of <span className="capitalize">{categorySlug ? categorySlug : brandSlug}</span>
+      </h2>
+
+      {/* Count + clear */}
+      <p className="text-xs text-gray-400 mb-4 h-4">
+        {!isFirstLoad && !isRestoring && `${totalCount.toLocaleString()} products found`}
+        {!isFirstLoad && !isRestoring && hasActiveFilters && (
+          <button onClick={onClearFilter} className="ml-2 text-[#000000] dark:text-[#d1a77d] hover:underline">
+            Clear filters
+          </button>
+        )}
+      </p>
+
+      {/* Restore / first-load skeleton */}
+      {(isFirstLoad || isRestoring) && <ProductGridSkeleton count={LIMIT} cols="4" />}
+
+      {/* Empty */}
+      {!isFirstLoad && !isRestoring && allProducts.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 gap-2">
+          <p className="text-sm text-gray-500 dark:text-gray-400">No products found.</p>
+          {hasActiveFilters && (
+            <button onClick={onClearFilter} className="text-xs text-[#000000] dark:text-[#d1a77d] hover:underline">
+              Show all products
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Product grid */}
+      {!isFirstLoad && !isRestoring && allProducts.length > 0 && (
+        <div className="grid md:grid-cols-4 grid-cols-2 lg:gap-4 gap-2">
+          {allProducts.map((product, i) => (
+            <ProductCard
+              key={`${product.productUuid}-${i}`}
+              productUuid={product.productUuid}
+              image={product.thumbnails?.mediaFileUrl || NoImg.src}
+              title={product.productName}
+              price={product.discountedPrice || product.regularPrice || 0}
+              originalPrice={product.regularPrice || 0}
+              discount={product.disRate || 0}
+              badge={product.productBadge || undefined}
+              inStock={!product.isTba}
+              isTba={product.isTba}
+              isBestDeal={false}
+              slug={product.productSlug}
+              endOfLife={product.endOfLife ?? false}
+              allowPreOrder={product.allowPreOrder ?? false}
+              recognitionBadge={product.recognitionBadge ?? ""}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Loader trigger div */}
+      <div ref={loaderRef} className="h-10 w-full" />
+
+      {/* Loading more skeleton */}
+      {isFetchingMore && <ProductGridSkeleton count={4} cols="4" />}
+    </div>
+  );
+}

@@ -1,0 +1,43 @@
+import Link from "next/link";
+import { api, rethrowIfTransient } from "@/lib/api";
+import ShopBrand, { Brand } from "./ShopBrand";
+
+export default async function ShopBrandSectionCom() {
+  let brands: Brand[] = [];
+  try {
+    const res = await api.get<{ data: Record<string, unknown>[] }>(
+      "/brands?order=0&page=1&limit=16",
+      { next: { revalidate: 60 } },
+    );
+    const list = Array.isArray(res) ? res : (res?.data ?? []);
+    brands = list
+      .filter((b) => b.is_active === true)
+      .map((b) => ({
+        id: String(b.uuid),
+        label: String(b.brand_name ?? "Unknown Brand"),
+        logo: b.thumbnail_img ? String(b.thumbnail_img) : "",
+        slug: String(b.brand_slug ?? b.brand_name ?? ""),
+        is_active: Boolean(b.is_active),
+      }));
+  } catch (error) {
+    rethrowIfTransient(error);
+    console.error("Error fetching brands:", error);
+  }
+
+  return (
+    <div className="md:px-12.5 px-4">
+      <div className="flex justify-between items-center mb-4">
+        {/* h2, not h1 — the page already has its one h1 (see page.tsx); a
+            second h1 here also made the outline jump h1 → h3 (Lighthouse
+            "heading elements not in sequentially-descending order"). */}
+        <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          Shop by Brand
+        </h2>
+        <Link href="/brands" className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 ">
+          See all
+        </Link>
+      </div>
+      <ShopBrand brands={brands} />
+    </div>
+  );
+}

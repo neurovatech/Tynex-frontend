@@ -1,0 +1,226 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "./banner.css";
+import MarqueeBulletinBar from "../MarqueeBulletinBar";
+
+export interface SlideItem {
+  id: string | number;
+  imageUrl?: string;
+  title?: string;
+  content?: React.ReactNode;
+  openNewTab?: boolean;
+  mediaInfo?: string;
+}
+
+interface BannerSliderProps {
+  slides?: SlideItem[];
+  autoplayDelay?: number;
+  navigation?: boolean;
+  pagination?: boolean;
+  slidesPerView?: number;
+}
+
+/**
+ * One banner slide's image, with its own load state.
+ *
+ * `priority`/`fetchPriority` images still start downloading immediately —
+ * this only changes what's PAINTED while those bytes are in flight: the same
+ * `bg-gray-200 dark:bg-zinc-800 animate-pulse` placeholder this file already
+ * uses for slides with no image at all, sized to the exact same box, instead
+ * of an empty gap or a slow top-to-bottom image draw-in.
+ */
+function BannerImage({
+  src,
+  alt,
+  priority,
+  fetchPriorityValue,
+}: {
+  src: string;
+  alt: string;
+  priority: boolean;
+  fetchPriorityValue: "high" | "auto";
+}) {
+  const [loaded, setLoaded] = React.useState(false);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+
+  // A cached image can finish loading (and fire its native `load` event)
+  // before React attaches the `onLoad` handler below, so that event is
+  // silently missed and the skeleton would never clear. Checking
+  // `complete` once on mount catches exactly that case.
+  React.useEffect(() => {
+    if (imgRef.current?.complete) setLoaded(true);
+  }, []);
+
+  return (
+    <>
+      {!loaded && (
+        <div className="absolute inset-0 bg-gray-200 dark:bg-zinc-800 animate-pulse rounded-[15px]" />
+      )}
+      <Image
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        fill
+        // Always opaque. This used to be `opacity-0` until React flipped
+        // `loaded` after HYDRATION — and Lighthouse does not count an
+        // invisible element as the LCP, so the hero (fetched in ~250ms) only
+        // "rendered" once JS finished hydrating: LCP breakdown showed 2,590ms
+        // of pure element-render delay (LCP 6.6s on slow 4G). An <img> paints
+        // nothing until its bytes have decoded anyway, and the grey pulse
+        // placeholder underneath still shows until then, so nothing visible
+        // changes except that the photo now appears the moment it's ready.
+        className="object-cover"
+        sizes="(max-width: 767px) 100vw, (max-width: 1420px) 66vw, 936px"
+        priority={priority}
+        fetchPriority={fetchPriorityValue}
+        quality={75}
+        onLoad={() => setLoaded(true)}
+      />
+    </>
+  );
+}
+
+function Bannerslider({
+  slides = [],
+  autoplayDelay = 3000,
+  navigation = true,
+  pagination = true,
+}: BannerSliderProps) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const finalSlides =
+    slides.length > 0
+      ? slides
+      : [
+          { id: 1, title: "Slide 1", content: "Demo Content 1" },
+          { id: 2, title: "Slide 2", content: "Demo Content 2" },
+          { id: 3, title: "Slide 3", content: "Demo Content 3" },
+        ];
+
+  // SSR Fallback: Render the first slide image immediately in HTML so LCP is instant!
+  if (!mounted) {
+    const firstSlide = finalSlides[0];
+    return (
+      <div className="w-full pb-4 md:pb-6 px-4 sm:px-6 md:px-8 lg:px-12">
+        <div>
+          <MarqueeBulletinBar />
+        </div>
+        {/* mb-[30px] on both branches: once mounted, the real Swiper below
+            renders an (empty) `.swiper-scrollbar` whose `margin-top: 30px`
+            (globals.css) sits under the slides — this pre-mount fallback
+            lacked it, so everything under the hero (Categories, Flash Sale…)
+            jumped down 30px the moment hydration swapped the two in. Same
+            30px is reserved here so the swap doesn't move anything. */}
+        {/* hero-pre / hero-pre-slide (globals.css): from 768px the real Swiper
+            shows 1.5 slides per view, so its first slide is only
+            (container - gap/2) / 1.5 wide — ~818px of a ~1240px row on a
+            1350px screen. This fallback used to be the FULL row width, so the
+            hero image shrank by a third the moment Swiper mounted (Lighthouse
+            "Layout shift culprits": Slide 1/Slide 2, ~0.27 CLS on desktop).
+            The container-query width below gives the fallback the exact width
+            the first Swiper slide ends up with, so nothing moves. */}
+        {firstSlide?.imageUrl ? (
+          <div className="hero-pre">
+            <div className="hero-pre-slide relative w-full h-60 max-[450px]:h-50 sm:h-75 md:h-110 rounded-[15px] overflow-hidden block mb-[30px]">
+              <BannerImage
+                src={firstSlide.imageUrl}
+                alt={firstSlide.title || "Hero Banner"}
+                priority
+                fetchPriorityValue="high"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="w-full h-55 sm:h-75 md:h-121 animate-pulse bg-gray-200 dark:bg-zinc-800 rounded-[15px] mb-[30px]" />
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full pb-4 md:pb-6 px-4 sm:px-6 md:px-8 lg:px-12">
+      <div>
+        <MarqueeBulletinBar />
+      </div>
+      <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+        loop={finalSlides.length >= 2}
+        pagination={pagination ? { clickable: true } : false}
+        navigation={navigation}
+        autoplay={
+          autoplayDelay
+            ? {
+                delay: autoplayDelay,
+                disableOnInteraction: false,
+                reverseDirection: true,
+              }
+            : undefined
+        }
+        scrollbar={{ draggable: true }}
+        slidesPerView={1}
+        spaceBetween={12}
+        breakpoints={{
+          768: {
+            slidesPerView: 1.5,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 1.5,
+            spaceBetween: 24,
+          },
+        }}
+        className="mySwiper"
+      >
+        {finalSlides.map((slide, index) => (
+          <SwiperSlide key={slide.id}>
+            {slide.imageUrl ? (
+              <Link
+                href={(slide.content as string) || "#"}
+                target={slide.openNewTab ? "_blank" : undefined}
+                rel={slide.openNewTab ? "noopener noreferrer" : undefined}
+                className="relative w-full h-60 max-[450px]:h-50 sm:h-75 md:h-110 rounded-[15px] overflow-hidden block"
+              >
+                <BannerImage
+                  src={slide.imageUrl}
+                  alt={slide.title || `Slide ${slide.id}`}
+                  priority={index === 0}
+                  fetchPriorityValue={index === 0 ? "high" : "auto"}
+                />
+              </Link>
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full h-55 sm:h-75 md:h-105 lg:h-125 bg-blue-100 text-blue-900 rounded-[15px] border border-blue-200 px-4 text-center">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4">
+                  {slide.title}
+                </h2>
+                <div className="text-base sm:text-lg md:text-xl">
+                  {slide.content}
+                </div>
+              </div>
+            )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  );
+}
+
+export default Bannerslider;

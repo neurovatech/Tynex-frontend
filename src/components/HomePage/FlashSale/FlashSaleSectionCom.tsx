@@ -1,0 +1,107 @@
+import FlashSale from "./FlashSale";
+import { api, rethrowIfTransient } from "@/lib/api";
+import GlobalTabs from "@/components/share/GlobalTabs";
+import { sortInStockFirst } from "@/lib/sortProducts";
+
+interface ShowcaseThumbnail {
+  fileUuid: string;
+  mediaFileUrl: string;
+}
+
+interface ShowcaseItem {
+  productUuid: string;
+  productCode: string;
+  productName: string;
+  productSlug: string;
+  productBadge: string;
+  isTba: boolean;
+  endOfLife?: boolean;
+  allowPreOrder?: boolean;
+  recognitionBadge?: string;
+  regularPrice: number;
+  discountedPrice: number;
+  disRate: number;
+  thumbnails: ShowcaseThumbnail;
+}
+
+interface ShowcaseItemsResponse {
+  statusCode: number;
+  status: string;
+  found: boolean;
+  count: number;
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: ShowcaseItem[];
+}
+
+export interface ProductCardItem {
+  uuid: string;
+  title: string;
+  slug: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  badge: string;
+  isBestDeal: boolean;
+  inStock: boolean;
+  image: string;
+}
+
+function mapToProductCard(list: ShowcaseItem[]): ProductCardItem[] {
+  return list.map((item) => ({
+    uuid: item.productUuid,
+    title: item.productName,
+    slug: item.productSlug,
+    price: item.discountedPrice,
+    originalPrice: item.regularPrice,
+    discount: Math.round(item.disRate),
+    badge: item.productBadge,
+    isBestDeal: false,
+    inStock: !item.isTba,
+    image: item.thumbnails?.mediaFileUrl ?? "/images/product.png",
+    isTba:            item.isTba,
+    endOfLife:        item.endOfLife        ?? false,
+    allowPreOrder:    item.allowPreOrder    ?? false,
+    recognitionBadge: item.recognitionBadge ?? "",
+  }));
+}
+
+async function fetchShowcase(endpoint: string): Promise<ProductCardItem[]> {
+  try {
+    const res = await api.get<ShowcaseItemsResponse>(endpoint, {
+      next: { revalidate: 60 },
+    });
+    const list = Array.isArray(res?.data) ? res.data : [];
+    return mapToProductCard(sortInStockFirst(list));
+  } catch (error) {
+    rethrowIfTransient(error);
+    console.error(`Error fetching from ${endpoint}:`, error);
+    return [];
+  }
+}
+
+export default async function FlashSaleSectionCom() {
+  const [newestProducts, popularProducts] = await Promise.all([
+    fetchShowcase("/showcase-items?showcaseSlug=flash-sale-newest"),
+    fetchShowcase("/showcase-items?showcaseSlug=flash-sale-popular"),
+  ]);
+
+  const tabsData = [
+    {
+      label: "Newest",
+      content: <FlashSale products={newestProducts} />,
+    },
+    {
+      label: "Popular",
+      content: <FlashSale products={popularProducts} />,
+    },
+  ];
+
+  return (
+    <div className="">
+      <GlobalTabs tabs={tabsData} />
+    </div>
+  );
+}

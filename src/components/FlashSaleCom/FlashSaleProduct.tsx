@@ -1,0 +1,160 @@
+"use client";
+
+import ProductCard from "@/components/share/GlobalProductCard";
+import GlobalCountdown from "@/components/share/GlobalCountdown";
+import SortDropdown from "@/components/share/SortDropdown";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+export interface SlideItem {
+  id: string | number;
+  imageUrl?: string;
+  title?: string;
+  content?: React.ReactNode;
+}
+
+interface NewestProps {
+  slides?: SlideItem[];
+  autoplayDelay?: number;
+  navigation?: boolean;
+  pagination?: boolean;
+  slidesPerView?: number;
+}
+
+function FlashSaleProduct({
+  autoplayDelay = 3500,
+  navigation = false,
+  pagination = true,
+  slidesPerView = 5,
+}: NewestProps) {
+  const products = [
+    {
+      title: "Apple AirPods Pro (2nd Gen)",
+      price: 100000,
+      originalPrice: 130000,
+      discount: 10,
+      badge: "Buy 2 Get 1",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+    {
+      title: "Samsung Galaxy Buds Pro Wireless Earbuds",
+      price: 75000,
+      originalPrice: 95000,
+      discount: 21,
+      badge: "Hot Sale",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+    {
+      title: "Sony WH-1000XM5 Noise Cancelling Headphones",
+      price: 120000,
+      originalPrice: 150000,
+      discount: 20,
+      badge: "Limited",
+      //,
+      inStock: false,
+      image: "/images/product.png",
+    },
+    {
+      title: "Apple AirPods Pro (2nd Gen)",
+      price: 100000,
+      originalPrice: 130000,
+      discount: 10,
+      badge: "Buy 2 Get 1",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+    {
+      title: "Samsung Galaxy Buds Pro Wireless Earbuds",
+      price: 75000,
+      originalPrice: 95000,
+      discount: 21,
+      badge: "Hot Sale",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+    {
+      title: "Sony WH-1000XM5 Noise Cancelling Headphones",
+      price: 120000,
+      originalPrice: 150000,
+      discount: 20,
+      badge: "Limited",
+      //,
+      inStock: false,
+      image: "/images/product.png",
+    },
+    {
+      title: "Apple AirPods Pro (2nd Gen)",
+      price: 100000,
+      originalPrice: 130000,
+      discount: 10,
+      badge: "Buy 2 Get 1",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+    {
+      title: "Samsung Galaxy Buds Pro Wireless Earbuds",
+      price: 75000,
+      originalPrice: 95000,
+      discount: 21,
+      badge: "Hot Sale",
+      //,
+      inStock: true,
+      image: "/images/product.png",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-4 gap-2 mt-6 items-stretch cursor-pointer md:px-12.5 px-4">
+      <div className="lg:col-span-8">
+        <h3>
+          𝗨𝗽𝘁𝗼 𝟳𝟬% 𝗢𝗙𝗙 at 𝗗𝗮𝘇𝘇𝗹𝗲 𝗠𝗮𝗿𝘁😱 𝗕𝗿𝗮𝗻𝗱 𝗡𝗲𝘄 𝗥𝗲𝗽𝗹𝗮𝗰𝗲𝗺𝗲𝗻𝘁 𝗚𝘂𝗮𝗿𝗮𝗻𝘁𝗲𝗲🔥
+        </h3>
+      </div>
+      <div className="lg:col-span-4">
+        <SortDropdown />
+      </div>
+      <div className="lg:col-span-12 bg-[#000000] px-4 rounded-sm">
+        <GlobalCountdown title="Flash Sale" targetDate="2026-06-10T23:59:59" />
+      </div>
+
+      <div className="lg:col-span-12 h-full">
+        <Swiper
+          modules={[Autoplay, Navigation, Pagination]}
+          spaceBetween={16}
+          slidesPerView={2}
+          navigation={navigation}
+          pagination={pagination ? { clickable: true } : false}
+          autoplay={
+            autoplayDelay
+              ? { delay: autoplayDelay, disableOnInteraction: false }
+              : false
+          }
+          breakpoints={{
+            640: { slidesPerView: 3, spaceBetween: 16 },
+            768: { slidesPerView: 4, spaceBetween: 16 },
+            1024: { slidesPerView: slidesPerView, spaceBetween: 16 },
+          }}
+          className="!pb-10"
+        >
+          {products.map((product, i) => (
+            <SwiperSlide key={i} className="h-auto">
+              <ProductCard {...product} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
+  );
+}
+
+export default FlashSaleProduct;

@@ -1,0 +1,119 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+interface CountdownProps {
+  targetDate: string | Date;
+  title?: string;
+  pagesLink?: string;
+}
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+interface TimeBoxProps {
+  value: number;
+  label: string;
+}
+
+const TimeBox: React.FC<TimeBoxProps> = ({ value }) => {
+  return (
+    <div className="flex flex-col items-center bg-[#FFD07959] text-white rounded-xl px-[7px] py-[4px] shadow-md">
+      <span className="text-[14px] font-medium">
+        {String(value).padStart(2, "0")}
+      </span>
+    </div>
+  );
+};
+
+const GlobalCountdown: React.FC<CountdownProps> = ({
+  targetDate,
+  title = "",
+  pagesLink = "",
+}) => {
+  const calculateTimeLeft = (): TimeLeft => {
+    const difference = new Date(targetDate).getTime() - new Date().getTime();
+
+    if (difference <= 0) {
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    }
+
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / (1000 * 60)) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
+
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setMounted(true);
+      setTimeLeft(calculateTimeLeft());
+    }, 0);
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(timer);
+    };
+  }, [targetDate]);
+
+  // Used to be `if (!mounted) return null`: the whole row (title + timer + See All)
+  // popped in after hydration, growing the Flash Sale block by ~68px and pushing
+  // everything under it down (part of the homepage layout shift). The row is now
+  // always rendered so its space is reserved; only the timer numbers stay
+  // invisible until the client knows the real time (the server has no "now" to
+  // agree with — that is why they were gated at all).
+
+  return (
+    <div className="w-full flex md:flex-row gap-4 lg:py-6 py-4 justify-between items-center">
+      <div className="flex md:flex-row gap-4">
+        <h2 className="md:text-[32px] text-[18px]  font-bold text-white hover:text-[#d1a77d]">
+          {title}
+        </h2>
+
+        <div className={`flex flex-wrap items-center lg:gap-3 gap-1 ${mounted ? "" : "invisible"}`}>
+          <TimeBox value={timeLeft.days} label="Days" />
+          <span className="text-white"> : </span>
+
+          <TimeBox value={timeLeft.hours} label="Hours" />
+          <span className="text-white"> : </span>
+
+          <TimeBox value={timeLeft.minutes} label="Minutes" />
+          <span className="text-white"> : </span>
+
+          <TimeBox value={timeLeft.seconds} label="Seconds" />
+        </div>
+      </div>
+
+      {pagesLink && (
+        <Link className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 " href={pagesLink}>
+          See All
+        </Link>
+      )}
+    </div>
+  );
+};
+
+export default GlobalCountdown;
