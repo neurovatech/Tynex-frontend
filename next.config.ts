@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
+  // React Compiler runs an extra Babel pass over every file — keep it for
+  // production builds only so `next dev` compiles much faster.
+  reactCompiler: process.env.NODE_ENV === "production",
   staticPageGenerationTimeout: 180,
   experimental: {
     optimizePackageImports: [
