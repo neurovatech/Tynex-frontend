@@ -1,5 +1,6 @@
 "use client";
 
+import { withStockAssort } from "@/lib/stock";
 import { useState, useEffect, useRef, useCallback } from "react";
 import ProductCard from "@/components/share/GlobalProductCard";
 import NoImg from "@/images/no_images.png";
@@ -71,11 +72,12 @@ function BrandProductList({
         brandSlug,
         page:  String(nextPage),
         limit: String(LIMIT),
+        stockAssort: "1",
       });
       if (currentSort)   qp.set("sort",   currentSort);
       if (currentSearch) qp.set("search", currentSearch);
 
-      const res = await api.get<ProductListResponse>(`/products?${qp.toString()}`);
+      const res = await api.get<ProductListResponse>(withStockAssort(`/products?${qp.toString()}`));
       const newItems = res?.data ?? [];
       if (newItems.length > 0) {
         setAllProducts((prev) => [...prev, ...newItems]);
@@ -99,7 +101,11 @@ function BrandProductList({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      // Start the next page ~2400px (about one page of products on a phone) BEFORE the sentinel is on screen. Loading only once it is
+      // visible meant the skeleton and the new rows were inserted while the content below the
+      // list (SEO text, footer) was already in view, shoving it down (CLS). Appending while
+      // that content is still off-screen moves nothing the visitor can see.
+      { rootMargin: "0px 0px 2400px 0px", threshold: 0 }
     );
     const el = loaderRef.current;
     if (el) observer.observe(el);
@@ -111,7 +117,7 @@ function BrandProductList({
       {/* ── Header ── */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-3 mt-8">
         <div>
-          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             All Products
           </h3>
           <p className="text-xs text-gray-400 mt-0.5">
@@ -147,6 +153,7 @@ function BrandProductList({
                 badge={product.productBadge || undefined}
                 inStock={!product.isTba}
                 isTba={product.isTba}
+                stockStatus={product.stockStatus}
                 isBestDeal={false}
                 slug={product.productSlug || product.productUuid}
                 allProduct={product}

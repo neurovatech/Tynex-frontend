@@ -81,10 +81,10 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
           <button
             onClick={() => setMapOpen(true)}
             // disabled={pickupDisabled}
-            className="absolute bottom-3 left-3 flex items-center gap-1.5 border border-[#000000] bg-white/90 dark:bg-[#2A2A2A]/90 backdrop-blur-sm text-[#000000] dark:text-white text-sm font-medium px-3 py-2 rounded-[27px] shadow-[0px_4px_9.5px_1px_#0000006E] hover:bg-white dark:hover:bg-[#333333] transition-colors disabled:cursor-not-allowed"
+            className="absolute bottom-3 left-3 flex items-center gap-1.5 border border-[#6D3F0E] bg-white/90 dark:bg-[#2A2A2A]/90 backdrop-blur-sm text-[#000000] dark:text-white text-sm font-medium px-3 py-2 rounded-[27px] shadow-[0px_4px_9.5px_1px_#6D3F0E6E] hover:bg-white dark:hover:bg-[#333333] transition-colors disabled:cursor-not-allowed"
             aria-label="View on map"
           >
-            <Map size={16} className="text-[#000000]" />
+            <Map size={16} className="text-[#6D3F0E]" />
             View Map
           </button>
         </div>
@@ -99,7 +99,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
             }
           >
             <div>
-              <h3 className="font-semibold text-[#000000] dark:text-white text-lg leading-tight h-12">
+              <h3 className="font-semibold text-[#222222] dark:text-white text-lg leading-tight h-12">
                 {isEmpty(store.branchName) ? NA : store.branchName}{" "}
               </h3>
 
@@ -124,7 +124,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
                   <p className="text-[#747474] dark:text-gray-400 uppercase text-sm">
                     Day Off
                   </p>
-                  <p className="font-semibold text-[#000000] dark:text-[#d1a77d] mt-0.5">
+                  <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C] mt-0.5">
                     {isEmpty(store.dayOff) ? NA : store.dayOff}
                   </p>
                 </div>
@@ -133,7 +133,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
                   <p className="text-[#747474] dark:text-gray-400 uppercase text-sm mt-2">
                     Branch location
                   </p>
-                  <span className="font-semibold text-[#000000] dark:text-[#d1a77d]">
+                  <span className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C]">
                     {isEmpty(store.contactNo) ? NA : store.contactNo}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
                   <p className="text-[#747474] dark:text-gray-400 uppercase text-sm">
                     Open Day
                   </p>
-                  <p className="font-semibold text-[#000000] dark:text-[#d1a77d] mt-0.5">
+                  <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C] mt-0.5">
                     {isEmpty(store.openDay) && isEmpty(store.hours) ? (
                       NA
                     ) : (
@@ -163,7 +163,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
                   <p className="text-[#747474] dark:text-gray-400 uppercase text-sm mt-2">
                     Email
                   </p>
-                  <span className="font-semibold text-[#000000] dark:text-[#d1a77d]">
+                  <span className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C]">
                     {isEmpty(store.email) ? NA : store.email}
                   </span>
                 </div>
@@ -177,7 +177,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
                 ? `/shop-location/${store.branchName}`
                 : `/shop-location/${store.slug}`
             }
-            className="w-full flex items-center justify-between bg-[#000000] dark:bg-[#2E2E2E] hover:bg-[#333333] dark:hover:bg-[#3A3A3A] text-white text-sm px-4 py-2.5 rounded-[14px] transition-colors"
+            className="w-full flex items-center justify-between bg-[#222222] dark:bg-[#2E2E2E] hover:bg-[#333333] dark:hover:bg-[#3A3A3A] text-white text-sm px-4 py-2.5 rounded-[14px] transition-colors"
           >
             See Details
             <span className="w-6 h-6 rounded-full border border-[#FACC15] flex items-center justify-center">
@@ -197,9 +197,9 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
           {/* Modal Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-[#EEEEEE] dark:border-[#2E2E2E]">
             <div className="flex items-center gap-2">
-              <MapPin size={18} className="text-[#000000]" />
+              <MapPin size={18} className="text-[#6D3F0E]" />
               <div>
-                <h2 className="font-semibold text-[#000000] dark:text-white text-base leading-tight">
+                <h2 className="font-semibold text-[#222222] dark:text-white text-base leading-tight">
                   {isEmpty(store.branchName)
                     ? "Store Location"
                     : store.branchName}
@@ -217,7 +217,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-[#2E2E2E] hover:bg-gray-200 dark:hover:bg-[#3A3A3A] transition-colors"
               aria-label="Close map"
             >
-              <X size={16} className="text-[#000000] dark:text-white" />
+              <X size={16} className="text-[#222222] dark:text-white" />
             </button> */}
           </div>
 
@@ -255,13 +255,13 @@ const LocationCard: React.FC<LocationCardProps> = ({ store }) => {
           {hasCoords && (
             <div className="flex items-center gap-4 px-4 py-2.5 bg-gray-50 dark:bg-[#1B1B1B] border-t border-[#EEEEEE] dark:border-[#2E2E2E] text-xs text-[#747474] dark:text-gray-400">
               <span>
-                <span className="font-medium text-[#000000] dark:text-white">
+                <span className="font-medium text-[#222222] dark:text-white">
                   Lat:
                 </span>{" "}
                 {store.latitude}
               </span>
               <span>
-                <span className="font-medium text-[#000000] dark:text-white">
+                <span className="font-medium text-[#222222] dark:text-white">
                   Lng:
                 </span>{" "}
                 {store.longitude}

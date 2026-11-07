@@ -3,7 +3,7 @@ import EmiPolicyCom from "@/components/EmiPolicy/EmiPolicyCom";
 
 export const metadata: Metadata = {
   title: "EMI Policy",
-  description: "Check the EMI Policy of Tynex. Learn about offline and online credit card EMI options, payment charges, and supported banks for easy installments.",
+  description: "Check the EMI Policy of tynex. Learn about offline and online credit card EMI options, payment charges, and supported banks for easy installments.",
 };
 export default function EMIPage() {
   return (

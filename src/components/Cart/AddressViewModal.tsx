@@ -67,7 +67,7 @@ export default function AddressViewModal({
           </button>
           <button
             onClick={onEdit}
-            className="flex-1 py-3 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
+            className="flex-1 py-3 rounded-xl bg-[#7B4F1E] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
           >
             EDIT
           </button>

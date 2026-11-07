@@ -11,7 +11,7 @@ function RightArrow() {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M7.93946 11.9998L13.7205 17.7808L14.781 16.7203L10.0605 11.9998L14.781 7.28075L13.7205 6.21875L7.93946 11.9998Z"
-        fill="#000000"
+        fill="#222222"
       />
     </svg>
   );

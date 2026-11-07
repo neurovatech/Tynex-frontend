@@ -1,4 +1,4 @@
-TYNEX — STAGING SITE SEO AUDIT: WHAT NEEDS BACKEND / CMS / DEVOPS ACTION
+tynex — STAGING SITE SEO AUDIT: WHAT NEEDS BACKEND / CMS / DEVOPS ACTION
 ==========================================================================
 For: Backend developer / whoever manages hosting + CMS content
 From: Frontend
@@ -66,7 +66,7 @@ flags with "SEO Content ❌". The frontend correctly detects this as "no
 content" (rather than rendering an empty box) and falls back to its own
 generated title/description — which is why the sheet's comment about
 titles looking like "Phones - Buy Online at Best Price in Bangladesh -
-Tynex" shows up: that IS the frontend's fallback, used only because the
+tynex" shows up: that IS the frontend's fallback, used only because the
 CMS field is empty. Filling in the CMS field lets the real custom copy
 take over automatically, no frontend change needed.
 
@@ -104,7 +104,7 @@ decision, flagging it here so it isn't mistaken for a bug.
   - Home page: previously had `noindex, nofollow` set — this blocked
     Google from indexing the homepage AND from following any link on it
     (which is how most of the catalogue gets discovered). Removed.
-  - Home page: the long CMS "About Tynex" content block existed in the
+  - Home page: the long CMS "About tynex" content block existed in the
     site-settings API (under the field `metaDescription` — a legacy
     naming quirk; it's actually ~580KB of rich HTML, not meta-tag text)
     but was never rendered anywhere on the page — only used, truncated, for
@@ -115,7 +115,7 @@ decision, flagging it here so it isn't mistaken for a bug.
     contactAddress/contactPhone/contactEmail from site-settings.
 
     NOTE: `contactAddress` in site-settings currently holds only
-    "Tynex, Bangladesh" — a free-text fallback, not a real street address.
+    "tynex, Bangladesh" — a free-text fallback, not a real street address.
     Schema.org strongly prefers a structured address (street, area, city,
     postal code) for LocalBusiness — if there's a real store address (the
     physical showroom at Bashundhara City, for example), add it as a

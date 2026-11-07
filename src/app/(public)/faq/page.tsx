@@ -2,9 +2,9 @@
 // import FaqCom from "./FaqCom";
 
 // export const metadata: Metadata = {
-//   title: "FAQ | Tynex",
+//   title: "FAQ | tynex",
 //   description:
-//     "Frequently asked questions about Tynex — Bangladesh's leading smartphone and accessories retailer. Store locations, products, brands, warranty, and online ordering.",
+//     "Frequently asked questions about tynex — Bangladesh's leading smartphone and accessories retailer. Store locations, products, brands, warranty, and online ordering.",
 // };
 
 // export default function Page() {
@@ -20,7 +20,7 @@ import FooterPagesCom from "@/components/share/FooterPagesCom";
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Frequently asked questions about Tynex — Bangladesh's leading smartphone and accessories retailer. Store locations, products, brands, warranty, and online ordering.",
+    "Frequently asked questions about tynex — Bangladesh's leading smartphone and accessories retailer. Store locations, products, brands, warranty, and online ordering.",
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────

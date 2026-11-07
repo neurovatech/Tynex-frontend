@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
+import { withStockAssort } from "@/lib/stock";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/share/GlobalProductCard";
@@ -168,7 +169,7 @@ function AllProducts({
 
         for (let p = 2; p <= loadedPages; p++) {
           const res = await api.get<ProductListResponse>(
-            `/products?${buildParams(p)}`
+            withStockAssort(`/products?${buildParams(p)}&stockAssort=1`)
           );
           const items = res?.data ?? [];
           accumulated = [...accumulated, ...items];
@@ -254,7 +255,7 @@ function AllProducts({
         setIsFetchingMore(true);
         try {
           const res = await api.get<ProductListResponse>(
-            `/products?${buildParams(1)}`
+            withStockAssort(`/products?${buildParams(1)}&stockAssort=1`)
           );
           if (cancelled) return;
           const items = res?.data ?? [];
@@ -282,7 +283,7 @@ function AllProducts({
     setIsFetchingMore(true);
     try {
       const res = await api.get<ProductListResponse>(
-        `/products?${buildParams(nextPage)}`
+        withStockAssort(`/products?${buildParams(nextPage)}&stockAssort=1`)
       );
       const newItems = res?.data ?? [];
       if (newItems.length > 0) {
@@ -307,7 +308,11 @@ function AllProducts({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      // Start the next page ~2400px (about one page of products on a phone) BEFORE the sentinel is on screen. Loading only once it is
+      // visible meant the skeleton and the new rows were inserted while the content below the
+      // list (SEO text, footer) was already in view, shoving it down (CLS). Appending while
+      // that content is still off-screen moves nothing the visitor can see.
+      { rootMargin: "0px 0px 2400px 0px", threshold: 0 }
     );
     const el = loaderRef.current;
     if (el) observer.observe(el);
@@ -323,20 +328,20 @@ function AllProducts({
 
       <div className="md:flex md:flex-wrap items-center justify-between gap-3 pb-3 hidden">
         <div>
-          <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             Products of <span className="capitalize"> {subCategorySlug || categorySlug} </span>
           </h2>
           <p className="text-xs text-gray-400 mt-0.5">
             {displayTotal.toLocaleString()} products found
             {selectedBrandSlug && (
-              <span className="ml-2 text-[#000000] dark:text-[#d1a77d] font-semibold">
+              <span className="ml-2 text-[#6D3F0E] dark:text-[#d4a97a] font-semibold">
                 · {selectedBrandSlug}
               </span>
             )}
             {hasFilter && onClearFilter && (
               <button
                 onClick={onClearFilter}
-                className="ml-3 text-[#000000] dark:text-[#d1a77d] hover:underline"
+                className="ml-3 text-[#6D3F0E] dark:text-[#d4a97a] hover:underline"
               >
                 Clear filters
               </button>
@@ -350,7 +355,7 @@ function AllProducts({
           <p className="text-4xl">😔</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">No products found.</p>
           {hasFilter && onClearFilter && (
-            <button onClick={onClearFilter} className="text-xs text-[#000000] dark:text-[#d1a77d] hover:underline">
+            <button onClick={onClearFilter} className="text-xs text-[#6D3F0E] dark:text-[#d4a97a] hover:underline">
               Show all products
             </button>
           )}
@@ -379,6 +384,7 @@ function AllProducts({
                 badge={product.productBadge || undefined}
                 inStock={!product.isTba}
                 isTba={product.isTba}
+                stockStatus={product.stockStatus}
                 isBestDeal={false}
                 slug={product.productSlug || product.productUuid}
                 endOfLife={product.endOfLife ?? false}

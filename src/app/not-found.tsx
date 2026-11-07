@@ -5,7 +5,7 @@ const NotFound = () => {
     <div className="bg-[#FFFBF6] md:bg-white md:dark:bg-[#302d29] flex flex-col items-center justify-center px-6 py-12">
       <div className="text-center">
         {/* Animated 404 Heading */}
-        <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] animate-pulse">
+        <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] animate-pulse">
           404
         </h1>
 
@@ -23,7 +23,7 @@ const NotFound = () => {
           </div>
         </div>
 
-        <h2 className="mt-8 text-2xl md:text-3xl font-bold text-[#000000] dark:text-white">
+        <h2 className="mt-8 text-2xl md:text-3xl font-bold text-[#222222] dark:text-white">
           {`Oops! You've drifted into space.`}
         </h2>
 
@@ -36,7 +36,7 @@ const NotFound = () => {
         <div className="mt-10">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-8 py-3 text-white font-semibold rounded-full bg-gradient-to-r from-gray-600 to-[#d1a77d] hover:opacity-90 transition-all shadow-lg hover:shadow-[#000000]/20"
+            className="inline-flex items-center gap-2 px-8 py-3 text-white font-semibold rounded-full bg-gradient-to-r from-gray-600 to-[#E9CCAE] hover:opacity-90 transition-all shadow-lg hover:shadow-[#B57908]/20"
           >
             <svg
               width="20"

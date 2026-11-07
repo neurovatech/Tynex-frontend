@@ -249,7 +249,7 @@ export default function ReelModal({
           </h3>
           {(product.discountedPrice || product.regularPrice) && (
             <div className="flex items-center gap-2 mb-4">
-              <p className="text-[#d1a77d] font-bold text-xl">
+              <p className="text-[#CB843B] font-bold text-xl">
                 {formatPrice(product.discountedPrice ?? product.regularPrice)}
               </p>
               {product.discountedPrice &&
@@ -263,7 +263,7 @@ export default function ReelModal({
           )}
           <Link
             href={`/product/${product.productSlug}`}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-[#d1a77d] hover:bg-[#b8722e] text-white hover:scale-[1.02] active:scale-95"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-[#CB843B] hover:bg-[#b8722e] text-white hover:scale-[1.02] active:scale-95"
           >
             See Details
           </Link>

@@ -94,7 +94,7 @@ export default function StepSelectModel({ selection, onSelectVariant, onRemove }
                   <button
                     key={variant.tradeVariantUuid}
                     onClick={() => onSelectVariant(device, variant)}
-                    className="flex flex-col items-center gap-2 p-4 border border-gray-200 dark:border-white/10 rounded-2xl hover:border-[#000000] hover:shadow-md bg-white dark:bg-[#1e1c1a] transition-all duration-200 group text-center"
+                    className="flex flex-col items-center gap-2 p-4 border border-gray-200 dark:border-white/10 rounded-2xl hover:border-[#6D3F0E] hover:shadow-md bg-white dark:bg-[#1e1c1a] transition-all duration-200 group text-center"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -103,7 +103,7 @@ export default function StepSelectModel({ selection, onSelectVariant, onRemove }
                       className="w-14 h-14 object-contain"
                       onError={(e) => { (e.currentTarget as HTMLImageElement).src = NoImg.src; }}
                     />
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#000000] dark:group-hover:text-[#d1a77d] transition-colors">
+                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#6D3F0E] dark:group-hover:text-[#d4a97a] transition-colors">
                       {variant.variantName}
                     </span>
                   </button>

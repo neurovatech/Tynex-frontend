@@ -2,7 +2,6 @@
 
 /**
  * BrandShowcaseSections
- *
  * Fetches /showcase-escalate/{brandSlug}?brand=1 which returns:
  *   { data: { topselling: [...], trending: [...] } }
  *
@@ -10,11 +9,11 @@
  *   1. Top Selling  — same visual as TopSellingCom  (grey bg)
  *   2. Trending     — same visual as RunningOfferCom (brown bg)
  *
- * Both are hidden when empty.
  */
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import type { PrefetchedQuery } from "@/lib/showcase-prefetch";
 import TrendingNow from "@/components/HomePage/TrendingNow/TrendingNow";
 import type { ProductCardItem } from "@/components/HomePage/TrendingNow/TrendingNowSectionCom";
 
@@ -35,7 +34,7 @@ interface ShowcaseProduct {
   thumbnails: { fileUuid: string; mediaFileUrl: string } | null;
 }
 
-interface BrandShowcaseResponse {
+export interface BrandShowcaseResponse {
   statusCode: number;
   status: string;
   found: boolean;
@@ -104,9 +103,11 @@ interface Props {
    * stay brand-only.
    */
   topCategory?: string | null;
+  /** Fetched on the server so the first paint has no skeleton to swap or collapse. */
+  initial?: PrefetchedQuery<BrandShowcaseResponse>;
 }
 
-export default function BrandShowcaseSections({ brandSlug, activeCategory, topCategory }: Props) {
+export default function BrandShowcaseSections({ brandSlug, activeCategory, topCategory, initial }: Props) {
   const chipSlug = activeCategory?.trim() || null;
   const topSlug  = topCategory?.trim() || null;
 
@@ -114,27 +115,47 @@ export default function BrandShowcaseSections({ brandSlug, activeCategory, topCa
   let showcaseParam: "subCategory" | "category" | "brand";
 
   if (chipSlug) {
-    showcaseSlug = chipSlug;
+    showcaseSlug = `${chipSlug}?subCategory=1`;
     showcaseParam = "subCategory";
   } else if (topSlug) {
-    showcaseSlug = topSlug;
-    showcaseParam = "category";
+    showcaseSlug = `${brandSlug}?categorySlug=${topCategory}`;
+    showcaseParam = "brand";
   } else {
-    showcaseSlug = brandSlug;
+    showcaseSlug = `${brandSlug}?brand=1`;
     showcaseParam = "brand";
   }
+  // if (chipSlug) {
+  //   showcaseSlug = chipSlug;
+  //   showcaseParam = "subCategory";
+  // } else if (topSlug) {
+  //   showcaseSlug = topSlug;
+  //   showcaseParam = "category";
+  // } else {
+  //   showcaseSlug = brandSlug;
+  //   showcaseParam = "brand";
+  // }
 
   const { data, isLoading } = useQuery<BrandShowcaseResponse>({
     queryKey: ["brand-showcase", showcaseSlug, showcaseParam],
     queryFn: () =>
       api.get<BrandShowcaseResponse>(
-        `/showcase-escalate/${showcaseSlug}?${showcaseParam}=1`,
+        `/showcase-escalate/${showcaseSlug}`,
       ),
+    initialData:
+      initial && initial.slug === showcaseSlug && initial.param === showcaseParam
+        ? initial.response
+        : undefined,
     staleTime: 10 * 60 * 1000,
     gcTime:    60 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect:   false,
   });
+
+  console.log("data", `/showcase-escalate/${showcaseSlug}?${showcaseParam}=1`)
+  console.log("data", data)
+  // console.log("data 99", brandSlug, topCategory)
+
+
   const topSelling = mapToCards(data?.data?.topSelling ?? []);
   const trending   = mapToCards(data?.data?.trending   ?? []);
 
@@ -150,7 +171,7 @@ export default function BrandShowcaseSections({ brandSlug, activeCategory, topCa
       {(isLoading || hasTopSelling) && (
         <div className="bg-[#EEEEEE] dark:bg-[#2a2420] rounded-lg py-3 px-3 mb-6">
           <div className="flex pb-4 md:px-4">
-            <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+            <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
               Top Selling
             </h2>
           </div>
@@ -164,9 +185,9 @@ export default function BrandShowcaseSections({ brandSlug, activeCategory, topCa
 
       {/* ── Trending ── */}
       {(isLoading || hasTrending) && (
-        <div className="bg-[#000000] dark:bg-[#2a2420] rounded-lg py-3 px-2 mb-6">
+        <div className="bg-[#6D3F0E] dark:bg-[#2a2420] rounded-lg py-3 px-2 mb-6">
           <div className="flex pb-4 md:px-4">
-            <h2 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold bg-linear-to-r from-white to-[#d1a77d] bg-clip-text text-transparent">
+            <h2 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold bg-linear-to-r from-white to-[#CB843B] bg-clip-text text-transparent">
               Trending
             </h2>
           </div>

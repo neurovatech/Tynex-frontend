@@ -3,7 +3,7 @@ type Props = {
   color?: string;
 };
 
-function MobileMenuIcon({ className = "", color = "#000000" }: Props) {
+function MobileMenuIcon({ className = "", color = "#222222" }: Props) {
   return (
     <svg
       width="16"

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Corporate Connectivity Solutions",
-  description: "Equip your business with premium smartphones, laptops, and gadget connectivity from Tynex. Send your corporate inquiries or book a meeting.",
+  description: "Equip your business with premium smartphones, laptops, and gadget connectivity from tynex. Send your corporate inquiries or book a meeting.",
 };
 
 export default function CorporateLayout({

@@ -92,7 +92,7 @@ function NewsletterUnsubscribeContent() {
               <>
                 <div className="flex justify-center">
                   <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center">
-                    <Loader2 size={28} className="animate-spin text-[#000000] dark:text-[#d1a77d]" />
+                    <Loader2 size={28} className="animate-spin text-[#6D3F0E] dark:text-[#d4a97a]" />
                   </div>
                 </div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -126,7 +126,7 @@ function NewsletterUnsubscribeContent() {
                   Changed your mind?{" "}
                   <Link
                     href="/"
-                    className="text-[#000000] dark:text-[#d1a77d] font-semibold hover:underline"
+                    className="text-[#6D3F0E] dark:text-[#d4a97a] font-semibold hover:underline"
                   >
                     Resubscribe from our website
                   </Link>
@@ -177,7 +177,7 @@ function NewsletterUnsubscribeContent() {
             {!isPending && (
               <Link
                 href="/"
-                className="inline-block mt-2 px-6 py-2.5 rounded-xl bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold transition-colors"
+                className="inline-block mt-2 px-6 py-2.5 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] text-white text-sm font-semibold transition-colors"
               >
                 Back to Home
               </Link>
@@ -194,7 +194,7 @@ export default function NewsletterUnsubscribePage() {
     <Suspense
       fallback={
         <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-[#000000] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#6D3F0E] animate-spin" />
         </div>
       }
     >

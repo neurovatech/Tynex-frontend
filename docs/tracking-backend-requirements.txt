@@ -1,4 +1,4 @@
-TYNEX — SERVER-SIDE TRACKING: WHAT THE BACKEND NEEDS TO BUILD
+tynex — SERVER-SIDE TRACKING: WHAT THE BACKEND NEEDS TO BUILD
 ================================================================
 For: Backend developer
 From: Frontend

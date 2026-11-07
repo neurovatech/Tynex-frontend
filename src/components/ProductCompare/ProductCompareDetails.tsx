@@ -152,7 +152,7 @@ function ProductSearchInput({
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#25221F] placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#d1a77d] focus:border-transparent transition"
+        className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#25221F] placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4A97A] focus:border-transparent transition"
       />
       {showDropdown && (
         <ul className="absolute z-30 left-0 right-0 mt-1 bg-white dark:bg-[#25221F] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden max-h-72 overflow-y-auto">
@@ -174,7 +174,7 @@ function ProductSearchInput({
                 setQuery("");
                 setOpen(false);
               }}
-              className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#d1a77d]/10 dark:hover:bg-[#d1a77d]/10 hover:text-[#b8864e] dark:hover:text-[#d1a77d] cursor-pointer transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#D4A97A]/10 dark:hover:bg-[#D4A97A]/10 hover:text-[#b8864e] dark:hover:text-[#D4A97A] cursor-pointer transition-colors"
             >
               <img
                 src={h.document.thumbnailsUrl || "/images/no_images.png"}
@@ -255,7 +255,7 @@ function FilledSlot({ slot, onRemove }: { slot: ResolvedSlot; onRemove: () => vo
           </p>
         )}
         {hasSpecialPrice && (
-          <p className="text-[11px] sm:text-xs font-semibold text-[#000000] dark:text-[#d1a77d]">
+          <p className="text-[11px] sm:text-xs font-semibold text-[#B57908] dark:text-[#D4A97A]">
             Special Price <span>{formatPrice(discountedPrice)}</span>
           </p>
         )}
@@ -433,7 +433,7 @@ export default function ProductCompareDetails({ slug }: ProductCompareDetailsPro
           <Fragment key={group.groupSlug}>
             <div
               style={{ gridColumn: "1 / -1" }}
-              className="px-4 sm:px-6 py-2 text-xs font-bold uppercase tracking-wide text-[#b8864e] dark:text-[#d1a77d] bg-gray-50 dark:bg-[#25221F] whitespace-nowrap"
+              className="px-4 sm:px-6 py-2 text-xs font-bold uppercase tracking-wide text-[#b8864e] dark:text-[#D4A97A] bg-gray-50 dark:bg-[#25221F] whitespace-nowrap"
             >
               {group.groupName}
             </div>

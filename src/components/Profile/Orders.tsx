@@ -143,7 +143,7 @@ function OrderRow({
           onClick={onOpen}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition ${
             !order.isDelivered && !order.isCancelled && order.orderStatus !== "Cancelled"
-              ? "bg-[#FFF1E0] text-[#000000] border border-[#d1a77d] hover:bg-[#FCE7CE]"
+              ? "bg-[#FFF1E0] text-[#7A4500] border border-[#E9CCAE] hover:bg-[#FCE7CE]"
               : "bg-white dark:bg-transparent border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800"
           }`}
         >
@@ -227,7 +227,7 @@ const Orders: React.FC<OrdersProps> = ({ onOrderClick }) => {
   if (isLoading) {
     return (
       <div className="p-12 text-center bg-white dark:bg-[#393430] rounded-2xl border border-gray-100 dark:border-zinc-800 flex flex-col items-center">
-        <Loader2 className="w-8 h-8 text-[#000000] animate-spin mb-3" />
+        <Loader2 className="w-8 h-8 text-[#7A4500] animate-spin mb-3" />
         <p className="text-sm text-gray-500">Loading your orders...</p>
       </div>
     );
@@ -265,7 +265,7 @@ const Orders: React.FC<OrdersProps> = ({ onOrderClick }) => {
               onClick={() => setTab(t.key)}
               className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${
                 tab === t.key
-                  ? "bg-[#d1a77d] text-[#333333] dark:bg-[#000000] dark:text-white"
+                  ? "bg-[#E9CCAE] text-[#5a3300] dark:bg-[#6D3F0E] dark:text-white"
                   : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
               }`}
             >

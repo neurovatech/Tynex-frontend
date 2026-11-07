@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
+import { withStockAssort, stockStateOf } from "@/lib/stock";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -42,6 +43,7 @@ interface ProductItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  stockStatus?: string;
   regularPrice: number;
   discountedPrice: number;
   disRate: number;
@@ -99,6 +101,7 @@ function ProductSkeleton() {
 
 // ── Product card (shared between both screens) ──────────────────────
 function ProductRow({ product, onClose }: { product: NormalizedProduct; onClose?: () => void }) {
+  console.log("product", product);
   const formatPrice = (p: number) => `৳${p.toLocaleString("en-BD")}`;
   return (
     <Link
@@ -124,7 +127,7 @@ function ProductRow({ product, onClose }: { product: NormalizedProduct; onClose?
         </p>
         <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
           {product.isTba ? (
-            <span className="bg-[#000000] text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
+            <span className="bg-[#6D3F0E] text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
               To Be Announced
             </span>
           ) : (
@@ -183,11 +186,12 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
     queryKey: ["search-category", selectedCategory?.slug],
     queryFn: () =>
       api.get<ProductListResponse>(
-        `/products?categorySlug=${selectedCategory?.slug}&page=1&limit=50`
+        withStockAssort(`/products?categorySlug=${selectedCategory?.slug}&page=1&limit=50&stockAssort=1`)
       ),
     enabled: isCategoryMode,
     staleTime: 5 * 60 * 1000,
   });
+
 
   // Unique categories from keyword results
   const categories = Array.from(
@@ -229,6 +233,8 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
     isTba:            h.document.isTba,
   }));
 
+  console.log(categoryQuery.data?.data, "categoryQuery.data?.data")
+
   // Normalise category products
   const categoryProducts: NormalizedProduct[] = (categoryQuery.data?.data ?? []).map((p) => ({
     id:               p.productUuid,
@@ -237,7 +243,7 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
     thumbnailsUrl:    getThumbnail(p.thumbnails),
     regularPrice:     p.regularPrice,
     discountedPrice:  p.discountedPrice,
-    isStockAvailable: !p.isTba,
+    isStockAvailable: stockStateOf(p.stockStatus) ? stockStateOf(p.stockStatus) === "in" : !p.isTba,
     isTba:            p.isTba,
   }));
 
@@ -253,13 +259,13 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
         <div className="w-full sm:w-[220px] lg:w-[200px] shrink-0 p-4 sm:p-5 border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-gray-700">
           <button
             onClick={() => setSelectedCategory(null)}
-            className="flex items-center gap-1 text-sm font-semibold text-[#000000] hover:text-[#9a6507] mb-4 transition-colors"
+            className="flex items-center gap-1 text-sm font-semibold text-[#B57908] hover:text-[#9a6507] mb-4 transition-colors"
           >
             <ChevronLeft size={16} />
             Back
           </button>
           <p className="text-sm font-semibold text-gray-800 dark:text-white mb-3">Categories</p>
-          <button className="px-3 py-1.5 text-xs sm:text-sm border rounded-lg border-[#d1a77d] text-[#b8864e] bg-[#d1a77d]/10">
+          <button className="px-3 py-1.5 text-xs sm:text-sm border rounded-lg border-[#D4A97A] text-[#b8864e] bg-[#D4A97A]/10">
             {selectedCategory.name}
           </button>
         </div>
@@ -311,7 +317,7 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
             <button
               key={i}
               onClick={() => setSelectedCategory({ slug: cat.slug, name: cat.name })}
-              className="px-3 py-1.5 text-xs sm:text-sm border rounded-lg transition-colors text-gray-600 dark:text-white border-gray-200 hover:border-[#d1a77d] hover:text-[#b8864e] dark:hover:border-[#d1a77d]"
+              className="px-3 py-1.5 text-xs sm:text-sm border rounded-lg transition-colors text-gray-600 dark:text-white border-gray-200 hover:border-[#D4A97A] hover:text-[#b8864e] dark:hover:border-[#D4A97A]"
             >
               {cat.name}
             </button>
@@ -331,7 +337,7 @@ export default function ProductSearches({ query, onClose }: ProductSearchesProps
               }}
               className="flex flex-col items-center gap-1.5 group"
             >
-              <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden hover:border-[#d1a77d] transition-colors p-1">
+              <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden hover:border-[#D4A97A] transition-colors p-1">
                 {brand.image ? (
                   <Image
                     src={brand.image}

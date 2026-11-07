@@ -40,7 +40,7 @@ function Pagination({
           <button key={p} onClick={() => onPageChange(p as number)}
             className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
               p === page
-                ? "bg-[#000000] text-white"
+                ? "bg-[#6D3F0E] text-white"
                 : "border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
             }`}
           >{p}</button>
@@ -77,6 +77,7 @@ export default function BrandCategoryFilter({
 }: Props) {
   const router   = useRouter();
   const pathname = usePathname();
+  console.log(products, "products")
 
   const navigate = (categoryUuid: string | null, page: number) => {
     const qp = new URLSearchParams();
@@ -94,7 +95,7 @@ export default function BrandCategoryFilter({
         {activeCategoryUuid && (
           <button
             onClick={() => navigate(null, 1)}
-            className="ml-2 text-[#000000] dark:text-[#d1a77d] hover:underline"
+            className="ml-2 text-[#6D3F0E] dark:text-[#d4a97a] hover:underline"
           >
             Clear filter
           </button>
@@ -110,7 +111,7 @@ export default function BrandCategoryFilter({
           {activeCategoryUuid && (
             <button
               onClick={() => navigate(null, 1)}
-              className="text-xs text-[#000000] dark:text-[#d1a77d] hover:underline"
+              className="text-xs text-[#6D3F0E] dark:text-[#d4a97a] hover:underline"
             >
               Show all products
             </button>
@@ -135,6 +136,7 @@ export default function BrandCategoryFilter({
                   discount={product.disRate || 0}
                   badge={product.productBadge || undefined}
                   inStock={!product.isTba}
+                  stockStatus={product.stockStatus}
                   isTba={product.isTba}
                   isBestDeal= {false}
                   slug={product.productSlug || product.productUuid}

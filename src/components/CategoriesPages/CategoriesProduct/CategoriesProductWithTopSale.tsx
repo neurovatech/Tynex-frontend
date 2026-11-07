@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import AllProducts from "@/components/CategoriesPages/CategoriesProduct/AllProducts";
 import FilterSidebar, {
@@ -19,6 +19,9 @@ import TopSellingCom from "@/components/CategoriesPages/TopSelling/TopSellingCom
 import RunningOfferCom from "@/components/CategoriesPages/RunningOffer/RunningOfferCom";
 import CategoryShowcaseSections from "@/components/CategoriesPages/CategoryShowcaseSections";
 import BannerEscalate from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { BannerEscalateResponse } from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { CategoryShowcaseResponse } from "@/components/CategoriesPages/CategoryShowcaseSections";
+import type { PrefetchedQuery } from "@/lib/showcase-prefetch";
 
 // TrendingNowSectionCom will be passed as a prop from the Server Component
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -39,6 +42,9 @@ interface CategoriesProductProps {
   trendingNowSlot?: React.ReactNode;
   topSellingSlot?: React.ReactNode;
   runningOfferSlot?: React.ReactNode;
+  /** Banner + Top Selling/Trending answers fetched on the server — see lib/showcase-prefetch.ts. */
+  initialBanner?: PrefetchedQuery<BannerEscalateResponse>;
+  initialShowcase?: PrefetchedQuery<CategoryShowcaseResponse>;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -59,6 +65,8 @@ function CategoriesProductWithTopSale({
   trendingNowSlot,
   topSellingSlot,
   runningOfferSlot,
+  initialBanner,
+  initialShowcase,
 }: CategoriesProductProps) {
   const searchParams = useSearchParams();
 
@@ -196,7 +204,11 @@ function CategoriesProductWithTopSale({
         if (subCategorySlug)
           queryParams.set("subCategorySlug", subCategorySlug);
         if (selectedBrandSlug) queryParams.set("brandSlug", selectedBrandSlug);
+        // The stock FILTER is `stockStatus` (0 = out of stock, 1 = in stock) — verified
+        // live: /products/attributes only reacts to this one, `stockAssort` below is not
+        // a filter, so it alone left the sidebar counts ignoring the selected filter.
         if (stockStatus !== null) queryParams.set("stockStatus", stockStatus);
+        if (stockStatus !== null) queryParams.set("stockAssort", stockStatus);
         if (minPrice !== undefined)
           queryParams.set("minDiscountedPrice", String(minPrice));
         if (maxPrice !== undefined)
@@ -289,19 +301,25 @@ function CategoriesProductWithTopSale({
    * from the same clean slate.
    */
   const handleBrandSelect = (brandSlug: string | null) => {
-    setSelectedBrandSlug(brandSlug);
-    // Reset every dependent filter — see note above.
-    setSelectedAttributes([]);
-    setMinPrice(undefined);
-    setMaxPrice(undefined);
-    setStockStatus(null);
-    // Keep the mobile filter modal in step, so reopening it shows nothing ticked.
-    setPendingAttributes([]);
-    setPendingMinPrice(undefined);
-    setPendingMaxPrice(undefined);
-    setPendingStockStatus(null);
-    setFilterApplyKey((prev) => prev + 1);
-    setActivePage(1);
+    // Filter changes re-render the whole list + sidebar (hundreds of nodes). Marking the
+    // state updates as a transition lets the browser paint right after the tap and render
+    // the result in slices instead of blocking the next frame (INP). The URL update below
+    // stays outside on purpose.
+    startTransition(() => {
+      setSelectedBrandSlug(brandSlug);
+      // Reset every dependent filter — see note above.
+      setSelectedAttributes([]);
+      setMinPrice(undefined);
+      setMaxPrice(undefined);
+      setStockStatus(null);
+      // Keep the mobile filter modal in step, so reopening it shows nothing ticked.
+      setPendingAttributes([]);
+      setPendingMinPrice(undefined);
+      setPendingMaxPrice(undefined);
+      setPendingStockStatus(null);
+      setFilterApplyKey((prev) => prev + 1);
+      setActivePage(1);
+    });
 
     const params = new URLSearchParams(window.location.search);
     if (brandSlug) {
@@ -328,8 +346,14 @@ function CategoriesProductWithTopSale({
       ? selectedAttributes.filter((v) => v !== value)
       : [...selectedAttributes, value];
 
-    setSelectedAttributes(nextAttrs);
-    setActivePage(1);
+    // Filter changes re-render the whole list + sidebar (hundreds of nodes). Marking the
+    // state updates as a transition lets the browser paint right after the tap and render
+    // the result in slices instead of blocking the next frame (INP). The URL update below
+    // stays outside on purpose.
+    startTransition(() => {
+      setSelectedAttributes(nextAttrs);
+      setActivePage(1);
+    });
 
     const params = new URLSearchParams(window.location.search);
     if (nextAttrs.length > 0) {
@@ -348,9 +372,15 @@ function CategoriesProductWithTopSale({
   };
 
   const handlePriceChange = (min: number, max: number) => {
-    setMinPrice(min);
-    setMaxPrice(max);
-    setActivePage(1);
+    // Filter changes re-render the whole list + sidebar (hundreds of nodes). Marking the
+    // state updates as a transition lets the browser paint right after the tap and render
+    // the result in slices instead of blocking the next frame (INP). The URL update below
+    // stays outside on purpose.
+    startTransition(() => {
+      setMinPrice(min);
+      setMaxPrice(max);
+      setActivePage(1);
+    });
 
     const params = new URLSearchParams(window.location.search);
     params.set("minDiscountedPrice", String(min));
@@ -367,8 +397,14 @@ function CategoriesProductWithTopSale({
 
   const handleStockStatusToggle = (status: string) => {
     const nextStatus = stockStatus === status ? null : status;
-    setStockStatus(nextStatus);
-    setActivePage(1);
+    // Filter changes re-render the whole list + sidebar (hundreds of nodes). Marking the
+    // state updates as a transition lets the browser paint right after the tap and render
+    // the result in slices instead of blocking the next frame (INP). The URL update below
+    // stays outside on purpose.
+    startTransition(() => {
+      setStockStatus(nextStatus);
+      setActivePage(1);
+    });
 
     const params = new URLSearchParams(window.location.search);
     if (nextStatus !== null) {
@@ -446,13 +482,12 @@ function CategoriesProductWithTopSale({
       {/* ── Brand filter tabs ── */}
       {brands.length > 0 && (
         <div className="md:px-12.5 px-4 mt-1 flex flex-row md:flex-wrap flex-nowrap gap-2 overflow-x-auto md:overflow-visible py-2 scrollbar-hide">
-          {/* All tab */}
           <button
             onClick={() => handleBrandSelect(null)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors whitespace-nowrap shrink-0 ${
               selectedBrandSlug === null
-                ? "bg-[#000000] text-white border-[#000000]"
-                : "bg-white dark:bg-[#2a2420] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#000000] hover:text-[#000000]"
+                ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+                : "bg-white dark:bg-[#2a2420] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#6D3F0E] hover:text-[#6D3F0E]"
             }`}
           >
             All
@@ -470,8 +505,8 @@ function CategoriesProductWithTopSale({
                   }
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-colors whitespace-nowrap shrink-0 ${
                     isActive
-                      ? "bg-[#000000] text-white border-[#000000]"
-                      : "bg-white dark:bg-[#2a2420] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#000000] hover:text-[#000000]"
+                      ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+                      : "bg-white dark:bg-[#2a2420] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#6D3F0E] hover:text-[#6D3F0E]"
                   }`}
                 >
                   {brand.brand_name}
@@ -483,7 +518,7 @@ function CategoriesProductWithTopSale({
 
       <div className="md:hidden flex md:px-12.5 px-4 pt-2 md:mt-[15px] flex-wrap items-center justify-between gap-3 md:pb-3 relative">
         <div className="md:hidden block">
-          <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             Products of{" "}
             <span className="capitalize">
               {" "}
@@ -493,17 +528,17 @@ function CategoriesProductWithTopSale({
           {/* <p className="text-xs text-gray-400 mt-0.5">
             {displayTotal.toLocaleString()} products found
             {selectedBrandSlug && (
-              <span className="ml-2 text-[#000000] dark:text-[#d1a77d] font-semibold">
+              <span className="ml-2 text-[#6D3F0E] dark:text-[#d4a97a] font-semibold">
                 · {selectedBrandSlug}
               </span>
             )}
           </p> */}
         </div>
 
-        <div className="md:hidden flex items-center fixed gap-3 bg-[#000000] px-3 py-2 rounded-full mb-3 bottom-20 z-88 left-1/2 transform -translate-x-1/2 shadow-[0px_4px_19.9px_0px_#00000066]">
+        <div className="md:hidden flex items-center fixed gap-3 bg-[#6d3f0e] px-3 py-2 rounded-full mb-3 bottom-20 z-88 left-1/2 transform -translate-x-1/2 shadow-[0px_4px_19.9px_0px_#00000066]">
           <button
             onClick={openFilterModal}
-            className="md:hidden flex items-center  gap-1.5 rounded-xl text-sm font-semibold  dark:border-white/10 text-white dark:text-gray-300 shrink-0 bg-[#000000]"
+            className="md:hidden flex items-center  gap-1.5 rounded-xl text-sm font-semibold  dark:border-white/10 text-white dark:text-gray-300 shrink-0 bg-[#6d3f0e]"
           >
             <SlidersHorizontal size={16} />
             Filter
@@ -561,12 +596,14 @@ function CategoriesProductWithTopSale({
             categorySlug={categorySlug}
             queryParam="category"
             activeBrandSlug={selectedBrandSlug}
+            initial={initialBanner}
           />
 
           {/* Category-specific Top Selling + Trending from showcase-escalate */}
           <CategoryShowcaseSections
             categorySlug={categorySlug}
             activeBrandSlug={selectedBrandSlug}
+            initial={initialShowcase}
           />
 
           {/* Top Selling */}
@@ -610,7 +647,7 @@ function CategoriesProductWithTopSale({
               <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-200 dark:border-white/10">
                 <button
                   onClick={closeFilterAndScroll}
-                  className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d1a77d] text-[#d1a77d]"
+                  className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d4a97a] text-[#d4a97a]"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
                     <path
@@ -673,7 +710,7 @@ function CategoriesProductWithTopSale({
                 </button>
                 <button
                   onClick={handleApplyFilters}
-                  className="flex-1 py-3 rounded-full bg-[#000000] text-white text-sm font-semibold"
+                  className="flex-1 py-3 rounded-full bg-[#6D3F0E] text-white text-sm font-semibold"
                 >
                   APPLY
                 </button>
@@ -695,7 +732,7 @@ function CategoriesProductWithTopSale({
               <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100 dark:border-white/10">
                 <button
                   onClick={() => setIsSortOpen(false)}
-                  className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d1a77d] text-[#d1a77d]"
+                  className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d4a97a] text-[#d4a97a]"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
                     <path
@@ -735,7 +772,7 @@ function CategoriesProductWithTopSale({
                     <span
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                         pendingSort === opt.value
-                          ? "border-[#d1a77d] bg-[#d1a77d]"
+                          ? "border-[#d4a97a] bg-[#d4a97a]"
                           : "border-gray-300 dark:border-gray-600"
                       }`}
                     >
@@ -768,7 +805,7 @@ function CategoriesProductWithTopSale({
                 </button>
                 <button
                   onClick={() => handleApplySort(pendingSort)}
-                  className="flex-1 py-3.5 rounded-full bg-[#000000] text-white text-sm font-semibold"
+                  className="flex-1 py-3.5 rounded-full bg-[#6D3F0E] text-white text-sm font-semibold"
                 >
                   APPLY
                 </button>

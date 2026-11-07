@@ -218,7 +218,7 @@ export default function ClipToCartCard({
           </div>
         )}
 
-        <p className="text-sm font-bold line-clamp-2 leading-tight text-[#d1a77d] h-12">
+        <p className="text-sm font-bold line-clamp-2 leading-tight text-[#CB843B] h-12">
           {product.title}
         </p>
 
@@ -242,12 +242,12 @@ export default function ClipToCartCard({
             onClick={handleCartClick}
             disabled={isAdding}
             className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-60 disabled:cursor-wait disabled:hover:scale-100 ${
-              isAdded ? "bg-green-500" : "bg-[#000000] dark:bg-white"
+              isAdded ? "bg-green-500" : "bg-[#101518] dark:bg-white"
             }`}
             aria-label={isAdded ? "Added to cart" : "Add to cart"}
           >
             {isAdding ? (
-              <svg className="w-4 h-4 animate-spin text-[#d1a77d] dark:text-black" fill="none" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 animate-spin text-[#E9CCAE] dark:text-black" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
               </svg>
@@ -263,7 +263,7 @@ export default function ClipToCartCard({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             ) : (
-              <CartIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#d1a77d] dark:text-black" />
+              <CartIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#E9CCAE] dark:text-black" />
             )}
           </button>
         </div>

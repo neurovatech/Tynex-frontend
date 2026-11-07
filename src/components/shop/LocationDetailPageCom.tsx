@@ -99,10 +99,10 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
           <div>
             <button
               onClick={() => setMapOpen(true)}
-              className="self-start flex items-center gap-1.5 border border-[#000000] bg-white/90 dark:bg-[#1F1F1F]/90 backdrop-blur-sm text-[#000000] dark:text-white font-medium px-3 py-2 rounded-[27px] shadow-[0px_4px_9.5px_1px_#0000006E] hover:bg-white dark:hover:bg-[#2A2A2A] transition-colors"
+              className="self-start flex items-center gap-1.5 border border-[#6D3F0E] bg-white/90 dark:bg-[#1F1F1F]/90 backdrop-blur-sm text-[#000000] dark:text-white font-medium px-3 py-2 rounded-[27px] shadow-[0px_4px_9.5px_1px_#6D3F0E6E] hover:bg-white dark:hover:bg-[#2A2A2A] transition-colors"
               aria-label="View on map"
             >
-              <Map size={16} className="text-[#000000]" />
+              <Map size={16} className="text-[#6D3F0E]" />
               View Map
             </button>
 
@@ -110,7 +110,7 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
               <h1 className="text-xl font-bold text-gray-900 dark:text-white leading-snug">
                 {store.branch_name}
               </h1>
-              <p className="text-[#000000] dark:text-[#d1a77d] font-medium mt-2.5">
+              <p className="text-[#6D3F0E] dark:text-[#D89B5C] font-medium mt-2.5">
                 {store.address}
               </p>
             </div>
@@ -118,26 +118,26 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 mt-6 w-full max-w-xs">
               <div>
                 <p className="text-sm uppercase text-[#747474] dark:text-gray-400 mb-0.5">Day Off</p>
-                <p className="font-semibold text-[#000000] dark:text-[#d1a77d]">
+                <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C]">
                   {store.dayoff || "—"}
                 </p>
               </div>
               <div>
                 <p className="text-sm uppercase text-[#747474] dark:text-gray-400 mb-0.5">Contact</p>
-                <p className="font-semibold text-[#000000] dark:text-[#d1a77d]">
+                <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C]">
                   {store.contactno || "—"}
                 </p>
               </div>
               <div>
                 <p className="text-sm uppercase text-[#747474] dark:text-gray-400 mb-0.5">Open Day</p>
-                <p className="font-semibold text-[#000000] dark:text-[#d1a77d]">
+                <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C]">
                   {store.openday || "—"}
                 </p>
               </div>
               {store.email && (
                 <div>
                   <p className="text-sm uppercase text-[#747474] dark:text-gray-400 mb-0.5">Email</p>
-                  <p className="font-semibold text-[#000000] dark:text-[#d1a77d] break-all text-sm">
+                  <p className="font-semibold text-[#6D3F0E] dark:text-[#D89B5C] break-all text-sm">
                     {store.email}
                   </p>
                 </div>
@@ -156,7 +156,7 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
                 href={descLink.trim()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block mt-3 text-sm text-[#000000] dark:text-[#d1a77d] hover:underline break-all"
+                className="inline-block mt-3 text-sm text-[#6D3F0E] dark:text-[#D89B5C] hover:underline break-all"
               >
                 {descLink.trim()}
               </a>
@@ -255,9 +255,9 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
         <div className="flex flex-col w-full">
           {/* Modal sub-header */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-[#EEEEEE] dark:border-[#2E2E2E]">
-            <MapPin size={18} className="text-[#000000] shrink-0" />
+            <MapPin size={18} className="text-[#6D3F0E] shrink-0" />
             <div>
-              <p className="font-semibold text-[#000000] dark:text-white text-sm leading-tight">
+              <p className="font-semibold text-[#222222] dark:text-white text-sm leading-tight">
                 {store.branch_name}
               </p>
               {store.address && (
@@ -295,11 +295,11 @@ const LocationDetailPageCom: React.FC<Props> = ({ store }) => {
           {hasCoords && (
             <div className="flex items-center gap-4 px-4 py-2.5 bg-gray-50 dark:bg-[#1B1B1B] border-t border-[#EEEEEE] dark:border-[#2E2E2E] text-xs text-[#747474] dark:text-gray-400">
               <span>
-                <span className="font-medium text-[#000000] dark:text-white">Lat:</span>{" "}
+                <span className="font-medium text-[#222222] dark:text-white">Lat:</span>{" "}
                 {store.latitude}
               </span>
               <span>
-                <span className="font-medium text-[#000000] dark:text-white">Lng:</span>{" "}
+                <span className="font-medium text-[#222222] dark:text-white">Lng:</span>{" "}
                 {store.longitude}
               </span>
             </div>

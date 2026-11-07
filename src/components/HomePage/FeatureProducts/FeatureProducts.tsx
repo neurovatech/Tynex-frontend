@@ -128,12 +128,12 @@ export default async function FeatureProducts() {
   return (
     <div className=" px-4 lg:px-0">
       <div className="flex justify-between items-center">
-        <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+        <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
           Feature Products
         </h3>
         <Link
           href="/feature-product"
-          className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 "
+          className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#CB843B]! transition-colors duration-300 "
         >
           See all
         </Link>
@@ -194,7 +194,7 @@ export default async function FeatureProducts() {
           <div
             key={i}
             className="bg-white dark:bg-[#35291e] rounded-2xl w-full py-4 sm:py-6 lg:py-7 flex flex-col items-center gap-2 sm:gap-4 cursor-pointer transition-all duration-300 hover:-translate-y-0.5"
-            style={{ boxShadow: "0px 6px 45px 25px #d1a77d24" }}
+            style={{ boxShadow: "0px 6px 45px 25px #E9CCAE24" }}
           >
             <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-[#f5ede4] flex items-center justify-center">
               {feature.icon}

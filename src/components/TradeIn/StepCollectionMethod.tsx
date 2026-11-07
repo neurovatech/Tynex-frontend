@@ -177,7 +177,7 @@ export default function StepCollectionMethod({ selection, onSuccess }: Props) {
   };
 
   // ── Shared styles ──
-  const inputCls = "w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1e1c1a] text-sm text-gray-800 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 transition";
+  const inputCls = "w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1e1c1a] text-sm text-gray-800 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6D3F0E]/30 transition";
   const selectCls = inputCls + " appearance-none cursor-pointer";
 
   return (
@@ -242,7 +242,7 @@ export default function StepCollectionMethod({ selection, onSuccess }: Props) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <button onClick={() => setSubStep(1)}
-              className="text-sm text-[#000000] dark:text-[#d1a77d] hover:underline flex items-center gap-1"
+              className="text-sm text-[#6D3F0E] dark:text-[#d4a97a] hover:underline flex items-center gap-1"
             >
               ‹ Edit details
             </button>
@@ -275,10 +275,10 @@ export default function StepCollectionMethod({ selection, onSuccess }: Props) {
           <div className="flex items-center gap-2.5 pt-1">
             <input type="checkbox" id="terms" checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#000000]" />
+              className="w-4 h-4 rounded accent-[#6D3F0E]" />
             <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer select-none">
               I agree to the{" "}
-              <span className="text-[#000000] dark:text-[#d1a77d]">privacy policy, terms &amp; conditions</span>
+              <span className="text-[#6D3F0E] dark:text-[#d4a97a]">privacy policy, terms &amp; conditions</span>
             </label>
           </div>
         </div>
@@ -300,7 +300,7 @@ export default function StepCollectionMethod({ selection, onSuccess }: Props) {
       <button
         onClick={subStep === 1 ? handleContinue : handleConfirm}
         disabled={isPending}
-        className="w-full mt-6 py-3.5 rounded-xl bg-[#000000] hover:bg-[#333333] disabled:opacity-60 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+        className="w-full mt-6 py-3.5 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] disabled:opacity-60 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2"
       >
         {isPending && <Loader2 size={15} className="animate-spin" />}
         {subStep === 1 ? "Continue" : isPending ? "Submitting..." : "Confirm request"}

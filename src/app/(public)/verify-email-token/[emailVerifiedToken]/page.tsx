@@ -146,7 +146,7 @@ export default function VerifyEmailPage() {
                 Email Verified!
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-                Your email address has been successfully verified. Welcome to Tynex Commerce!
+                Your email address has been successfully verified. Welcome to tynex Commerce!
               </p>
               
               <div className="bg-green-50 dark:bg-green-950/20 rounded-2xl p-4 mb-6">

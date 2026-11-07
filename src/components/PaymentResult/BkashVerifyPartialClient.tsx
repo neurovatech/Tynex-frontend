@@ -19,7 +19,7 @@ interface BkashVerifyPartialResponse {
 
 const LoadingScreen = () => (
   <div className="min-h-[70vh] flex items-center justify-center">
-    <Loader2 className="animate-spin text-[#000000]" size={32} />
+    <Loader2 className="animate-spin text-[#7B4F1E]" size={32} />
   </div>
 );
 

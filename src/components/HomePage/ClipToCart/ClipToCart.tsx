@@ -53,7 +53,7 @@ function ClipToCart({
     return (
       <div>
         <div className="flex justify-between items-center gap-6 pb-5">
-          <h3 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
+          <h3 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#222222_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
             Clip to Cart
           </h3>
         </div>
@@ -84,12 +84,12 @@ function ClipToCart({
     <div>
       {/* Header */}
       <div className="flex justify-between items-center gap-6 pb-5">
-        <h3 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
+        <h3 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#222222_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
           Clip to Cart
         </h3>
         <Link
           href="/clip-to-cart"
-          className="text-sm font-medium text-primary bg-orange-50 border border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#d1a77d]! transition-colors duration-300"
+          className="text-sm font-medium text-primary bg-orange-50 border border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#CB843B]! transition-colors duration-300"
         >
           See All
         </Link>

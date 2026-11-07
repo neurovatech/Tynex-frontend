@@ -20,10 +20,10 @@ const ProductInfoRow: React.FC<ProductInfoRowProps> = ({
       >
         <StackIcon />
         <div>
-          <p className="font-bold text-[20px] text-[#000000]">
+          <p className="font-bold text-[20px] text-[#222222]">
             {inStock ? "In Stock" : "Out of Stock"}
           </p>
-          <p className="text-[14px] text-[#00000099]">
+          <p className="text-[14px] text-[#22222299]">
             {inStock ? "Available" : "Not Available"}
           </p>
         </div>
@@ -31,12 +31,12 @@ const ProductInfoRow: React.FC<ProductInfoRowProps> = ({
 
       {/* Warranty */}
       <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#F2F2F2] justify-center">
-        <CreditCard className="w-8 h-8 text-[#000000]" />
+        <CreditCard className="w-8 h-8 text-[#222222]" />
         <div>
-          <p className="font-bold text-[20px] text-[#000000]">
+          <p className="font-bold text-[20px] text-[#222222]">
             {warrantyYears} Year{warrantyYears > 1 ? "s" : ""}
           </p>
-          <p className="text-[14px] text-[#00000099]">Warranty</p>
+          <p className="text-[14px] text-[#22222299]">Warranty</p>
         </div>
       </div> 
     </div>

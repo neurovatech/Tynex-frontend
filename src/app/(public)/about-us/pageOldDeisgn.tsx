@@ -7,14 +7,14 @@ import ShowroomExplorer from "@/components/AboutUs/ShowroomExplorer";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "Learn more about Tynex, the ultimate destination for mobile phones, laptops, and gadgets in Bangladesh. Discover our showrooms, customer base, and services.",
+  description: "Learn more about tynex, the ultimate destination for mobile phones, laptops, and gadgets in Bangladesh. Discover our showrooms, customer base, and services.",
 };
 
 import FirstImg from "@/images/about_1.png";
 import FirstImg2 from "@/images/about_2.png";
 
 const stats = [
-  { value: "393,000+", label: "Unique Customers" },
+  { value: "1,624,848 +", label: "Unique Customers" },
   { value: "820,000+", label: "Products Delivered" },
   { value: "1.2 Million+", label: "Social Media Followers" },
   { value: "7,000+", label: "5-Star Google Reviews" },
@@ -59,7 +59,7 @@ export default async function AboutUs() {
       <div className=" px-4 sm:px-6 pb-14">
         {/* Welcome Label */}
         <p className="text-[#c9a230] dark:text-white font-semibold text-[13px] mt-5 mb-1 tracking-wide">
-          Welcome to Tynex
+          Welcome to tynex
         </p>
 
         {/* Heading */}
@@ -90,7 +90,7 @@ export default async function AboutUs() {
           <div className="relative w-full" style={{ paddingBottom: "52%" }}>
             <Image
               src={FirstImg}
-              alt="Tynex Store Front"
+              alt="tynex Store Front"
               fill
               sizes="(max-width: 768px) 100vw, 900px"
               className="object-cover"
@@ -124,7 +124,7 @@ export default async function AboutUs() {
           {stats.map((stat, i) => (
             <div
               key={i}
-              className={`flex-1 flex flex-col items-center justify-center text-center px-2 py-5 bg-[#d1a77d47] rounded-2xl`}
+              className={`flex-1 flex flex-col items-center justify-center text-center px-2 py-5 bg-[#E9CCAE47] rounded-2xl`}
             >
               <span
                 className={`font-bold leading-tight ${
@@ -174,7 +174,7 @@ export default async function AboutUs() {
           >
             <Image
               src={FirstImg2}
-              alt="Tynex Happy Customer"
+              alt="tynex Happy Customer"
               fill
               sizes="(max-width: 640px) 100vw, 450px"
               className="object-cover object-top"
@@ -186,7 +186,7 @@ export default async function AboutUs() {
           >
             <Image
               src={FirstImg2}
-              alt="Tynex Happy Customer"
+              alt="tynex Happy Customer"
               fill
               sizes="(max-width: 640px) 100vw, 450px"
               className="object-cover object-top"
@@ -220,7 +220,7 @@ export default async function AboutUs() {
           {stats.map((stat, i) => (
             <div
               key={i}
-              className={`flex-1 flex flex-col items-center justify-center text-center px-2 py-5 bg-[#d1a77d47] rounded-2xl`}
+              className={`flex-1 flex flex-col items-center justify-center text-center px-2 py-5 bg-[#E9CCAE47] rounded-2xl`}
             >
               <span
                 className={`font-bold leading-tight ${
@@ -248,7 +248,7 @@ export default async function AboutUs() {
           </p>
 
           {/* 1. SSR Component Data (Server-rendered) */}
-          <div className="p-6 bg-[#d1a77d22] dark:bg-[#d1a77d11] rounded-2xl border border-gray-150 dark:border-gray-800">
+          <div className="p-6 bg-[#E9CCAE22] dark:bg-[#E9CCAE11] rounded-2xl border border-gray-150 dark:border-gray-800">
             <h3 className="text-[16px] font-bold text-gray-900 dark:text-white mb-1">
               🌐 Live Brands Count (Direct Server SSR)
             </h3>

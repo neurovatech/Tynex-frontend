@@ -5,7 +5,7 @@ import { SITE_URL, absoluteUrl } from "@/lib/seo-config";
 /*
  * The home page advertises itself differently from the rest of the site:
  * og:site_name is the domain and og:locale is en_US here, whereas every other
- * route uses SITE_NAME ("Tynex") and OG_LOCALE ("en_BD"). Kept local so the
+ * route uses SITE_NAME ("tynex") and OG_LOCALE ("en_BD"). Kept local so the
  * shared constants — and therefore every other page — stay untouched.
  */
 const HOME_OG_SITE_NAME = "tynex.com.bd";
@@ -78,7 +78,7 @@ const ShopSelector = dynamic(
  * The home page's own SEO copy.
  *
  * Deliberately NOT taken from site-settings. That endpoint returns
- * metaTitle: "Tynex" — a brand name, not a page title — and it was overwriting
+ * metaTitle: "tynex" — a brand name, not a page title — and it was overwriting
  * the descriptive title this page is supposed to rank on. Product, category and
  * brand pages still read their metadata from the API; only the home page, whose
  * copy is fixed editorial content, is pinned here.
@@ -86,7 +86,7 @@ const ShopSelector = dynamic(
 const HOME_TITLE =
   "Best Mobile, Laptop and Gadget Shop in Bangladesh ";
 const HOME_DESCRIPTION =
-  "Tynex is the leading and top rated smartphone, laptops, tablets, and accessories selling shop in Bangladesh. Buy the latest tech products at the lowest price";
+  "tynex is the leading and top rated smartphone, laptops, tablets, and accessories selling shop in Bangladesh. Buy the latest tech products at the lowest price";
 const HOME_KEYWORDS = "Best Smartphone shop in Bangladesh";
 
 const HOME_OG_IMAGE = {
@@ -198,7 +198,7 @@ export default async function Home() {
           "Categories" section title, which mis-describes the page. */}
       <PauseOffscreenSwipers />
       <h1 className="sr-only">
-        Tynex — Buy Mobiles, Laptops &amp; Gadgets Online in Bangladesh
+        tynex — Buy Mobiles, Laptops &amp; Gadgets Online in Bangladesh
       </h1>
 
       {/* HERO SLIDER  */}
@@ -225,7 +225,7 @@ export default async function Home() {
 
       {/* Flash Sale */}
       <>
-        <div className="bg-[#000000]">
+        <div className="bg-[#6D3F0E]">
           <div className="flex flex-col flex-1 py-6 sm:py-8 md:py-10 mt-6 sm:mt-8 md:mt-10! max-w-355 mx-auto">
             <div className="px-3 sm:px-4 md:px-6 lg:px-12 pb-4">
               <GlobalCountdown
@@ -253,11 +253,11 @@ export default async function Home() {
         <div className="flex flex-col flex-1 max-w-355 mx-auto">
           <div className="px-3 sm:px-4 md:px-6 lg:px-12">
             <div className="flex items-center gap-4 sm:gap-6 pb-4 sm:pb-5 justify-between pt-4 sm:pt-6">
-              <h3 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+              <h3 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
                 Trending Now
               </h3>
               <Link
-                className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 "
+                className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#CB843B]! transition-colors duration-300 "
                 href="/trending-now"
               >
                 See All
@@ -272,7 +272,7 @@ export default async function Home() {
 
       {/* Clip To Cart */}
       <>
-        <div className="bg-[#d1a77d] dark:bg-[#000000]">
+        <div className="bg-[#E9CCAE] dark:bg-[#6d3f0e]">
           <div className="flex flex-col flex-1 py-6 sm:py-8 md:py-10 mt-6 sm:mt-8 md:mt-10! max-w-355 mx-auto px-3 sm:px-4 md:px-6 lg:px-12">
             <ClipToCartSectionCom />
           </div>
@@ -299,7 +299,7 @@ export default async function Home() {
       {/* New Arrivals */}
       <>
         <div>
-          <div className="bg-[#000000]">
+          <div className="bg-[#6D3F0E]">
             <div className="flex flex-col flex-1 py-6 sm:py-8 md:py-10 mt-6 sm:mt-8 md:mt-10! max-w-355 mx-auto">
               <div className="px-3 sm:px-4 md:px-6 lg:px-12">
                 <div className="flex items-center gap-4 sm:gap-6 pb-4 sm:pb-5 justify-between">
@@ -309,7 +309,7 @@ export default async function Home() {
 
                   <Link
                     href="/new-arrivals"
-                    className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 "
+                    className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#CB843B]! transition-colors duration-300 "
                   >
                     See all
                   </Link>
@@ -340,17 +340,17 @@ export default async function Home() {
 
       {/* Hot Deal of the Day */}
       <>
-        <div className="bg-[#000000]">
+        <div className="bg-[#222222]">
           <div className="flex flex-col flex-1 py-6 sm:py-8 md:py-10 mt-6 sm:mt-8 md:mt-10! max-w-355 mx-auto">
             <div className="px-3 sm:px-4 md:px-6 lg:px-12">
               <div className="flex items-center justify-between gap-4 sm:gap-6 pb-4 sm:pb-5">
-                <h3 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold transition-colors bg-linear-to-r from-white to-[#d1a77d] text-transparent bg-clip-text hover:brightness-110 dark:text-white">
+                <h3 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold transition-colors bg-linear-to-r from-white to-[#CB843B] text-transparent bg-clip-text hover:brightness-110 dark:text-white">
                   Hot Deal of the Day
                 </h3>
 
                 <Link
                   href="/hot-deal"
-                  className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#d1a77d]! transition-colors duration-300 "
+                  className="text-sm font-medium text-primary  bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28]  hover:underline hover:text-[#CB843B]! transition-colors duration-300 "
                 >
                   See all
                 </Link>

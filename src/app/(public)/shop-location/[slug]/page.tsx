@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: ogTitle,
     description:
       description?.trim() ||
-      `Visit Tynex at ${store.branch_name}. Located at ${store.address}. Contact: ${store.contactno}`,
+      `Visit tynex at ${store.branch_name}. Located at ${store.address}. Contact: ${store.contactno}`,
     alternates: { canonical: `/shop-location/${slug}` },
     openGraph: {
       title: ogTitle,

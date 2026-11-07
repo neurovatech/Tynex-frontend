@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { withStockAssort } from "@/lib/stock";
 import CategoriesProductWithTopSale from "@/components/CategoriesPages/CategoriesProduct/CategoriesProductWithTopSale";
 import Breadcrumb from "@/components/share/Breadcrumb";
 import ProductListSectionCom from "@/components/HomePage/ProductList/ProductListSectionCom";
@@ -6,6 +7,9 @@ import { api } from "@/lib/api";
 import type { AttributeGroup } from "@/components/share/FilterSidebar";
 import type { Metadata } from "next";
 import { lookupCategoryNames, toTitleCase } from "@/lib/category-lookup";
+import { prefetchBanner, prefetchShowcase } from "@/lib/showcase-prefetch";
+import type { BannerEscalateResponse } from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { CategoryShowcaseResponse } from "@/components/CategoriesPages/CategoryShowcaseSections";
 import {
   SITE_NAME,
   OG_LOCALE,
@@ -41,6 +45,8 @@ export interface ProductItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  /** Real stock ("In Stock" / "Out of Stock") — only meaningful when the list call sent stockAssort=1, see lib/stock.ts */
+  stockStatus?: string;
   endOfLife?: boolean;
   allowPreOrder?: boolean;
   recognitionBadge?: string;
@@ -120,10 +126,10 @@ export async function generateMetadata({
   const cmsTitle = currentPage > 1 ? undefined : seoText(seo?.title);
   const cmsDescription = seoText(seo?.description);
 
-  const ogTitle = cmsTitle || `${categoryName} Products${pageLabel} | Tynex`;
+  const ogTitle = cmsTitle || `${categoryName} Products${pageLabel} | tynex`;
   const ogDescription =
     cmsDescription ||
-    `Browse ${categoryName} products at Tynex — Bangladesh's premium tech store.`;
+    `Browse ${categoryName} products at tynex — Bangladesh's premium tech store.`;
   const ogImage = buildOgImage(categoryImage, categoryName);
 
   // A CMS canonical is absolute and page-agnostic, so it is only right for
@@ -139,7 +145,7 @@ export async function generateMetadata({
       `${categoryName}${pageLabel}`,
     description:
       cmsDescription ||
-      `Shop the complete ${categoryName} collection at Tynex. Explore all ${categoryName} products with the best prices, official warranty, and fast delivery across Bangladesh.${currentPage > 1 ? ` Viewing page ${currentPage}.` : ""}`,
+      `Shop the complete ${categoryName} collection at tynex. Explore all ${categoryName} products with the best prices, official warranty, and fast delivery across Bangladesh.${currentPage > 1 ? ` Viewing page ${currentPage}.` : ""}`,
     ...(seoText(seo?.keywords) ? { keywords: seoText(seo?.keywords) } : {}),
     alternates: { canonical },
     openGraph: {
@@ -192,13 +198,14 @@ export default async function CategoriesPage({
       const queryParams = new URLSearchParams({
         page: String(currentPage),
         limit: String(LIMIT),
+        stockAssort: "1",
         categorySlug,
       });
       if (sort) queryParams.set("sort", sort);
       if (search) queryParams.set("search", search);
 
       const res = await api.get<ProductListResponse>(
-        `/products?${queryParams.toString()}`,
+        withStockAssort(`/products?${queryParams.toString()}`),
         // Only the default view (page 1, no sort/search) is a shared, cached
         // response. Every other page/sort/search combination is its own URL and
         // would become its own file in .next/cache/fetch-cache (search text is
@@ -257,11 +264,16 @@ export default async function CategoriesPage({
     }
   }
 
-  const [productData, brands, { attributes, priceData }] = await Promise.all([
-    fetchProducts(),
-    fetchBrands(),
-    fetchAttributes(),
-  ]);
+  // Banner + Top Selling/Trending are fetched here rather than in the browser so
+  // the block is in the first HTML at its final size (no skeleton -> collapse).
+  const [productData, brands, { attributes, priceData }, initialBanner, initialShowcase] =
+    await Promise.all([
+      fetchProducts(),
+      fetchBrands(),
+      fetchAttributes(),
+      prefetchBanner<BannerEscalateResponse>(categorySlug, "category"),
+      prefetchShowcase<CategoryShowcaseResponse>(categorySlug, "category"),
+    ]);
 
   // ── Breadcrumb ────────────────────────────────────────────────────────────────
   const breadcrumbItems = [
@@ -304,6 +316,8 @@ export default async function CategoriesPage({
           brands={brands}
           attributes={attributes}
           priceData={priceData}
+          initialBanner={initialBanner}
+          initialShowcase={initialShowcase}
           topSellingSlot={<ProductListSectionCom showcaseSlug="top-selling" />}
           runningOfferSlot={
             <ProductListSectionCom showcaseSlug="running-offer" />

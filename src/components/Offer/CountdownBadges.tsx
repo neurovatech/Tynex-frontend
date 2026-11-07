@@ -26,8 +26,8 @@ export default function CountdownBadges({ size = "sm", endDate }: Props) {
 
   const base =
     size === "md"
-      ? "bg-[#000000] text-white font-medium rounded-md px-3 py-1.5 text-sm"
-      : "bg-[#000000] text-white font-medium rounded-md px-2.5 py-1 text-sm";
+      ? "bg-[#6D3F0E] text-white font-medium rounded-md px-3 py-1.5 text-sm"
+      : "bg-[#6D3F0E] text-white font-medium rounded-md px-2.5 py-1 text-sm";
 
   return (
     <div className="flex items-center gap-1 flex-wrap">
@@ -37,7 +37,7 @@ export default function CountdownBadges({ size = "sm", endDate }: Props) {
             {value} {label}
           </span>
           {i < labels.length - 1 && (
-            <span className="text-[#3d2000] dark:text-[#d1a77d] font-bold text-sm">:</span>
+            <span className="text-[#3d2000] dark:text-[#d4a97a] font-bold text-sm">:</span>
           )}
         </span>
       ))}

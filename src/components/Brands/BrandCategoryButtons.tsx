@@ -33,14 +33,14 @@ export default function BrandCategoryButtons({ categories, activeCategorySlug: a
         onClick={() => navigate(null)}
         className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${
           activeCategoryUuid === null
-            ? "bg-[#000000] text-white border-[#000000]"
-            : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#000000] hover:text-[#000000] dark:hover:text-[#d1a77d]"
+            ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+            : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#6D3F0E] hover:text-[#6D3F0E] dark:hover:text-[#d4a97a]"
         }`}
       >
         All
       </button>
 
-      {/* Category buttons */}
+ 
       {categories
         .filter((c) => c.is_active)
         .map((cat) => (
@@ -49,8 +49,8 @@ export default function BrandCategoryButtons({ categories, activeCategorySlug: a
             onClick={() => navigate(cat.category_slug)}
             className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${
               activeCategoryUuid === cat.category_slug
-                ? "bg-[#000000] text-white border-[#000000]"
-                : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#000000] hover:text-[#000000] dark:hover:text-[#d1a77d]"
+                ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+                : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#6D3F0E] hover:text-[#6D3F0E] dark:hover:text-[#d4a97a]"
             }`}
           >
             {cat.category_name}

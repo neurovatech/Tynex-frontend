@@ -58,7 +58,7 @@ export default async function LimitedTimeOffer() {
       <div className="md:px-12.5 px-4">
         <Breadcrumb items={breadcrumbItems} />
 
-        <div className="lg:col-span-12  bg-[#000000] px-4 rounded-sm">
+        <div className="lg:col-span-12  bg-[#6d3f0e] px-4 rounded-sm">
           <GlobalCountdown title="Flash Sale" targetDate={getNext15thDate()} />
         </div>
       </div>

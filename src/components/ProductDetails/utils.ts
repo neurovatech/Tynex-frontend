@@ -8,6 +8,10 @@ export interface VariantRow {
   thumbnailUrl: string;
   isActive: boolean;
   isTba: boolean;
+  isEcd?: boolean;
+  isPreOrder?: boolean;
+  isFs?: boolean;
+  isLs?: boolean;
 }
 
 export interface VariantApiResponse {
@@ -26,6 +30,11 @@ export interface ConsolidatedVariant {
   price: number;
   thumbnailUrl: string;
   attributes: Record<string, string>;
+  isPreOrder?: boolean;
+  isTba?: boolean;
+  isFs?: boolean;
+  isLs?: boolean;
+  isEcd?: boolean;
 }
 
 export function consolidateVariants(rows: VariantRow[]): {
@@ -119,10 +128,17 @@ export function consolidateVariants(rows: VariantRow[]): {
       existing.mrp = row.mrpUnitSale;
     }
 
-    // Track isTba per variant
-    if (row.isTba && !existing.attributes["_isTba"]) {
-      existing.attributes["_isTba"] = "true";
+    // Variant status flags
+    if (row.isPreOrder) existing.isPreOrder = true;
+    if (row.isTba) {
+      existing.isTba = true;
+      if (!existing.attributes["_isTba"]) {
+        existing.attributes["_isTba"] = "true";
+      }
     }
+    if (row.isFs) existing.isFs = true;
+    if (row.isLs) existing.isLs = true;
+    if (row.isEcd) existing.isEcd = true;
 
     if (row.thumbnailUrl?.trim() && !existing.thumbnailUrl) {
       existing.thumbnailUrl = row.thumbnailUrl.trim();

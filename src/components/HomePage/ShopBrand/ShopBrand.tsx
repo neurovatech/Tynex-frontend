@@ -1,4 +1,5 @@
 "use client";
+import { withStockAssort } from "@/lib/stock";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,6 +34,8 @@ interface ProductItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  /** Real stock ("In Stock" / "Out of Stock") — only meaningful when the list call sent stockAssort=1, see lib/stock.ts */
+  stockStatus?: string;
   regularPrice: number;
   discountedPrice: number;
   disRate: number;
@@ -63,7 +66,7 @@ export default function ShopBrand({ brands }: Props) {
     refetchOnReconnect: false,
     queryFn: () =>
       api.get<ProductListResponse>(
-        `/products?brandSlug=${activeBrandSlug}&limit=12&page=1`,
+        withStockAssort(`/products?brandSlug=${activeBrandSlug}&limit=12&page=1&stockAssort=1`),
       ),
     enabled: !!activeBrandSlug,
   });
@@ -112,7 +115,7 @@ export default function ShopBrand({ brands }: Props) {
                         flex items-center justify-center p-3 sm:p-4
                         ${
                           isActive
-                            ? "bg-[#FFF4E8] border border-[#d1a77d] shadow-sm dark:bg-[#342a20] dark:border-[#000000]"
+                            ? "bg-[#FFF4E8] border border-[#E9CCAE] shadow-sm dark:bg-[#342a20] dark:border-[#B57908]"
                             : "bg-[#F3F3F5] border border-transparent dark:bg-zinc-800/80 hover:bg-[#F0ECF8]"
                         }
                       `}
@@ -136,7 +139,7 @@ export default function ShopBrand({ brands }: Props) {
                     <span
                       className={`text-[11px] lg:text-xs font-semibold text-center leading-tight transition-colors ${
                         isActive
-                          ? "text-[#000000] dark:text-white"
+                          ? "text-[#101518] dark:text-white"
                           : "text-gray-600 dark:text-gray-400"
                       }`}
                     >
@@ -221,6 +224,7 @@ export default function ShopBrand({ brands }: Props) {
                       isBestDeal={false}
                       inStock={!product.isTba}
                       isTba={product.isTba}
+                      stockStatus={product.stockStatus}
                       image={product.thumbnails?.mediaFileUrl ?? ""}
                       // See ProductList.tsx's ProductCard for why: Swiper
                       // repositions slides via transform after mount, which

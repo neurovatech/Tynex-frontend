@@ -35,11 +35,11 @@ interface CampaignsResponse {
 export const metadata: Metadata = {
   title: "Latest Offers & Campaigns",
   description:
-    "Explore Tynex's latest campaigns, flash sales, and exclusive offers on smartphones, laptops, and gadgets in Bangladesh.",
+    "Explore tynex's latest campaigns, flash sales, and exclusive offers on smartphones, laptops, and gadgets in Bangladesh.",
   alternates: { canonical: "/offer" },
   openGraph: {
     title: "Latest Offers & Campaigns ",
-    description: "Shop the best deals and limited-time offers at Tynex.",
+    description: "Shop the best deals and limited-time offers at tynex.",
     url: absoluteUrl("/offer"),
     siteName: SITE_NAME,
     locale: OG_LOCALE,
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Latest Offers & Campaigns ",
-    description: "Shop the best deals and limited-time offers at Tynex.",
+    description: "Shop the best deals and limited-time offers at tynex.",
     images: [DEFAULT_OG_IMAGE.url],
   },
 };

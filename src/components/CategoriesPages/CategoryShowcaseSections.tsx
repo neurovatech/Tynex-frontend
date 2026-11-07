@@ -16,6 +16,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import type { PrefetchedQuery } from "@/lib/showcase-prefetch";
 import TrendingNow from "@/components/HomePage/TrendingNow/TrendingNow";
 import type { ProductCardItem } from "@/components/HomePage/TrendingNow/TrendingNowSectionCom";
 
@@ -36,7 +37,7 @@ interface ShowcaseProduct {
   thumbnails: { fileUuid: string; mediaFileUrl: string } | null;
 }
 
-interface CategoryShowcaseResponse {
+export interface CategoryShowcaseResponse {
   statusCode: number;
   status: string;
   found: boolean;
@@ -86,29 +87,48 @@ interface Props {
   queryParam?: "category" | "subCategory";
   /** When a brand chip is active, call the API with that brand slug + brand=1 instead */
   activeBrandSlug?: string | null;
+  /** Fetched on the server so the first paint has no skeleton to swap or collapse. */
+  initial?: PrefetchedQuery<CategoryShowcaseResponse>;
 }
 
 export default function CategoryShowcaseSections({
   categorySlug,
   queryParam = "category",
   activeBrandSlug,
+  initial,
 }: Props) {
   // Brand chip selected → use brand slug with brand=1
   // Otherwise → use category/subCategory slug with the appropriate param
   const showcaseSlug  = activeBrandSlug?.trim() || categorySlug;
   const showcaseParam = activeBrandSlug?.trim() ? "brand" : queryParam;
+  const showcaseQuery = `${activeBrandSlug}?categorySlug=${categorySlug}`;
 
+  // `/showcase-escalate/${showcaseSlug}?${showcaseParam}=1`,
   const { data, isLoading } = useQuery<CategoryShowcaseResponse>({
     queryKey: ["category-showcase", showcaseSlug, showcaseParam],
     queryFn: () =>
       api.get<CategoryShowcaseResponse>(
-        `/showcase-escalate/${showcaseSlug}?${showcaseParam}=1`,
+        `/showcase-escalate/${showcaseQuery}`,
       ),
+    // Server-supplied answer (see lib/showcase-prefetch.ts) — only while the key it was
+    // fetched for is still the one in use, so a chip change never shows stale data.
+    initialData:
+      initial && initial.slug === showcaseSlug && initial.param === showcaseParam
+        ? initial.response
+        : undefined,
     staleTime: 10 * 60 * 1000,
     gcTime:    60 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect:   false,
   });
+
+  // console.log("data", `/showcase-escalate/${showcaseSlug}?${showcaseParam}=1`)
+  console.log("data", `/showcase-escalate/${showcaseQuery}`,)
+  console.log("data", data,)
+  
+  // /showcase-escalate/samsung?categorySlug=phones?brand=1
+  // /showcase-escalate/samsung?categorySlug=phones?brand=1
+  // /showcase-escalate/samsung?categorySlug=phones?brand=1
 
   const topSelling = mapToCards(data?.data?.topSelling ?? []);
   const trending   = mapToCards(data?.data?.trending   ?? []);
@@ -125,7 +145,7 @@ export default function CategoryShowcaseSections({
       {(isLoading || hasTopSelling) && (
         <div className="bg-[#EEEEEE] dark:bg-[#2a2420] rounded-lg py-3 px-3 mb-6">
           <div className="flex pb-4 md:px-4">
-            <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+            <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
               Top Selling
             </h2>
           </div>
@@ -139,9 +159,9 @@ export default function CategoryShowcaseSections({
 
       {/* ── Trending ── */}
       {(isLoading || hasTrending) && (
-        <div className="bg-[#000000] dark:bg-[#2a2420] rounded-lg py-3 px-2 mb-6">
+        <div className="bg-[#6D3F0E] dark:bg-[#2a2420] rounded-lg py-3 px-2 mb-6">
           <div className="flex pb-4 md:px-4">
-            <h2 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold bg-linear-to-r from-white to-[#d1a77d] bg-clip-text text-transparent">
+            <h2 className="text-[20px] sm:text-[24px] md:text-[32px] font-bold bg-linear-to-r from-white to-[#CB843B] bg-clip-text text-transparent">
               Trending
             </h2>
           </div>

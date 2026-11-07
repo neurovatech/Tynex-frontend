@@ -1,3 +1,4 @@
+import { withStockAssort } from "@/lib/stock";
 import Breadcrumb from "@/components/share/Breadcrumb";
 import { api } from "@/lib/api";
 import NewArrivalsClient from "@/components/NewArrivals/NewArrivalsClient";
@@ -109,7 +110,7 @@ interface PaginationProps {
 //             href={hrefFor(p as number)}
 //             className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
 //               p === page
-//                 ? "bg-[#000000] text-white"
+//                 ? "bg-[#6D3F0E] text-white"
 //                 : "border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
 //             }`}
 //           >
@@ -153,7 +154,7 @@ export default async function FeatureProductsPages({
 
   try {
     const res = await api.get<ShowcaseItemsResponse>(
-      `/products?latest=1&page=1&limit=500`,
+      withStockAssort(`/products?latest=1&page=1&limit=500&stockAssort=1`),
       { next: { revalidate: 60 } }
     );
     initialProducts    = Array.isArray(res?.data) ? res.data : [];
@@ -169,7 +170,7 @@ export default async function FeatureProductsPages({
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <div className="mt-6 md:px-12.5 px-4">
-        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white mb-4">
+        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white mb-4">
           New Arrivals
         </h1>
         {/* Client component handles infinite scroll */}

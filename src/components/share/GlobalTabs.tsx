@@ -28,7 +28,7 @@ const GlobalTabs: React.FC<GlobalTabsProps> = ({
             onClick={() => setActiveTab(index)}
             className={`px-4 py-2 lg:text-sm text-[13px] md:text-base font-bold rounded-lg transition-all duration-300 ${
               activeTab === index
-                ? "bg-[#d1a77d7a] text-primary"
+                ? "bg-[#e9ccae7a] text-primary"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >

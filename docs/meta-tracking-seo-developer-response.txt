@@ -1,4 +1,4 @@
-TYNEX — RESPONSE TO "Meta Pixel + Conversions API Tracking Migration" HANDOFF
+tynex — RESPONSE TO "Meta Pixel + Conversions API Tracking Migration" HANDOFF
 ================================================================================
 To:      SEO developer (author of the handoff doc, Version 2)
 From:    Frontend developer

@@ -4,7 +4,7 @@ import FooterPagesCom from "@/components/share/FooterPagesCom";
 export const metadata: Metadata = {
   title: "Product Disclaimer Policy",
   description:
-    "Read Tynex's Product Disclaimer Policy before booking your product. Learn about the terms and conditions associated with our products.",
+    "Read tynex's Product Disclaimer Policy before booking your product. Learn about the terms and conditions associated with our products.",
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────

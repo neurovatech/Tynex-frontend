@@ -36,7 +36,7 @@ export default function PriceAvailability({
         <div className="flex flex-col items-start text-black">
           <span className="font-semibold text-sm">
             Offer Price:{" "}
-            <span className="text-[#d1a77d]">
+            <span className="text-[#CB843B]">
               {displayOfferPrice > 0 ? displayOfferPrice.toLocaleString() : "—"} ৳
             </span>
           </span>
@@ -64,7 +64,7 @@ export default function PriceAvailability({
         <div className="flex flex-col items-start text-black">
           <span className="font-semibold text-sm">
             Regular Price:{" "}
-            <span className="text-[#d1a77d]">
+            <span className="text-[#CB843B]">
               {displayRegularPrice > 0 ? displayRegularPrice.toLocaleString() : "—"} ৳
             </span>
           </span>

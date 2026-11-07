@@ -4,7 +4,7 @@ import FooterPagesCom from "@/components/share/FooterPagesCom";
 export const metadata: Metadata = {
   title: "Pre-Order Policy",
   description:
-    "Read Tynex's Pre-Order Policy before booking your product. Learn about advance payment, delivery timeline, order confirmation, cancellation, and refund terms for pre-orders.",
+    "Read tynex's Pre-Order Policy before booking your product. Learn about advance payment, delivery timeline, order confirmation, cancellation, and refund terms for pre-orders.",
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────

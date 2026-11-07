@@ -1,4 +1,5 @@
 "use client";
+import { withStockAssort } from "@/lib/stock";
 import { useState, useEffect, useRef, useCallback } from "react";
 import ProductCard from "@/components/share/GlobalProductCard";
 import { api } from "@/lib/api";
@@ -10,6 +11,8 @@ interface ShowcaseItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  /** Real stock ("In Stock" / "Out of Stock") — only meaningful when the list call sent stockAssort=1, see lib/stock.ts */
+  stockStatus?: string;
   regularPrice: number;
   discountedPrice: number;
   disRate: number;
@@ -59,7 +62,7 @@ export default function NewArrivalsClient({
       // No cache option: public catalog read, now cacheable via the proxy's
       // Cache-Control (see src/app/api/proxy/[...path]/route.ts).
       const res = await api.get<ShowcaseItemsResponse>(
-        `/products?latest=1&page=${nextPage}&limit=${LIMIT}`,
+        withStockAssort(`/products?latest=1&page=${nextPage}&limit=${LIMIT}&stockAssort=1`),
       );
       const newItems = res?.data ?? [];
       if (newItems.length > 0) {
@@ -84,7 +87,11 @@ export default function NewArrivalsClient({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      // Start the next page ~2400px (about one page of products on a phone) BEFORE the sentinel is on screen. Loading only once it is
+      // visible meant the skeleton and the new rows were inserted while the content below the
+      // list (SEO text, footer) was already in view, shoving it down (CLS). Appending while
+      // that content is still off-screen moves nothing the visitor can see.
+      { rootMargin: "0px 0px 2400px 0px", threshold: 0 }
     );
     const el = loaderRef.current;
     if (el) observer.observe(el);
@@ -107,6 +114,7 @@ export default function NewArrivalsClient({
             badge={product.productBadge || undefined}
             inStock={!product.isTba}
             isTba={product.isTba}
+            stockStatus={product.stockStatus}
             isBestDeal={false}
             slug={product.productSlug || product.productUuid}
           />

@@ -63,14 +63,14 @@ export default function SigninGooglePage() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">{error}</p>
             <Link
               href="/auth/login"
-              className="inline-block px-6 py-3 rounded-xl bg-[#000000] text-white text-sm font-bold hover:bg-[#444444] transition-colors"
+              className="inline-block px-6 py-3 rounded-xl bg-[#222222] text-white text-sm font-bold hover:bg-[#444444] transition-colors"
             >
               Back to login
             </Link>
           </>
         ) : (
           <>
-            <div className="w-10 h-10 mx-auto mb-4 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 mx-auto mb-4 border-4 border-[#B57908] border-t-transparent rounded-full animate-spin" />
             <p className="text-sm text-gray-600 dark:text-gray-300">Signing you in with Google…</p>
           </>
         )}

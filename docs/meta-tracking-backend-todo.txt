@@ -1,4 +1,4 @@
-TYNEX — ASP.NET BACKEND TO-DO LIST
+tynex — ASP.NET BACKEND TO-DO LIST
 Meta Pixel + Conversions API Tracking Migration
 ================================================================================
 For:     ASP.NET backend developer

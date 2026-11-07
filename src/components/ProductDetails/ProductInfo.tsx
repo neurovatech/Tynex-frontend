@@ -24,7 +24,7 @@ import { addToCart } from "@/store/slices/cartSlice";
 import toast from "react-hot-toast";
 import { useAddToWishlist, useRemoveFromWishlist } from "@/hooks/useWishlist";
 import { trackAddToCart } from "@/lib/analytics/pixelEvents";
-import type { CareOption } from "./TynexCare";
+import type { CareOption } from "./DazzleCare";
 type StockStatus = "in_stock" | "overselling" | "pre_order" | "eol";
 
 import { useTheme } from "next-themes";
@@ -241,7 +241,7 @@ export default function ProductInfo({
     <div className="space-y-5 text-gray-800 dark:text-gray-100">
       <div className="flex items-start justify-between gap-3 mb-0">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#000000] dark:text-white leading-snug">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#222222] dark:text-white leading-snug">
             {title}
           </h1>
 
@@ -249,7 +249,7 @@ export default function ProductInfo({
             <span className="text-gray-500 dark:text-white">By:</span>
             <Link
               href={`/brands/${brand_slug}`}
-              className="text-[#000000] dark:text-[#d1a77d] hover:underline font-semibold"
+              className="text-[#B57908] dark:text-[#D4A97A] hover:underline font-semibold"
             >
               {brand}
             </Link>
@@ -319,7 +319,7 @@ export default function ProductInfo({
               </svg>
             )}
 
-            <span className="text-[#000000] dark:text-white">
+            <span className="text-[#222222] dark:text-white">
               {alldata?.stockNote ||
                 stockNote ||
                 (alldata?.totalStock !== undefined &&
@@ -340,11 +340,11 @@ export default function ProductInfo({
               >
                 <path
                   d="M0.837294 10.1859C0.619676 9.9329 0.5 9.61027 0.5 9.27658C0.5 8.94289 0.619676 8.62026 0.837294 8.36729C1.1592 7.99301 1.48206 7.62491 1.80587 7.26301C1.70777 6.79348 1.61348 6.3192 1.52301 5.84015C1.46078 5.51224 1.51825 5.17288 1.68497 4.88374C1.8517 4.5946 2.11661 4.37486 2.43158 4.26444C2.89825 4.10063 3.36206 3.94301 3.82301 3.79158C3.97253 3.33539 4.12825 2.87729 4.29015 2.41729C4.40051 2.10289 4.6198 1.83841 4.90833 1.67174C5.19685 1.50507 5.53553 1.44724 5.86301 1.50872C6.3392 1.59825 6.81158 1.69158 7.28015 1.78872C7.63634 1.47063 7.99825 1.15348 8.36587 0.837294C8.61883 0.619676 8.94146 0.5 9.27515 0.5C9.60884 0.5 9.93147 0.619676 10.1844 0.837294C10.5559 1.15539 10.9197 1.47444 11.2759 1.79444C11.7521 1.69444 12.2325 1.5992 12.7173 1.50872C13.045 1.44687 13.384 1.50452 13.6728 1.67122C13.9617 1.83791 14.1812 2.10261 14.2916 2.41729C14.4535 2.87825 14.6092 3.33634 14.7587 3.79158C15.2197 3.94396 15.6835 4.10158 16.1502 4.26444C16.8001 4.49301 17.1859 5.16158 17.0587 5.84015C16.9673 6.32777 16.8716 6.81015 16.7716 7.28729C17.0954 7.65015 17.4192 8.02015 17.743 8.39729C17.9608 8.65009 18.0808 8.97262 18.081 9.30631C18.0813 9.64001 17.9619 9.96273 17.7444 10.2159C17.4235 10.5902 17.1006 10.9582 16.7759 11.3202C16.8749 11.7897 16.9692 12.2644 17.0587 12.7444C17.1206 13.0721 17.0629 13.4111 16.8962 13.7C16.7295 13.9888 16.4648 14.2083 16.1502 14.3187C15.6835 14.4825 15.2197 14.6402 14.7587 14.7916C14.6082 15.2487 14.4525 15.7068 14.2916 16.1659C14.1815 16.4808 13.9621 16.7458 13.6732 16.9128C13.3843 17.0798 13.0452 17.1376 12.7173 17.0759C12.244 16.9866 11.7716 16.8928 11.3002 16.7944C10.944 17.1135 10.5821 17.4306 10.2144 17.7459C9.96147 17.9635 9.63884 18.0832 9.30515 18.0832C8.97146 18.0832 8.64883 17.9635 8.39587 17.7459C8.02444 17.4278 7.66063 17.1087 7.30444 16.7887C6.82825 16.8887 6.34777 16.984 5.86301 17.0744C5.53531 17.1363 5.1963 17.0786 4.90746 16.9119C4.61863 16.7452 4.39911 16.4805 4.28872 16.1659C4.12862 15.7093 3.9729 15.2512 3.82158 14.7916C3.35623 14.639 2.8924 14.4819 2.43015 14.3202C2.11518 14.2097 1.85027 13.99 1.68355 13.7008C1.51682 13.4117 1.45935 13.0723 1.52158 12.7444C1.61301 12.2559 1.70872 11.773 1.80872 11.2959C1.48132 10.929 1.15749 10.559 0.837294 10.1859Z"
-                  fill="#000000"
+                  fill="#6D3F0E"
                 />
                 <path
                   d="M0.837294 10.1859C0.619676 9.9329 0.5 9.61027 0.5 9.27658C0.5 8.94289 0.619676 8.62026 0.837294 8.36729C1.1592 7.99301 1.48206 7.62491 1.80587 7.26301C1.70777 6.79348 1.61348 6.3192 1.52301 5.84015C1.46078 5.51224 1.51825 5.17288 1.68497 4.88374C1.8517 4.5946 2.11661 4.37486 2.43158 4.26444C2.89825 4.10063 3.36206 3.94301 3.82301 3.79158C3.97253 3.33539 4.12825 2.87729 4.29015 2.41729C4.40051 2.10289 4.6198 1.83841 4.90833 1.67174C5.19685 1.50507 5.53553 1.44724 5.86301 1.50872C6.3392 1.59825 6.81158 1.69158 7.28015 1.78872C7.63634 1.47063 7.99825 1.15348 8.36587 0.837294C8.61883 0.619676 8.94146 0.5 9.27515 0.5C9.60884 0.5 9.93147 0.619676 10.1844 0.837294C10.5559 1.15539 10.9197 1.47444 11.2759 1.79444C11.7521 1.69444 12.2325 1.5992 12.7173 1.50872C13.045 1.44687 13.384 1.50452 13.6728 1.67122C13.9617 1.83791 14.1812 2.10261 14.2916 2.41729C14.4535 2.87825 14.6092 3.33634 14.7587 3.79158C15.2197 3.94396 15.6835 4.10158 16.1502 4.26444C16.8002 4.49301 17.1859 5.16158 17.0587 5.84015C16.9673 6.32777 16.8716 6.81015 16.7716 7.28729C17.0954 7.65015 17.4192 8.02015 17.743 8.39729C17.9608 8.65009 18.0808 8.97262 18.081 9.30631C18.0813 9.64001 17.9619 9.96273 17.7444 10.2159C17.4235 10.5902 17.1006 10.9582 16.7759 11.3202C16.8749 11.7897 16.9692 12.2644 17.0587 12.7444C17.1206 13.0721 17.0629 13.4111 16.8962 13.7C16.7295 13.9888 16.4648 14.2083 16.1502 14.3187C15.6835 14.4825 15.2197 14.6402 14.7587 14.7916C14.6082 15.2487 14.4525 15.7068 14.2916 16.1659C14.1815 16.4808 13.9621 16.7458 13.6732 16.9128C13.3843 17.0798 13.0452 17.1376 12.7173 17.0759C12.244 16.9866 11.7716 16.8928 11.3002 16.7944C10.944 17.1135 10.5821 17.4306 10.2144 17.7459C9.96147 17.9635 9.63884 18.0832 9.30515 18.0832C8.97146 18.0832 8.64883 17.9635 8.39587 17.7459C8.02444 17.4278 7.66063 17.1087 7.30444 16.7887C6.82825 16.8887 6.34777 16.984 5.86301 17.0744C5.53531 17.1363 5.1963 17.0786 4.90746 16.9119C4.61863 16.7452 4.39911 16.4806 4.28872 16.1659C4.12862 15.7093 3.9729 15.2512 3.82158 14.7916C3.35623 14.639 2.8924 14.4819 2.43015 14.3202C2.11518 14.2097 1.85027 13.99 1.68355 13.7008C1.51682 13.4117 1.45935 13.0723 1.52158 12.7444C1.61301 12.2559 1.70872 11.773 1.80872 11.2959C1.48132 10.929 1.15749 10.559 0.837294 10.1859Z"
-                  stroke="#000000"
+                  stroke="#6D3F0E"
                   strokeLinejoin="round"
                 />
                 <path
@@ -356,7 +356,7 @@ export default function ProductInfo({
               </svg>
             )}
 
-            <span className="font-bold bg-gradient-to-r from-[#000000] to-[#D3791B] bg-clip-text text-transparent flex dark:text-white text-[12px] lg:text-[16px]">
+            <span className="font-bold bg-gradient-to-r from-[#6D3F0E] to-[#D3791B] bg-clip-text text-transparent flex dark:text-white text-[12px] lg:text-[16px]">
               {alldata?.warrantyNote || warrantyNote || alldata?.warranty || ""}
             </span>
           </div>
@@ -410,11 +410,11 @@ export default function ProductInfo({
               >
                 <path
                   d="M15.4698 7.83C14.8817 6.30882 13.8608 4.99331 12.5332 4.04604C11.2056 3.09878 9.62953 2.56129 7.99979 2.5C6.37005 2.56129 4.79398 3.09878 3.46639 4.04604C2.1388 4.99331 1.11787 6.30882 0.529787 7.83C0.490071 7.93985 0.490071 8.06015 0.529787 8.17C1.11787 9.69118 2.1388 11.0067 3.46639 11.954C4.79398 12.9012 6.37005 13.4387 7.99979 13.5C9.62953 13.4387 11.2056 12.9012 12.5332 11.954C13.8608 11.0067 14.8817 9.69118 15.4698 8.17C15.5095 8.06015 15.5095 7.93985 15.4698 7.83ZM7.99979 12.5C5.34979 12.5 2.54979 10.535 1.53479 8C2.54979 5.465 5.34979 3.5 7.99979 3.5C10.6498 3.5 13.4498 5.465 14.4648 8C13.4498 10.535 10.6498 12.5 7.99979 12.5Z"
-                  fill="#d1a77d"
+                  fill="#CB843B"
                 />
                 <path
                   d="M8 5C7.40666 5 6.82664 5.17595 6.33329 5.50559C5.83994 5.83524 5.45543 6.30377 5.22836 6.85195C5.0013 7.40013 4.94189 8.00333 5.05765 8.58527C5.1734 9.16721 5.45912 9.70176 5.87868 10.1213C6.29824 10.5409 6.83279 10.8266 7.41473 10.9424C7.99667 11.0581 8.59987 10.9987 9.14805 10.7716C9.69623 10.5446 10.1648 10.1601 10.4944 9.66671C10.8241 9.17336 11 8.59334 11 8C11 7.20435 10.6839 6.44129 10.1213 5.87868C9.55871 5.31607 8.79565 5 8 5ZM8 10C7.60444 10 7.21776 9.8827 6.88886 9.66294C6.55996 9.44318 6.30362 9.13082 6.15224 8.76537C6.00087 8.39991 5.96126 7.99778 6.03843 7.60982C6.1156 7.22186 6.30608 6.86549 6.58579 6.58579C6.86549 6.30608 7.22186 6.1156 7.60982 6.03843C7.99778 5.96126 8.39992 6.00087 8.76537 6.15224C9.13082 6.30362 9.44318 6.55996 9.66294 6.88886C9.8827 7.21776 10 7.60444 10 8C10 8.53043 9.78929 9.03914 9.41421 9.41421C9.03914 9.78929 8.53043 10 8 10Z"
-                  fill="#d1a77d"
+                  fill="#CB843B"
                 />
               </svg>
 
@@ -423,7 +423,7 @@ export default function ProductInfo({
           </div>
 
           {/* {isPreorder && (
-            <span className="inline-block mt-2 bg-[#FAF3E7] text-[#000000] dark:bg-[#5E4221] dark:text-[#d1a77d] text-xs font-extrabold px-3 py-1 rounded-full border border-[#000000]/20 animate-pulse">
+            <span className="inline-block mt-2 bg-[#FAF3E7] text-[#7B4F1E] dark:bg-[#5E4221] dark:text-[#E9CCAE] text-xs font-extrabold px-3 py-1 rounded-full border border-[#7B4F1E]/20 animate-pulse">
               Pre-order Booking Open (Pay 5% Booking Deposit Only)
             </span>
           )} */}
@@ -473,7 +473,7 @@ export default function ProductInfo({
               className={`transition-colors duration-200 ${
                 isWishlisted
                   ? "text-red-500 fill-red-500"
-                  : "text-[#000000] fill-none"
+                  : "text-[#B57908] fill-none"
               }`}
             />
           </button>
@@ -493,7 +493,7 @@ export default function ProductInfo({
           {/* <button
               className="w-10 h-10 border border-[#EEEEEE] dark:border-gray-700 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-[#1A1A1A] transition-colors"
             >
-              <Share2 key="3" size={16} className="text-[#000000]" />
+              <Share2 key="3" size={16} className="text-[#B57908]" />
             </button> */}
         </div>
       </div>
@@ -504,7 +504,7 @@ export default function ProductInfo({
           <button
             type="button"
             onClick={() => setShowProfitMeter(!showProfitMeter)}
-            className="w-5 h-5 text-gray-300 dark:text-white hover:text-[#000000] transition hidden"
+            className="w-5 h-5 text-gray-300 dark:text-white hover:text-[#B57908] transition hidden"
             title="Admin Cost View (Secret Toggle)"
           >
             <Settings size={14} className="animate-spin-slow" />
@@ -523,25 +523,25 @@ export default function ProductInfo({
 
       {/* Admin Profit Meter (Secrets Panel) */}
       {showProfitMeter && (
-        <div className="bg-[#faf4ea] dark:bg-purple-950/20 rounded-xl p-3 border border-purple-200/50 dark:border-purple-800/20 text-purple-950 dark:text-[#d1a77d] flex items-center justify-between text-xs animate-fade-in">
+        <div className="bg-[#faf4ea] dark:bg-purple-950/20 rounded-xl p-3 border border-purple-200/50 dark:border-purple-800/20 text-purple-950 dark:text-[#d4a97a] flex items-center justify-between text-xs animate-fade-in">
           <div className="flex items-center gap-2">
-            <Percent size={14} className="text-[#d1a77d]" />
+            <Percent size={14} className="text-[#d4a97a]" />
             <span>
               <strong>Admin Profit Meter:</strong> Cost Price: BDT
               {Math.round(basePrice * 0.85).toLocaleString()} | Profit Margin:{" "}
-              <strong className="text-[#d1a77d] dark:text-[#d1a77d]">
+              <strong className="text-[#d4a97a] dark:text-[#d4a97a]">
                 15% (BDT{Math.round(basePrice * 0.15).toLocaleString()})
               </strong>
             </span>
           </div>
-          <span className="text-[10px] bg-[#d1a77d] text-white dark:bg-purple-900/60 font-bold px-2 py-0.5 rounded">
+          <span className="text-[10px] bg-[#d4a97a] text-white dark:bg-purple-900/60 font-bold px-2 py-0.5 rounded">
             Hidden from Public
           </span>
         </div>
       )}
 
       {/* Availability Status */}
-      <div className="hidden items-center justify-between py-2 text-sm bg-gray-50 dark:bg-[#25221F] p-3 rounded-xl border border-[#000000]/20 dark:border-gray-800/50">
+      <div className="hidden items-center justify-between py-2 text-sm bg-gray-50 dark:bg-[#25221F] p-3 rounded-xl border border-[#7B4F1E]/20 dark:border-gray-800/50">
         {/* <div className="flex items-center gap-2">
           <span className="text-gray-500 dark:text-white">Availability:</span>
           <span
@@ -549,7 +549,7 @@ export default function ProductInfo({
               stockStatus === "eol"
                 ? "text-red-500"
                 : stockStatus === "pre_order"
-                  ? "text-[#000000] dark:text-[#d1a77d]"
+                  ? "text-[#7B4F1E] dark:text-[#bd9961]"
                   : "text-emerald-600"
             }`}
           >
@@ -578,7 +578,7 @@ export default function ProductInfo({
       {warrantyNote && (
         <div className="hidden items-center gap-1.5 text-sm font-semibold">
           <WarrantyIcon />
-          <span className="bg-linear-to-r from-[#000000] to-[#D3791B] dark:from-[#d1a77d] dark:to-[#000000] bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-[#6D3F0E] to-[#D3791B] dark:from-[#D4A97A] dark:to-[#B57908] bg-clip-text text-transparent">
             {warrantyNote}
           </span>
         </div>
@@ -613,7 +613,7 @@ export default function ProductInfo({
       </div>
 
       {/* Main Pricing block */}
-      <div className="lg:flex items-center justify-between gap-4 text-sm bg-[#FAF9F6] dark:bg-[#25221F] p-4 rounded-2xl border border-[#000000]/20 dark:border-gray-800/80">
+      <div className="lg:flex items-center justify-between gap-4 text-sm bg-[#FAF9F6] dark:bg-[#25221F] p-4 rounded-2xl border border-[#7B4F1E]/20 dark:border-gray-800/80">
         <div className="space-y-1 w-full">
           {/* ── Variant unavailable — message itself now shown above the
                 Color/RAM/Region selector box (see ProductDetail.tsx),
@@ -638,7 +638,7 @@ export default function ProductInfo({
               )} */}
               <div className="flex flex-col md:flex-row justify-between">
                 <div className="flex gap-2.5 items-center">
-                  <span className="text-[28px] font-extrabold text-[#000000] dark:text-[#d1a77d]">
+                  <span className="text-[28px] font-extrabold text-[#B57908] dark:text-[#D4A97A]">
                     BDT {combinedOfferPrice.toLocaleString()}
                   </span>
                   {combinedOriginalPrice > combinedOfferPrice && (
@@ -682,7 +682,7 @@ export default function ProductInfo({
                       </span>
                     </div>
                   ))}
-                  <div className="flex justify-between text-xs font-bold text-[#000000] dark:text-[#d1a77d] border-t border-gray-200 dark:border-gray-700 pt-1 mt-1">
+                  <div className="flex justify-between text-xs font-bold text-[#B57908] dark:text-[#D4A97A] border-t border-gray-200 dark:border-gray-700 pt-1 mt-1">
                     <span>Total</span>
                     <span>BDT {combinedOfferPrice.toLocaleString()}</span>
                   </div>
@@ -692,7 +692,7 @@ export default function ProductInfo({
               {/* Add to Cart Button */}
               {/* <button
                 onClick={handleAddToCart}
-                className="w-full flex items-center justify-center gap-2 bg-[#000000] hover:bg-[#9a6507] active:scale-95 text-white font-bold px-6 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg mt-3"
+                className="w-full flex items-center justify-center gap-2 bg-[#B57908] hover:bg-[#9a6507] active:scale-95 text-white font-bold px-6 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg mt-3"
               >
                 <ShoppingCart size={18} />
                 Add to Cart
@@ -715,17 +715,17 @@ export default function ProductInfo({
       </div>
 
       {/* ── Competitor Live Price Comparison ── */}
-      <div className="bg-[#F8F9FB] hidden dark:bg-[#22201D] border border-[#000000]/20 dark:border-gray-800 rounded-2xl p-4 space-y-3 shadow-xs">
+      <div className="bg-[#F8F9FB] hidden dark:bg-[#22201D] border border-[#7B4F1E]/20 dark:border-gray-800 rounded-2xl p-4 space-y-3 shadow-xs">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-            <DollarSign size={14} className="text-[#000000]" /> Live Competitor
+            <DollarSign size={14} className="text-[#B57908]" /> Live Competitor
             Price Checker
           </h3>
           <button
             type="button"
             onClick={handlePriceComparison}
             disabled={isComparing}
-            className="text-xs font-bold text-[#000000] dark:text-[#d1a77d] bg-white dark:bg-[#342D26] hover:bg-gray-50 border border-gray-200 dark:border-gray-700 py-1 px-3 rounded-lg shadow-2xs cursor-pointer disabled:opacity-50"
+            className="text-xs font-bold text-[#7B4F1E] dark:text-[#bd9961] bg-white dark:bg-[#342D26] hover:bg-gray-50 border border-gray-200 dark:border-gray-700 py-1 px-3 rounded-lg shadow-2xs cursor-pointer disabled:opacity-50"
           >
             {isComparing
               ? "Scanning Competitor Sites..."
@@ -736,7 +736,7 @@ export default function ProductInfo({
         {isComparing && (
           <div className="w-full h-1.5 bg-gray-250 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
-              className="h-full bg-linear-to-r from-orange-500 to-[#000000] rounded-full animate-progress"
+              className="h-full bg-linear-to-r from-orange-500 to-[#7B4F1E] rounded-full animate-progress"
               style={{ width: "80%" }}
             />
           </div>
@@ -760,7 +760,7 @@ export default function ProductInfo({
             </div>
             <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-xl p-2.5 text-center border border-emerald-100/50 dark:border-emerald-900/30">
               <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
-                You Save At Tynex
+                You Save At tynex
               </p>
               <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
                 BDT{compareResult.savings.toLocaleString()}

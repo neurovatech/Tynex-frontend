@@ -47,7 +47,7 @@ const CareerCard: React.FC<{ post: BlogPost }> = ({ post }) => {
       </div>
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
-          <span className="bg-[#d1a77d] text-white text-xs font-semibold px-3 py-0.5 rounded-full">
+          <span className="bg-[#d4a97a] text-white text-xs font-semibold px-3 py-0.5 rounded-full">
             {post.post_category}
           </span>
           <span className="text-gray-400 dark:text-gray-300 text-xs flex items-center gap-1">

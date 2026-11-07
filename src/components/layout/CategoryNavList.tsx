@@ -150,7 +150,7 @@ export default function CategoryNavList({ categories }: Props) {
     <>
       <nav 
         ref={navElementRef}
-        className="items-center rounded-lg flex-1 bg-background py-1.5 px-5 w-[90%] relative z-99 "
+        className="items-center rounded-lg flex-1  w-[90%] relative z-99 "
       >
         <div className="relative w-full flex items-center">
 
@@ -196,7 +196,7 @@ export default function CategoryNavList({ categories }: Props) {
   <Link
     href={`/categories/${item.slug}`}
     prefetch={false}
-    className="flex dark:bg-light_bg items-center gap-1 text-sm text-primary font-bold hover:text-[#000000] dark:hover:text-[#ba975f] whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors duration-150 no-underline"
+    className="flex  text-white  items-center gap-2 text-sm  font-bold hover:text-[#d1a77d] dark:hover:text-[#ba975f] whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors duration-150 no-underline"
   >
     {item.name}
     {hasSubmenu && (

@@ -11,7 +11,7 @@ interface TermsCheckboxProps {
 const TermsCheckbox: React.FC<TermsCheckboxProps> = ({
   checked: externalChecked,
   onChange,
-  companyName = "Tynex",
+  companyName = "tynex",
   termsUrl = "/terms",
 }) => {
   const [internalChecked, setInternalChecked] = useState(false);

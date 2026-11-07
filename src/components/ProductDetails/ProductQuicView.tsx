@@ -564,7 +564,7 @@ function ProductQuicView({
             <div className="relative w-full h-64 sm:h-80 rounded-xl overflow-hidden bg-white dark:bg-[#2a2420]">
               {loading ? (
                 <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-10 h-10 border-4 border-[#B57908] border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : (
                 <Image
@@ -589,7 +589,7 @@ function ProductQuicView({
                     onClick={() => setSelectedImage(i)}
                     className={`shrink-0 w-14 h-14 rounded-lg border-2 overflow-hidden bg-white ${
                       selectedImage === i
-                        ? "border-[#000000]"
+                        ? "border-[#B57908]"
                         : "border-gray-200 dark:border-gray-700"
                     }`}
                   >
@@ -611,7 +611,7 @@ function ProductQuicView({
             {/* Availability + Code */}
             <div className="flex items-center justify-between text-sm">
               {showTbaFlag ? (
-                <span className="bg-[#000000] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                <span className="bg-[#6D3F0E] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
                   TBA
                 </span>
               ) : (
@@ -632,7 +632,7 @@ function ProductQuicView({
             </div>
 
             {/* Title */}
-            <h2 className="text-lg sm:text-xl font-bold text-[#000000] dark:text-white leading-snug">
+            <h2 className="text-lg sm:text-xl font-bold text-[#222222] dark:text-white leading-snug">
               {loading ? (
                 <span className="block h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
               ) : (
@@ -646,7 +646,7 @@ function ProductQuicView({
                 By:{" "}
                 <Link
                   href={`/brands/${product?.brandSlug ?? ""}`}
-                  className="text-[#000000] font-semibold hover:underline"
+                  className="text-[#B57908] font-semibold hover:underline"
                 >
                   {displayBrand}
                 </Link>
@@ -658,12 +658,12 @@ function ProductQuicView({
               <div className="flex items-baseline gap-2">
                 {showTbaFlag ? (
                   /* TBA — price hide, শুধু TBA badge */
-                  <span className="bg-[#000000] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">
+                  <span className="bg-[#6D3F0E] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">
                     TBA
                   </span>
                 ) : (
                   <>
-                    <span className="text-2xl font-extrabold text-[#000000] dark:text-[#d1a77d]">
+                    <span className="text-2xl font-extrabold text-[#B57908] dark:text-[#D4A97A]">
                       {loading ? (
                         <span className="block h-7 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
                       ) : (
@@ -740,7 +740,7 @@ function ProductQuicView({
                     <div className="flex items-center gap-2 shrink-0">
                       {selectedVariant.price > 0 ? (
                         <>
-                          <span className="text-base font-extrabold text-[#000000]">
+                          <span className="text-base font-extrabold text-[#B57908]">
                             BDT {selectedVariant.price.toLocaleString()}
                           </span>
                           {selectedVariant.mrp > selectedVariant.price && (
@@ -775,7 +775,7 @@ function ProductQuicView({
             {displaySlug && (
               <Link
                 href={`/product/${displaySlug}`}
-                className="inline-block text-xs text-[#000000] hover:underline"
+                className="inline-block text-xs text-[#B57908] hover:underline"
                 onClick={() => setOpen(false)}
               >
                 View full details →
@@ -822,7 +822,7 @@ function ProductQuicView({
               className={`w-full flex items-center justify-center gap-2 h-11 px-4 rounded-xl text-sm font-semibold border transition-all duration-300 active:scale-95 disabled:opacity-60 disabled:cursor-wait ${
                 isWishlisted
                   ? "bg-red-50 border-red-300 text-red-500"
-                  : "bg-white border-orange-200 text-[#000000] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
+                  : "bg-white border-orange-200 text-[#6D3F0E] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
               }`}
               aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
@@ -869,7 +869,7 @@ function ProductQuicView({
                 <button
                   onClick={handleAddToCart}
                   disabled={loading}
-                  className="border border-[#E7E7E7] bg-[#F7F7F7] text-[#000000] px-4 py-2 rounded-md hover:bg-[#000000] hover:text-white transition-colors duration-500 w-full justify-center flex items-center disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                  className="border border-[#E7E7E7] bg-[#F7F7F7] text-[#222222] px-4 py-2 rounded-md hover:bg-[#222222] hover:text-white transition-colors duration-500 w-full justify-center flex items-center disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
                 >
                   ADD TO CART
                 </button>
@@ -878,7 +878,7 @@ function ProductQuicView({
                 type="button"
                 onClick={handleBuyNow}
                 disabled={loading || loadingBuyNow || !displayInStock}
-                className={`border border-[#E7E7E7] bg-[#000000] text-white px-4 py-2 rounded-md hover:bg-[#F7F7F7] hover:text-[#000000] transition-colors duration-500 w-full justify-center flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
+                className={`border border-[#E7E7E7] bg-[#222222] text-white px-4 py-2 rounded-md hover:bg-[#F7F7F7] hover:text-[#222222] transition-colors duration-500 w-full justify-center flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                   !displayInStock ? "pointer-events-none opacity-50" : ""
                 }`}
               >

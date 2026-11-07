@@ -23,7 +23,7 @@ export interface ApiOrderItem {
   isHomeDelivery: boolean;
   isStorePickup: boolean;
   isShopPickup?: boolean;
-  /** Store's own address, e.g. "Tynex Bashundhara City, Shop No: 023, ...". Only present for store-pickup orders. */
+  /** Store's own address, e.g. "tynex Bashundhara City, Shop No: 023, ...". Only present for store-pickup orders. */
   storeLocation?: string;
   isFullPaymentAtStore: boolean;
   orderStatus?: string;

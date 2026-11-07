@@ -78,18 +78,18 @@ function BlogDetailsCom({ post }: BlogDetailsComProps) {
             <span className="bg-yellow-400 text-white text-xs font-semibold px-3 py-0.5 rounded-full">
               {post.post_category}
             </span>
-            <span className="text-[#000000] dark:text-gray-300 text-xs flex items-center gap-1">
+            <span className="text-[#222] dark:text-gray-300 text-xs flex items-center gap-1">
               <CalendarIcon />
               {formatDate(post.published_at)}
             </span>
           </div>
 
-          <h1 className="font-semibold text-[20px] lg:text-[32px] text-[#000000] dark:text-white mb-2 leading-snug">
+          <h1 className="font-semibold text-[20px] lg:text-[32px] text-[#222] dark:text-white mb-2 leading-snug">
             {post.post_title}
           </h1>
 
           {metaDescription?.trim() && (
-            <p className="text-[#000000] dark:text-gray-300 text-sm leading-relaxed">
+            <p className="text-[#222] dark:text-gray-300 text-sm leading-relaxed">
               {metaDescription.trim()}
             </p>
           )}
@@ -99,16 +99,16 @@ function BlogDetailsCom({ post }: BlogDetailsComProps) {
         {articleHtml && (
           <Card>
   <article
-    className="text-[#000000] dark:text-white
-               [&_h1]:text-[#000000] [&_h1]:dark:text-white
-               [&_h2]:text-[#000000] [&_h2]:dark:text-white
-               [&_h3]:text-[#000000] [&_h3]:dark:text-white
-               [&_h4]:text-[#000000] [&_h4]:dark:text-white
-               [&_p]:text-[#000000] [&_p]:dark:text-gray-300
-               [&_li]:text-[#000000] [&_li]:dark:text-gray-300
-               [&_span]:text-[#000000] [&_span]:dark:text-gray-300!
-               [&_strong]:text-[#000000] [&_strong]:dark:text-white
-               [&_td]:text-[#000000] [&_td]:dark:text-black
+    className="text-[#222] dark:text-white
+               [&_h1]:text-[#222] [&_h1]:dark:text-white
+               [&_h2]:text-[#222] [&_h2]:dark:text-white
+               [&_h3]:text-[#222] [&_h3]:dark:text-white
+               [&_h4]:text-[#222] [&_h4]:dark:text-white
+               [&_p]:text-[#222] [&_p]:dark:text-gray-300
+               [&_li]:text-[#222] [&_li]:dark:text-gray-300
+               [&_span]:text-[#222] [&_span]:dark:text-gray-300!
+               [&_strong]:text-[#222] [&_strong]:dark:text-white
+               [&_td]:text-[#222] [&_td]:dark:text-black
                [&_a]:text-indigo-600 [&_a]:dark:text-black
                [&_table]:border [&_table]:border-gray-200 [&_table]:dark:border-[#4a443f]
                [&_td]:border [&_td]:border-gray-200 [&_td]:dark:border-[#4a443f]
@@ -120,7 +120,7 @@ function BlogDetailsCom({ post }: BlogDetailsComProps) {
 
         {/* Related Posts Card */}
         {/* <Card>
-          <h2 className="text-[#000000] dark:text-white font-bold mb-4">
+          <h2 className="text-[#222] dark:text-white font-bold mb-4">
             Related Posts
           </h2>
           <RelatedPosts />

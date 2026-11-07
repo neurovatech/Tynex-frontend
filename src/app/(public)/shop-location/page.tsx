@@ -16,7 +16,7 @@ interface District {
 export const metadata: Metadata = {
   title: "Store Locations",
   description:
-    "Find a Tynex store near you. Visit our branches across Bangladesh for the best smartphones, laptops, and gadgets.",
+    "Find a tynex store near you. Visit our branches across Bangladesh for the best smartphones, laptops, and gadgets.",
 };
 
 // ─── Breadcrumb ───────────────────────────────────────────────────────────────

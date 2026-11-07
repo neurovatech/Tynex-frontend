@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      site: "@dazzlebd",
+      site: "@tynexbd",
       title,
       description,
       images: [ogImage.url],
@@ -178,7 +178,7 @@ export default async function RootLayout({
                 containerStyle={{ zIndex: 9999999 }}
               />
               <NextTopLoader
-                color="#d1a77d"
+                color="#d4a97a"
                 initialPosition={0.08}
                 crawlSpeed={200}
                 height={3}

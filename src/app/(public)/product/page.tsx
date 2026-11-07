@@ -7,14 +7,14 @@ import { SITE_NAME, OG_LOCALE, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo-c
 export const metadata: Metadata = {
   title: "Shop Mobiles, Laptops & Accessories",
   description:
-    "Browse Tynex's extensive collection of premium smartphones, high-performance laptops, accessories, and audio gadgets. Best prices in Bangladesh with active warranties.",
+    "Browse tynex's extensive collection of premium smartphones, high-performance laptops, accessories, and audio gadgets. Best prices in Bangladesh with active warranties.",
   keywords: [
     "smartphones Bangladesh",
     "laptops Bangladesh",
     "buy iPhone Bangladesh",
     "Samsung Galaxy price BD",
     "gadgets online Bangladesh",
-    "Tynex shop",
+    "tynex shop",
   ],
   openGraph: {
     title: "Shop Mobiles, Laptops & Accessories ",

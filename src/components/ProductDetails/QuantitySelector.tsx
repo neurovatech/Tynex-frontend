@@ -57,7 +57,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
       <button
         onClick={() => update(qty + 1)}
         disabled={qty >= max}
-        className="w-9 h-9 flex items-center justify-center border border-gray-300 bg-[#000000] hover:bg-[#000000]/50 disabled:opacity-40 transition text-white rounded-[10px]"
+        className="w-9 h-9 flex items-center justify-center border border-gray-300 bg-[#222222] hover:bg-[#222222]/50 disabled:opacity-40 transition text-white rounded-[10px]"
       >
         <Plus size={14} />
       </button>

@@ -31,7 +31,7 @@ Target: **≈3,500 KiB → ≈400 KiB** on the homepage. All changes are prop-le
 
 | | |
 |---|---|
-| **Files** | `share/GlobalProductCard.tsx:246` · `search/RecentSearches.tsx:207` · `search/ProductSearches.tsx:112,329` · `HomePage/ClipToCart/ClipToCart.tsx:213,240,249` · `app/(public)/search/page.tsx:170` · `ProductDetails/BuyMore.tsx:100` · `ProductDetails/TynexCare.tsx:109` |
+| **Files** | `share/GlobalProductCard.tsx:246` · `search/RecentSearches.tsx:207` · `search/ProductSearches.tsx:112,329` · `HomePage/ClipToCart/ClipToCart.tsx:213,240,249` · `app/(public)/search/page.tsx:170` · `ProductDetails/BuyMore.tsx:100` · `ProductDetails/tynexCare.tsx:109` |
 | **Current** | Emits bare `<img src="<1200×1263 origin>">`, no `srcset`; existing `sizes` props are inert |
 | **Proposed** | Delete the `unoptimized` prop only. Every other prop, class, `onError` handler and layout stays byte-identical |
 | **Expected saving** | **≈3,100 KiB** (product grids) + **≈540 KiB** (header trending searches, every page). Measured: 63,170 B → 5,428 B at 256px (−91.4%) |

@@ -301,7 +301,7 @@ export default function ExplorePanel({
                 onSelectBrand(brand.label);
                 onClose();
               }}
-              className="flex flex-col items-center justify-center rounded-lg p-3 text-center text-sm text-[#000000] hover:bg-[#d1a77d33] active:bg-[#d1a77d66] transition-colors border border-[#00000022]"
+              className="flex flex-col items-center justify-center rounded-lg p-3 text-center text-sm text-[#222222] hover:bg-[#E9CCAE33] active:bg-[#E9CCAE66] transition-colors border border-[#2222]"
             >
               <span className="font-medium">{brand.label}</span>
             </Link>
@@ -321,7 +321,7 @@ export default function ExplorePanel({
             onClick={() => {
               onClose();
             }}
-            className="flex items-center gap-3 px-5 py-3.5 text-sm text-[#000000] hover:bg-[#d1a77d33] active:bg-[#d1a77d66] transition-colors"
+            className="flex items-center gap-3 px-5 py-3.5 text-sm text-[#222222] hover:bg-[#E9CCAE33] active:bg-[#E9CCAE66] transition-colors"
           >
             <LayoutDashboard className="h-4 w-auto object-contain" />
             <span className="font-medium"> All Category </span>
@@ -334,7 +334,7 @@ export default function ExplorePanel({
                 <button
                   key={cat.uuid || cat.label}
                   onClick={() => setMobileSubCategory(cat.label)}
-                  className="flex items-center justify-between px-5 py-3.5 text-sm font-medium text-[#000000] hover:bg-[#d1a77d33] active:bg-[#d1a77d66] transition-colors"
+                  className="flex items-center justify-between px-5 py-3.5 text-sm font-medium text-[#222222] hover:bg-[#E9CCAE33] active:bg-[#E9CCAE66] transition-colors"
                 >
                   <span className="flex items-center gap-3">
                     {cat.category_images ? (
@@ -363,7 +363,7 @@ export default function ExplorePanel({
                     : "/brands/"
                 }
                 onClick={onClose}
-                className="flex items-center justify-between px-5 py-3.5 text-sm font-medium text-[#000000] hover:bg-[#d1a77d33] active:bg-[#d1a77d66] transition-colors"
+                className="flex items-center justify-between px-5 py-3.5 text-sm font-medium text-[#222222] hover:bg-[#E9CCAE33] active:bg-[#E9CCAE66] transition-colors"
               >
                 <span className="flex items-center gap-3">
                   {cat.category_images ? (
@@ -389,17 +389,17 @@ export default function ExplorePanel({
 
   // ── Desktop ───────────────────────────────────────────────────────────────
   return (
-    <div className="absolute z-999 top-full left-0 mt-2 bg-white dark:bg-[#393430] border border-gray-100 dark:border-[#000000] rounded-2xl shadow-2xl flex overflow-hidden w-[580px] max-h-[420px]">
+    <div className="absolute z-999 top-full left-0 mt-2 bg-white dark:bg-[#393430] border border-gray-100 dark:border-[#222] rounded-2xl shadow-2xl flex overflow-hidden w-[580px] max-h-[420px]">
       {/* Category sidebar */}
-      <div className="w-53.75 shrink-0 border-r border-gray-100 dark:border-[#000000] overflow-y-auto p-2">
+      <div className="w-53.75 shrink-0 border-r border-gray-100 dark:border-[#222] overflow-y-auto p-2">
         {normalizedCategories.map((cat) => (
           <button
             key={cat.uuid || cat.label}
             onClick={() => onHoverCategory(cat.label)}
             className={`w-full flex items-center justify-between rounded-[10px] px-4 py-2.5 text-sm font-medium transition-colors ${
               activeCategory === cat.label
-                ? "bg-[#d1a77d66] text-black dark:text-white"
-                : "text-[#000000] hover:bg-gray-50 dark:hover:bg-[#d1a77d66]/20 dark:text-gray-300"
+                ? "bg-[#E9CCAE66] text-black dark:text-white"
+                : "text-[#222222] hover:bg-gray-50 dark:hover:bg-[#E9CCAE66]/20 dark:text-gray-300"
             }`}
           >
             <span className="flex items-center gap-1">
@@ -432,7 +432,7 @@ export default function ExplorePanel({
                 onSelectBrand(brand.label);
                 onClose();
               }}
-              className="flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-xl border bg-white border-gray-200 hover:border-[#d1a77d]"
+              className="flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-xl border bg-white border-gray-200 hover:border-[#D4A97A]"
             >
               <BrandLogo
                 logo={brand.logo}

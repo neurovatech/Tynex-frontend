@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Brand } from "@/app/(public)/brands/page";
 
-// ✅ Move constant outside component — stable reference, no SSR/client mismatch
 const ALPHABET = ["All", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
 
 function BrandCard({ brands }: { brands: Brand[] }) {
@@ -29,9 +28,7 @@ function BrandCard({ brands }: { brands: Brand[] }) {
 
   return (
     <div className="w-full py-4">
-      {/* Top Filter Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 mb-6 gap-4">
-        {/* Search */}
         <div className="lg:col-span-4 w-full">
           <input
             type="text"
@@ -42,14 +39,13 @@ function BrandCard({ brands }: { brands: Brand[] }) {
               w-full h-12 rounded-xl border border-gray-300 text-[16px] dark:border-gray-700
               bg-white dark:bg-[#1A1A1A] px-4 text-sm text-black dark:text-white
               placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none
-              focus:border-[#d1a77d] dark:focus:border-[#d1a77d]
+              focus:border-[#D4A97A] dark:focus:border-[#D4A97A]
             "
           />
         </div>
 
         {/* A–Z Filter */}
         <div className="lg:col-span-8 flex flex-wrap gap-2">
-          {/* ✅ Use flex-wrap instead of grid — avoids invalid nesting & layout mismatch */}
           {ALPHABET.map((letter) => (
             <button
               key={letter}
@@ -58,8 +54,8 @@ function BrandCard({ brands }: { brands: Brand[] }) {
                 min-w-9 h-9 px-3 rounded-lg text-sm font-medium border transition-all duration-300
                 ${
                   selectedLetter === letter
-                    ? "bg-black text-white border-black dark:bg-[#d1a77d] dark:text-black dark:border-[#d1a77d]"
-                    : "bg-white text-black border-gray-300 hover:border-black dark:bg-[#1A1A1A] dark:text-white dark:border-gray-700 dark:hover:border-[#d1a77d]"
+                    ? "bg-black text-white border-black dark:bg-[#D4A97A] dark:text-black dark:border-[#D4A97A]"
+                    : "bg-white text-black border-gray-300 hover:border-black dark:bg-[#1A1A1A] dark:text-white dark:border-gray-700 dark:hover:border-[#D4A97A]"
                 }
               `}
             >
@@ -68,8 +64,7 @@ function BrandCard({ brands }: { brands: Brand[] }) {
           ))}
         </div>
       </div>
-
-      {/* Brand Grid */}
+      
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 lg:gap-4 gap-2">
         {filteredBrands.length > 0 ? (
           filteredBrands.map((brand, i) => (
@@ -79,8 +74,8 @@ function BrandCard({ brands }: { brands: Brand[] }) {
               className="
                 flex w-full flex-col items-center justify-center gap-2
                 py-4 px-2 rounded-xl border border-gray-200 dark:border-gray-700
-                bg-white  hover:border-[#d1a77d]
-                dark:hover:border-[#d1a77d] transition-all duration-300
+                bg-white  hover:border-[#D4A97A]
+                dark:hover:border-[#D4A97A] transition-all duration-300
               "
             >
               <div className="relative h-16 w-40">

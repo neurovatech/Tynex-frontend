@@ -103,7 +103,7 @@ function ClipToCartForPage({
   if (!products.length) {
     return (
       <div className="py-16 text-center">
-        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
+        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#222222_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
           Clip to Cart
         </h1>
         <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
@@ -118,7 +118,7 @@ function ClipToCartForPage({
       {/* Header — h1 because this is the page's own subject; the shared header
           carries no heading, so without it the page had none at all. */}
       <div className="flex justify-between items-center gap-6 pb-5">
-        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
+        <h1 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#222222_0%,#965C20_43.27%,#693B0C_100%)] dark:text-white">
           Clip to Cart
         </h1>
       </div>

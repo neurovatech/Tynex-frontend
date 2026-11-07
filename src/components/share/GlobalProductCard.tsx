@@ -5,6 +5,7 @@ import ProductImage from "@/images/product.png";
 import ProductCardImage from "./ProductCardImage";
 import ProductCardWishlist from "./ProductCardWishlist";
 import ProductCardBuy from "./ProductCardBuy";
+import { stockStateOf } from "@/lib/stock";
 export type { DefaultVariantResponse } from "./ProductCardBuy";
 
 export interface ProductCardProps {
@@ -14,6 +15,8 @@ export interface ProductCardProps {
   badge?: string;
   title?: string;
   inStock?: boolean;
+  /** Backend `stockStatus` ("In Stock" / "Out of Stock") from a /products call made with stockAssort=1 — see lib/stock.ts. Leave undefined for data from any other source. */
+  stockStatus?: string;
   price?: number;
   originalPrice?: number;
   isBestDeal?: boolean;
@@ -40,6 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   badge,
   title = "Product",
   inStock = true,
+  stockStatus,
   price = 0,
   originalPrice = 0,
   isBestDeal = false,
@@ -55,6 +59,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const itemId = productUuid || uuid || "";
   const showTbaFlag = isTba ?? !inStock;
+  // Real stock from the backend when this card was fed by a stockAssort=1
+  // list call; otherwise undefined and the label keeps its old behaviour.
+  const stockState = stockStateOf(stockStatus);
   const resolvedSlug = slug || title?.toLowerCase().replace(/\s+/g, "-");
   const href = `/product/${resolvedSlug}`;
   const compareHref = `/product-compare/${resolvedSlug}`;
@@ -62,6 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isendOfLifeDisabled = allProduct
     ? allProduct.endOfLife === true
     : endOfLife === true;
+
   return (
     <div
       data-product-uuid={itemId}
@@ -87,7 +95,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Right badges: productBadge */}
           {badge ? (
-            <span className="bg-[linear-gradient(93.36deg,#000000_-28.88%,#000000_93.21%)] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md max-w-[80%]">
+            <span className="bg-[linear-gradient(93.36deg,#222222_-28.88%,#6D3F0E_93.21%)] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md max-w-[80%]">
               {badge}
             </span>
           ) : (
@@ -98,7 +106,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Recognition badge — below top badge row */}
         {recognitionBadge && (
           <div className="absolute top-8 sm:top-10 right-2 sm:right-3 z-40">
-            <span className="bg-[linear-gradient(90deg,#000000_0%,#d1a77d_100%)] text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2.5 py-0.5 rounded-full shadow-md">
+            <span className="bg-[linear-gradient(90deg,#B57908_0%,#E9CCAE_100%)] text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2.5 py-0.5 rounded-full shadow-md">
               {recognitionBadge}
             </span>
           </div>
@@ -184,7 +192,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="text-left">
           <Link href={href} prefetch={false}>
             <h3
-              className="font-semibold dark:text-[#000000] text-[15px] leading-[1.5] line-clamp-2 h-11 text-[#575757] max-[640px]:text-[13px]"
+              className="font-semibold dark:text-[#222] text-[15px] leading-[1.5] line-clamp-2 h-11 text-[#575757] max-[640px]:text-[13px]"
               title={title}
             >
               <span className="hidden sm:inline">
@@ -194,13 +202,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {title.length > 30 ? title.slice(0, 30) + "..." : title}
               </span>
 
-              {/* endOfLife → no stock label */}
+              {/* Stock label. TBA and End-of-Life products get their own badge
+                  instead, so no stock label there. When the backend sent a
+                  real `stockStatus` (a /products call made with stockAssort=1)
+                  its text is shown as-is; for a card fed by any other source
+                  (no stockStatus) the label falls back to the old inStock-based
+                  one — never an empty span. */}
               {!showTbaFlag &&
                 !endOfLife &&
-                (inStock ? (
-                  <span className="text-[#03A000] font-bold"> In Stock </span>
+                (stockState === "in" || (!stockState && inStock) ? (
+                  <span className="text-[#03A000] font-bold"> {stockState ? stockStatus : "In Stock"} </span>
                 ) : (
-                  <span className="text-[#f00]"> Out Of Stock </span>
+                  <span className="text-[#f00]"> {stockState ? stockStatus : "Out Of Stock"} </span>
                 ))}
             </h3>
           </Link>
@@ -222,7 +235,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             {showTbaFlag && !endOfLife ? (
                 <div className="h-7.5">
-              <div className="bg-[#000000] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+              <div className="bg-[#6D3F0E] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
                 To Be Announced
               </div>
               </div>
@@ -238,7 +251,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   >
                     <path
                       d="M1.05292 0.00767491C0.539583 -0.0591029 0.0729167 0.317281 0.0116667 0.848469C-0.0495833 1.37966 0.309167 1.86835 0.819583 1.93513L1.05 1.96548C1.51667 2.02619 1.86667 2.439 1.86667 2.93072V3.88686H0.7C0.312083 3.88686 0 4.21164 0 4.61535C0 5.01905 0.312083 5.34383 0.7 5.34383H1.86667V10.6861C1.86667 12.2948 3.12083 13.6 4.66667 13.6H5.6C8.69167 13.6 11.2 10.9896 11.2 7.77212V6.8008C11.2 5.19206 9.94583 3.88686 8.4 3.88686H7.93333C7.41708 3.88686 7 4.32092 7 4.85817C7 5.39543 7.41708 5.82949 7.93333 5.82949H8.4C8.91625 5.82949 9.33333 6.26354 9.33333 6.8008V7.77212C9.33333 9.91811 7.66208 11.6574 5.6 11.6574H4.66667C4.15042 11.6574 3.73333 11.2233 3.73333 10.6861V5.34383H4.9C5.28792 5.34383 5.6 5.01905 5.6 4.61535C5.6 4.21164 5.28792 3.88686 4.9 3.88686H3.73333V2.93072C3.73625 1.45858 2.68625 0.217114 1.28333 0.0349929L1.05292 0.00463937V0.00767491Z"
-                      fill="#000000"
+                      fill="#101518"
                     />
                   </svg>
                   {formatPrice(price)}

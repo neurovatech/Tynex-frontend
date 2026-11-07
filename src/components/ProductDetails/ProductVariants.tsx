@@ -33,7 +33,7 @@ const ProductVariants: React.FC<ProductVariantsProps> = ({
           key={group.label}
           className="space-y-2 flex gap-3 my-3 lg:px-5 pt-[10px] dark:border-[#4a3f36]"
         >
-          <p className="text-sm font-semibold text-[#000000] pt-2.5 dark:text-white">
+          <p className="text-sm font-semibold text-[#222222] pt-2.5 dark:text-white">
             {group.label}:
           </p>
           <div className="flex flex-wrap gap-2">
@@ -52,7 +52,7 @@ const ProductVariants: React.FC<ProductVariantsProps> = ({
                   className={`flex items-center gap-1.5 transition-all duration-150 rounded-xl border-2 font-medium text-sm
                     ${
                       isActive
-                        ? "border-[#d1a77d] bg-[#d1a77d] dark:text-black shadow-sm"
+                        ? "border-[#E9CCAE] bg-[#E9CCAE] dark:text-black shadow-sm"
                         : isDisabled
                           ? "border-gray-100 bg-gray-50 text-gray-300 line-through"
                           : "border-[#EEEEEE] bg-white text-gray-600 hover:shadow-sm"

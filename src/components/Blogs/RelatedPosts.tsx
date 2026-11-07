@@ -14,7 +14,7 @@ interface Post {
 const posts: Post[] = [
   {
     id: 1,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",
@@ -22,7 +22,7 @@ const posts: Post[] = [
   },
   {
     id: 2,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",
@@ -30,7 +30,7 @@ const posts: Post[] = [
   },
   {
     id: 3,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",
@@ -38,7 +38,7 @@ const posts: Post[] = [
   },
   {
     id: 4,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",
@@ -46,7 +46,7 @@ const posts: Post[] = [
   },
   {
     id: 5,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",
@@ -54,7 +54,7 @@ const posts: Post[] = [
   },
   {
     id: 6,
-    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at Tynex",
+    title: "iPhone 16 Pro Price BD (2025): Authentic Apple Flagship at tynex",
     category: "Technology",
     date: "20 December,2025",
     image: "",

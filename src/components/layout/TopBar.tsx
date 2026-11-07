@@ -11,7 +11,7 @@ export default function TopBar() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-xs font-medium transition-colors bg-linear-to-r from-primary to-[#d1a77d] text-transparent bg-clip-text hover:brightness-110 dark:hover:text-white"
+              className="text-xs font-medium transition-colors bg-linear-to-r from-primary to-[#CB843B] text-transparent bg-clip-text hover:brightness-110 dark:hover:text-white"
             >
               {item.label}
             </Link>

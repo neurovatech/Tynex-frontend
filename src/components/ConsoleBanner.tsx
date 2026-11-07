@@ -16,8 +16,8 @@ export default function ConsoleBanner() {
     w.__tynexConsoleBannerShown = true;
 
     console.log(
-      "%cTYNEX%c\nBest Mobile, Laptop and Gadget Shop in Bangladesh\ntynex.com.bd",
-      "font-size:28px;font-weight:900;color:#000000;padding:4px 0;",
+      "%ctynex%c\nBest Mobile, Laptop and Gadget Shop in Bangladesh\ntynex.com.bd",
+      "font-size:28px;font-weight:900;color:#B57908;padding:4px 0;",
       "font-size:12px;color:#888;line-height:1.6;"
     );
     console.log(

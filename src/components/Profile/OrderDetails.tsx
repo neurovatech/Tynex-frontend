@@ -132,7 +132,7 @@ const ReturnModal: React.FC<ReturnModalProps> = ({ orderNo, onClose }) => {
               </p>
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-[#000000] text-white rounded-2xl font-semibold hover:bg-[#333333] transition-colors"
+                className="w-full py-3 bg-[#7A4500] text-white rounded-2xl font-semibold hover:bg-[#5a3300] transition-colors"
               >
                 Done
               </button>
@@ -149,8 +149,8 @@ const ReturnModal: React.FC<ReturnModalProps> = ({ orderNo, onClose }) => {
                       key={r}
                       className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
                         reason === r
-                          ? "border-[#000000] bg-orange-50 dark:bg-orange-900/20"
-                          : "border-gray-200 dark:border-gray-600 hover:border-[#000000]/50"
+                          ? "border-[#7A4500] bg-orange-50 dark:bg-orange-900/20"
+                          : "border-gray-200 dark:border-gray-600 hover:border-[#7A4500]/50"
                       }`}
                     >
                       <input
@@ -159,7 +159,7 @@ const ReturnModal: React.FC<ReturnModalProps> = ({ orderNo, onClose }) => {
                         value={r}
                         checked={reason === r}
                         onChange={() => setReason(r)}
-                        className="accent-[#000000]"
+                        className="accent-[#7A4500]"
                       />
                       <span className="text-base text-gray-700 dark:text-gray-300">{r}</span>
                     </label>
@@ -176,14 +176,14 @@ const ReturnModal: React.FC<ReturnModalProps> = ({ orderNo, onClose }) => {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the issue in more detail..."
                   rows={3}
-                  className="w-full border border-gray-200 dark:border-gray-600 rounded-2xl px-4 py-3 text-base dark:bg-[#1e1a17] dark:text-white focus:outline-none focus:border-[#000000] resize-none placeholder:text-gray-400"
+                  className="w-full border border-gray-200 dark:border-gray-600 rounded-2xl px-4 py-3 text-base dark:bg-[#1e1a17] dark:text-white focus:outline-none focus:border-[#7A4500] resize-none placeholder:text-gray-400"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading || !reason}
-                className="w-full py-3.5 bg-[#000000] text-white rounded-2xl font-semibold hover:bg-[#333333] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#7A4500] text-white rounded-2xl font-semibold hover:bg-[#5a3300] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -562,7 +562,7 @@ function PayDueModal({
               <button
                 onClick={handlePay}
                 disabled={loading || parsedAmount <= 0}
-                className="w-full py-3.5  bg-[#000000] hover:bg-[#333333] text-white rounded-2xl font-bold text-base transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3.5  bg-[#7A4500] hover:bg-[#5a3300] text-white rounded-2xl font-bold text-base transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <><Loader2 size={16} className="animate-spin" /> Redirecting...</>
@@ -838,7 +838,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
   if (isLoading) {
     return (
       <div className="p-12 text-center bg-[#F7F7F7] dark:bg-[#393430] rounded-3xl flex flex-col items-center justify-center font-sans">
-        <Loader2 className="w-8 h-8 text-[#000000] animate-spin mb-3" />
+        <Loader2 className="w-8 h-8 text-[#7A4500] animate-spin mb-3" />
         <p className="text-base font-medium text-gray-600 dark:text-gray-300">
           Fetching tracking details for Order #{orderNo}...
         </p>
@@ -853,7 +853,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
       {/* Header Section */}
       <div className="rounded-2xl flex justify-between items-start flex-wrap gap-4">
         <div>
-          <h2 className="text-[#000000] dark:text-[#d1a77d] text-2xl font-bold">
+          <h2 className="text-[#7A4500] dark:text-[#d48c34] text-2xl font-bold">
             Order #{trackingData?.orderNo || orderNo}
           </h2>
           <p className="text-gray-400 text-sm mt-1">
@@ -944,7 +944,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
                 disabled={!canPayDue}
                 className={`shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition ${
                   canPayDue
-                    ? "bg-[#000000] hover:bg-[#333333] text-white"
+                    ? "bg-[#7A4500] hover:bg-[#5a3300] text-white"
                     : "bg-gray-200 dark:bg-zinc-700 text-gray-400 dark:text-zinc-500 cursor-not-allowed"
                 }`}
               >
@@ -987,7 +987,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
           {/* Tracking code */}
           {trackingData?.trackingCode && (
             <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-100 dark:border-zinc-800">
-              <Truck size={15} className="text-[#000000] dark:text-[#d1a77d] shrink-0" />
+              <Truck size={15} className="text-[#7A4500] dark:text-[#d48c34] shrink-0" />
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Tracking: <span className="font-bold text-gray-800 dark:text-white">{trackingData.trackingCode}</span>
                 {trackingData.courierName ? ` · ${trackingData.courierName}` : ""}
@@ -1089,7 +1089,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
             /* Store Pickup */
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-amber-50 dark:bg-amber-950/40 rounded-xl flex items-center justify-center shrink-0 border border-amber-100 dark:border-amber-900">
-                <MapPin size={18} className="text-[#000000] dark:text-[#d1a77d]" />
+                <MapPin size={18} className="text-[#7A4500] dark:text-[#d48c34]" />
               </div>
               <div>
                 <p className="text-sm font-bold text-amber-700 dark:text-amber-400 mb-0.5">🏪 Store Pickup</p>
@@ -1105,7 +1105,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
             /* Home Delivery */
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-amber-50 dark:bg-amber-950/40 rounded-xl flex items-center justify-center shrink-0 border border-amber-100 dark:border-amber-900">
-                <MapPin size={18} className="text-[#000000] dark:text-[#d1a77d]" />
+                <MapPin size={18} className="text-[#7A4500] dark:text-[#d48c34]" />
               </div>
               <div className="space-y-0.5">
                 <h4 className="font-bold text-base text-gray-800 dark:text-white">
@@ -1148,10 +1148,10 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-            <Package size={20} className="text-[#000000] dark:text-[#d1a77d]" />
+            <Package size={20} className="text-[#7A4500] dark:text-[#d48c34]" />
             Product Information
           </h3>
-          <span className="text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#000000] dark:text-[#d1a77d]">
+          <span className="text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7A4500] dark:text-[#d48c34]">
             {rawOrder?.comerzOrderItems?.length || rawOrder?.productCount || 1} Item(s)
           </span>
         </div>
@@ -1169,7 +1169,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
                   <div className="flex items-start gap-3.5">
                     {/* Item Badge & Icon */}
                     <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 flex items-center justify-center shrink-0">
-                      <ShoppingBag size={20} className="text-[#000000] dark:text-[#d1a77d]" />
+                      <ShoppingBag size={20} className="text-[#7A4500] dark:text-[#d48c34]" />
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -1189,7 +1189,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
                             </p>
                           )}
                         </div>
-                        <span className="text-base font-extrabold text-[#000000] dark:text-[#d1a77d] bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-xl border border-amber-200/60 dark:border-amber-800/50">
+                        <span className="text-base font-extrabold text-[#7A4500] dark:text-[#d48c34] bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-xl border border-amber-200/60 dark:border-amber-800/50">
                           ৳{fmtBDT(finalPrice)}
                         </span>
                       </div>
@@ -1232,14 +1232,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
             /* Fallback single product display when comerzOrderItems is empty */
             <div className="p-4 flex items-start gap-3.5">
               <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 flex items-center justify-center shrink-0">
-                <ShoppingBag size={20} className="text-[#000000] dark:text-[#d1a77d]" />
+                <ShoppingBag size={20} className="text-[#7A4500] dark:text-[#d48c34]" />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-gray-900 dark:text-white">
                   {rawOrder?.productName || `Product (${rawOrder?.productCount || 1} Item)`}
                 </h4>
                 <p className="text-sm text-gray-400 mt-1">
-                  Total Product Price: <span className="font-bold text-[#000000] dark:text-[#d1a77d]">৳{fmtBDT(rawOrder?.productPrice ?? 0)}</span>
+                  Total Product Price: <span className="font-bold text-[#7A4500] dark:text-[#d48c34]">৳{fmtBDT(rawOrder?.productPrice ?? 0)}</span>
                 </p>
               </div>
             </div>
@@ -1307,7 +1307,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
               )} */}
               <div className="border-t border-gray-100 dark:border-zinc-800 pt-3 flex justify-between items-center font-bold text-gray-900 dark:text-white">
                 <span>Grand Total</span>
-                <span className="text-[#000000] dark:text-[#d1a77d] text-lg">
+                <span className="text-[#7A4500] dark:text-[#d48c34] text-lg">
                   ৳{fmtBDT(grandAmount)}
                 </span>
               </div>
@@ -1394,7 +1394,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onBack }) => {
               )}
               <div className="border-t border-gray-100 dark:border-zinc-800 pt-3 flex justify-between items-center font-bold text-gray-900 dark:text-white">
                 <span>Grand Total</span>
-                <span className="text-[#000000] dark:text-[#d1a77d] text-lg">
+                <span className="text-[#7A4500] dark:text-[#d48c34] text-lg">
                   ৳{fmtBDT(grandAmount)}
                 </span>
               </div>

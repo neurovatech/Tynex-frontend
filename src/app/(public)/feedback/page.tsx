@@ -116,7 +116,7 @@ const Feedback = () => {
               type="text"
               placeholder="Enter your name"
               {...register("name")}
-              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             />
             {errors.name && (
               <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>
@@ -132,7 +132,7 @@ const Feedback = () => {
               type="tel"
               placeholder="Enter phone number"
               {...register("phoneNumber")}
-              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             />
             {errors.phoneNumber && (
               <p className="text-xs text-red-500 mt-1">
@@ -150,7 +150,7 @@ const Feedback = () => {
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             />
             {errors.email && (
               <p className="text-xs text-red-500 mt-1">
@@ -168,7 +168,7 @@ const Feedback = () => {
               type="text"
               placeholder="Enter subject"
               {...register("subject")}
-              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             />
             {errors.subject && (
               <p className="text-xs text-red-500 mt-1">
@@ -186,7 +186,7 @@ const Feedback = () => {
               placeholder="Enter description"
               {...register("description")}
               rows={4}
-              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full px-4 py-4 rounded-[20px] border border-[#E7E7E7] bg-[#FAFAFA] dark:bg-[#302d29] dark:text-white text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             />
           </div>
 

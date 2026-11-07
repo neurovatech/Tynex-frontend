@@ -95,13 +95,13 @@ export default function CartItem({
               );
             }
             const productLine  = name.slice(0, newlineIdx);
-            const carePlanLine = name.slice(newlineIdx + 1); // "with Tynex care+ ..."
+            const carePlanLine = name.slice(newlineIdx + 1); // "with tynex care+ ..."
             return (
               <>
                 <p className="text-sm text-gray-800 dark:text-white">
                   {productLine}
                 </p>
-                <p className="text-xs font-bold italic text-[#000000] dark:text-[#d1a77d] mt-0.5 leading-snug">
+                <p className="text-xs font-bold italic text-[#B57908] dark:text-[#D4A97A] mt-0.5 leading-snug">
                   {carePlanLine}
                 </p>
               </>

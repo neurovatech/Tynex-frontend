@@ -19,7 +19,7 @@ const addOnItems: AddOnItem[] = [
   {
     id: 1,
     image:
-      "https://dazzle.sgp1.cdn.digitaloceanspaces.com/39566/Anker-High-Speed-USB-C-Charger-20W-Price-in-bangladesh-1.jpg",
+      "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F39566%2FAnker-High-Speed-USB-C-Charger-20W-Price-in-bangladesh-1.jpg&w=96&q=75",
     name: "Anker High Speed USB C Charger 20W",
     saveAmount: "৳1,00,000",
     price: "৳1,00,000",
@@ -27,7 +27,7 @@ const addOnItems: AddOnItem[] = [
   {
     id: 2,
     image:
-      "https://dazzle.sgp1.cdn.digitaloceanspaces.com/39566/Anker-High-Speed-USB-C-Charger-20W-Price-in-bangladesh-1.jpg",
+      "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F39566%2FAnker-High-Speed-USB-C-Charger-20W-Price-in-bangladesh-1.jpg&w=96&q=75",
     name: "Anker High Speed USB C Charger 20W",
     saveAmount: "৳1,00,000",
     price: "৳1,00,000",
@@ -53,9 +53,9 @@ export default function ProductAddOn() {
     <div className="w-full bg-white dark:bg-[#1C1A17] p-4 rounded-2xl space-y-6">
       
       {/* ── Bundle Offer Section ── */}
-      <div className="bg-[#FAF8F5] dark:bg-[#2C2925] border border-[#000000]/20 rounded-2xl p-4 space-y-3.5 shadow-2xs">
+      <div className="bg-[#FAF8F5] dark:bg-[#2C2925] border border-[#7B4F1E]/20 rounded-2xl p-4 space-y-3.5 shadow-2xs">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-extrabold text-[#000000] dark:text-[#d1a77d] flex items-center gap-1.5">
+          <h3 className="text-base font-extrabold text-[#7B4F1E] dark:text-[#E9CCAE] flex items-center gap-1.5">
             📦 Special Bundle Offer
           </h3>
           {/* Demo toggle for out of stock simulation */}
@@ -80,7 +80,7 @@ export default function ProductAddOn() {
           <p className="dark:text-white">Get the complete kit and save big:</p>
           <ul className="list-disc list-inside space-y-0.5 text-gray-700 dark:text-gray-350">
             <li className="dark:text-white/70">1x Premium Phone Protector Case</li>
-            <li className="dark:text-white/70">1x Tynex Privacy Screen Guard</li>
+            <li className="dark:text-white/70">1x tynex Privacy Screen Guard</li>
           </ul>
         </div>
 
@@ -88,14 +88,14 @@ export default function ProductAddOn() {
         {isGlassOutOfStock ? (
           <div className="bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 p-3 rounded-xl border border-red-100 dark:border-red-900/40 flex items-start gap-2 text-xs">
             <Info size={14} className="flex-shrink-0 mt-0.5" />
-            <span>Bundle unavailable: Tynex Privacy Screen Guard is currently Out of Stock in Banani flagship store.</span>
+            <span>Bundle unavailable: tynex Privacy Screen Guard is currently Out of Stock in Banani flagship store.</span>
           </div>
         ) : (
           <label
             className={`flex items-center justify-between p-3 rounded-xl border-2 border-dashed cursor-pointer transition ${
               bundleSelected
                 ? "border-emerald-500 bg-emerald-500/5"
-                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-[#34302C] hover:border-[#000000]"
+                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-[#34302C] hover:border-[#7B4F1E]"
             }`}
           >
             <div className="flex items-center gap-2">
@@ -218,7 +218,7 @@ export default function ProductAddOn() {
             height={24}
             alt="Picture of the author"
           />
-          <p className="lg:text-xs text-[10px] text-[#000000] dark:text-gray-300 my-1">Estimated Delivery</p>
+          <p className="lg:text-xs text-[10px] text-[#222222] dark:text-gray-300 my-1">Estimated Delivery</p>
           <p className="text-sm font-bold text-gray-900 dark:text-white">0-3 Days</p>
         </div>
 
@@ -232,7 +232,7 @@ export default function ProductAddOn() {
               alt="Picture of the author"
             />
           </span>
-          <p className="lg:text-xs text-[10px] text-[#000000] dark:text-gray-300 my-1">Purchase Point</p>
+          <p className="lg:text-xs text-[10px] text-[#222222] dark:text-gray-300 my-1">Purchase Point</p>
           <p className="text-sm font-bold text-gray-900 dark:text-white">100</p>
         </div>
 
@@ -257,7 +257,7 @@ export default function ProductAddOn() {
               </svg>
             </span>
           </div>
-          <p className="lg:text-xs text-[10px] text-[#000000] dark:text-gray-300 my-1">Minimum Booking Amount</p>
+          <p className="lg:text-xs text-[10px] text-[#222222] dark:text-gray-300 my-1">Minimum Booking Amount</p>
           <p className="text-sm font-bold text-gray-900 dark:text-white">৳15,000</p>
         </div>
       </div>

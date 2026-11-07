@@ -72,7 +72,7 @@ export default function ThemeToggle({ className }: Props) {
             : "Switch to dark theme"
           : "Toggle theme"
       }
-      className={`${className ?? "w-13.5 h-13.5"} rounded-xl bg-[#d1a77d47] flex items-center justify-center transition-all duration-300`}
+      className={`${className ?? "w-13.5 h-13.5"} rounded-xl bg-[#E9CCAE47] flex items-center justify-center transition-all duration-300`}
     >
       <div
         className={`transition-all duration-300 ${

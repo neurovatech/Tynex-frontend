@@ -62,7 +62,7 @@ export default function OrderSuccessModal({
               onTrackOrder();
               onClose();
             }}
-            className="w-full py-3.5 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
+            className="w-full py-3.5 rounded-xl bg-[#7B4F1E] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
           >
             TRACK ORDER
           </button>

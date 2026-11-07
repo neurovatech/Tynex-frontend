@@ -53,12 +53,12 @@ export function absoluteUrl(path = "/"): string {
 // different title/description/image. But Next.js does NOT deep-merge
 // `openGraph` with the root layout's — a page that sets its own `openGraph`
 // silently loses siteName/locale unless it sets them again itself. That gap
-// is why shared links were showing the raw domain instead of "Tynex" as the
+// is why shared links were showing the raw domain instead of "tynex" as the
 // site name. SITE_NAME/OG_LOCALE exist so every page can restate them
 // consistently in one line.
 
 /** Must match `siteName`/`locale` in the root layout's own openGraph block. */
-export const SITE_NAME = "Tynex";
+export const SITE_NAME = "tynex";
 export const OG_LOCALE = "en_BD";
 
 /**

@@ -11,7 +11,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
 
   return (
     <div>
-      <NextTopLoader color="#d1a77d" showSpinner={false} />
+      <NextTopLoader color="#d4a97a" showSpinner={false} />
       {children}
     </div>
   );

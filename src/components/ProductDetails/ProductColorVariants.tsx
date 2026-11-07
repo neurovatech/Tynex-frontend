@@ -41,7 +41,7 @@ const ProductColorVariants: React.FC<ProductColorVariantsProps> = ({
             className="lg:px-5 border-b border-[#e7e7e7] dark:border-[#4a3f36] pb-4 mb-1"
           >
             {/* Label row — "Color: White" */}
-            <p className="text-sm font-semibold text-[#000000] dark:text-white mb-3">
+            <p className="text-sm font-semibold text-[#222222] dark:text-white mb-3">
               {group.label}
               {selectedLabel && (
                 <span className="font-normal text-gray-500 dark:text-gray-300 ml-1">

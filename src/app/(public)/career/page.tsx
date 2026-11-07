@@ -7,7 +7,7 @@ import NoData from "@/components/ui/NoData";
 
 export const metadata: Metadata = {
   title: "Careers & Job Openings",
-  description: "Join the Tynex team! Explore job openings, career paths, and opportunities in tech, admin, design, and operations at Tynex Bangladesh.",
+  description: "Join the tynex team! Explore job openings, career paths, and opportunities in tech, admin, design, and operations at tynex Bangladesh.",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────

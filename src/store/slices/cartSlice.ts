@@ -17,7 +17,7 @@ export interface CartItem {
   slug?: string;
   minBookingPrice?: number;   // minimum booking deposit for this product
   /**
-   * The Tynex Care / protection plan's own price, when `accessoriesUuid` is
+   * The tynex Care / protection plan's own price, when `accessoriesUuid` is
    * set — already folded into `price` above (so totals stay correct without
    * this), but kept as its own number so a receipt can show it as a
    * separate, highlighted line instead of a single lump sum.

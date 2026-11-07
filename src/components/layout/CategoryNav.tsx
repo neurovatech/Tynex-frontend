@@ -53,11 +53,11 @@ export default function CategoryNav({ categories, subCategories, explorAllData }
   return (
     <div ref={navRef} className="relative w-full hidden lg:flex">
       <div className=" flex-col flex-1 items-center max-w-336 mx-auto lg:px-2 sm:px-0 hidden lg:flex">
-        <div className="flex items-center gap-3 py-2.5 w-full">
+        <div className="flex items-center gap-3 pt-2.5 w-full">
           <div className="relative shrink-0">
             <button
               onClick={() => setExploreOpen((p) => !p)}
-              className="flex items-center gap-2 bg-[#d1a77d] hover:bg-[#c89a6b] text-gray-900 font-bold text-[12.5px] tracking-wide px-[18px] py-[14px] rounded-[9px] transition-colors"
+              className="flex items-center gap-2 bg-[#fffbf6] hover:bg-white/90 text-gray-900 font-bold text-[12.5px] tracking-wide px-4.5 py-3.5 rounded-[9px] rounded-bl-none rounded-br-none transition-colors"
             >
               EXPLORE ALL
               <ChevronDownIcon />

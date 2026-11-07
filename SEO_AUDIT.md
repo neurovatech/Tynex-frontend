@@ -1,4 +1,4 @@
-# SEO Audit — Tynex E-Commerce
+# SEO Audit — tynex E-Commerce
 
 **Stack:** Next.js 16.2.1 App Router · Metadata API
 **Audit date:** 2026-08-14
@@ -20,7 +20,7 @@ I probed the live backend to establish exactly which entities carry SEO metadata
 ```json
 {
   "title": "iPhone 17 Pro Price in Bangladesh",
-  "description": "The iPhone 17 Pro price in Bangladesh is BDT 142990 . Buy genuine products with replacement guarantee , and exclusive EMI options at Tynex. Buy Now!",
+  "description": "The iPhone 17 Pro price in Bangladesh is BDT 142990 . Buy genuine products with replacement guarantee , and exclusive EMI options at tynex. Buy Now!",
   "keywords": "iPhone 17 Pro Price in Bangladesh",
   "canonical": "https://tynex.com.bd/product/iphone-17-pro-price-in-bangladesh",
   "totalReview": 0, "soldCount": 0, "leftStock": 0
@@ -86,7 +86,7 @@ The API already returns everything required: `productName`, `brandName`, `discou
 
 **Verified live:**
 ```
-/categories/phones → "Phones - Buy Online at Best Price in Bangladesh | Tynex "
+/categories/phones → "Phones - Buy Online at Best Price in Bangladesh | tynex "
 /blogs             → "Latest Blogs & Technology News  "
 ```
 
@@ -94,7 +94,7 @@ The API already returns everything required: `productName`, `brandName`, `discou
 ```ts
 title: { default: title, template: `%s - ${siteName}` }
 ```
-…and **57 title declarations already end in `` or `| Tynex`**, so the template appends the brand a second time.
+…and **57 title declarations already end in `` or `| tynex`**, so the template appends the brand a second time.
 
 Affected: about-us, all 12 policy pages, blogs, announcement, career, press-coverage, brands, categories, sub-categories, offers, FAQ, feedback, corporate — essentially every page **except** product pages (which correctly pass the bare API `metaTags.title` and therefore render correctly).
 
@@ -102,7 +102,7 @@ Affected: about-us, all 12 policy pages, blogs, announcement, career, press-cove
 |---|---|
 | **Impact** | Google truncates titles near ~580px (~60 chars). A duplicated brand wastes ~9 characters of the most valuable SEO real estate on the site and looks unprofessional in the SERP |
 | **Root cause** | The `template` was added to the root layout after individual pages had already hardcoded the brand suffix |
-| **Fix** | Remove the hardcoded `` / `| Tynex` suffix from child page titles and let the root template supply it. Use `title.absolute` where a page genuinely needs to bypass the template |
+| **Fix** | Remove the hardcoded `` / `| tynex` suffix from child page titles and let the root template supply it. Use `title.absolute` where a page genuinely needs to bypass the template |
 | **Risk** | **Low** — mechanical, but touches many files; needs a rendered-title check afterwards |
 
 ---
@@ -206,7 +206,7 @@ The product API returns no `updatedAt`/`modifiedAt`. Without it, sitemap `lastMo
 | **L3** | Product page returns `{}` when the API 404s, but still renders the component with `product=null`. It should call `notFound()` so Next.js returns a real **404 status**; currently a missing product returns HTTP 200 with an empty shell — a soft-404 that Google penalises |
 | **L4** | `/faq` page has FAQ content but no `FAQPage` schema — a straightforward rich-result win |
 | **L5** | No `og:image` dimensions (`width`/`height`) declared; some crawlers render cards better with them |
-| **L6** | `twitter:site` hardcoded as `@dazzlebd` rather than read from `site-settings` |
+| **L6** | `twitter:site` hardcoded as `@tynexbd` rather than read from `site-settings` |
 
 ---
 

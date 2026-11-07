@@ -24,10 +24,10 @@ const INITIAL_SELECTION: TradeInSelection = {
 
 const HOW_IT_WORKS = [
   "Provide device details and get a price quote",
-  "Book a home pick-up or visit the nearest Tynex store",
+  "Book a home pick-up or visit the nearest tynex store",
   "Your device will be assessed for condition",
   "Opt for a certified data wipe service",
-  "Trade-in and get instant cash on home pickup or Tynex Voucher on Store drop-off",
+  "Trade-in and get instant cash on home pickup or tynex Voucher on Store drop-off",
 ];
 
 export default function TradeInWizard() {
@@ -89,7 +89,7 @@ export default function TradeInWizard() {
         </p>
         <button
           onClick={() => { setSelection(INITIAL_SELECTION); setStep(0); setSubmitted(false); }}
-          className="px-6 py-3 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#333333] transition-colors"
+          className="px-6 py-3 rounded-xl bg-[#6D3F0E] text-white text-sm font-semibold hover:bg-[#5a3409] transition-colors"
         >
           Start New Trade-In
         </button>
@@ -112,7 +112,7 @@ export default function TradeInWizard() {
           <ol className="space-y-4">
             {HOW_IT_WORKS.map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#d1a77d] dark:bg-[#3e2e1a] text-[#000000] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                <span className="w-6 h-6 rounded-full bg-[#E9CCAE] dark:bg-[#3e2e1a] text-[#6D3F0E] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                   {i + 1}
                 </span>
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-snug">{item}</p>

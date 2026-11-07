@@ -17,7 +17,7 @@ export interface CareOption {
   warrantyDays?: number;
 }
 
-interface TynexCareProps {
+interface DazzleCareProps {
   options: CareOption[];
   /** Called whenever the selected care-option ID changes (null = deselected) */
   onSelectionChange?: (selectedIds: string[]) => void;
@@ -26,7 +26,7 @@ interface TynexCareProps {
 const formatPrice = (n: number) =>
   n > 0 ? "৳" + n.toLocaleString("en-US") : "0";
 
-const TynexCare: React.FC<TynexCareProps> = ({ options, onSelectionChange }) => {
+const DazzleCare: React.FC<DazzleCareProps> = ({ options, onSelectionChange }) => {
   const [open, setOpen]       = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -46,11 +46,11 @@ const TynexCare: React.FC<TynexCareProps> = ({ options, onSelectionChange }) => 
 
 
   return (
-    <div className="rounded-2xl bg-[#000000] border border-[#3a3330] overflow-hidden">
+    <div className="rounded-2xl bg-[#222222] border border-[#3a3330] overflow-hidden">
       {/* ── Header ── */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-[#000000] hover:bg-[#2a2420] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-[#222222] hover:bg-[#2a2420] transition-colors"
       >
         <div className="flex items-center gap-2 font-semibold text-white">
           <Shield size={17} className="text-orange-500" />
@@ -105,7 +105,7 @@ const TynexCare: React.FC<TynexCareProps> = ({ options, onSelectionChange }) => 
                 />
 
                 {/* Icon / thumbnail */}
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-[#000000]">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-[#6D3F0E]">
                   {opt.thumbnail ? (
                     <Image
                       src={opt.thumbnail}
@@ -123,7 +123,7 @@ const TynexCare: React.FC<TynexCareProps> = ({ options, onSelectionChange }) => 
                 <div className="flex-1 min-w-0">
                   <div className="lg:flex lg:items-start lg:justify-between gap-3">
                     {/* Title + description */}
-                    <p className="text-sm text-[#000000] leading-snug mb-1.5 lg:mb-0 lg:w-96">
+                    <p className="text-sm text-[#222222] leading-snug mb-1.5 lg:mb-0 lg:w-96">
                       <span className="font-semibold">{opt.title}</span>
                       {opt.description && (
                         <span className="text-gray-500">
@@ -201,4 +201,4 @@ const TynexCare: React.FC<TynexCareProps> = ({ options, onSelectionChange }) => 
   );
 };
 
-export default TynexCare;
+export default DazzleCare;

@@ -78,7 +78,7 @@ This is consistent with (and larger than) the Lighthouse figure of 1,760.5 KiB, 
 | [share/GlobalProductCard.tsx](src/components/share/GlobalProductCard.tsx:246) | 246 | All product grids | ~264×278 |
 | [app/(public)/search/page.tsx](<src/app/(public)/search/page.tsx:170>) | 170 | Search results page | ~264×278 |
 | [ProductDetails/BuyMore.tsx](src/components/ProductDetails/BuyMore.tsx:100) | 100 | PDP cross-sell | small |
-| [ProductDetails/TynexCare.tsx](src/components/ProductDetails/TynexCare.tsx:109) | 109 | PDP care options | small |
+| [ProductDetails/tynexCare.tsx](src/components/ProductDetails/tynexCare.tsx:109) | 109 | PDP care options | small |
 
 `RecentSearches.tsx` is the worst ratio in the codebase: it renders **10 trending-search thumbnails at 38×38** in the header search panel — on **every page** — each downloading a full **1200×1263 / ~55 KiB** original. That is ~550 KiB to paint 10 thumbnails, a **~99.9% waste** (a 64px WebP is 816 B).
 

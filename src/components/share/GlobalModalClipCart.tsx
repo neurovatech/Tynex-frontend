@@ -48,7 +48,7 @@ export default function GlobalModalClipCart({
         <div className="flex shrink-0 justify-between items-center px-5 py-4 border-b border-gray-100">
           <button
             onClick={onBack || onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-[#d1a77d]"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-[#E9CCAE]"
           >
             <RightArrow />
           </button>

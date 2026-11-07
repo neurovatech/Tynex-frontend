@@ -1,6 +1,6 @@
-# 🛒 Tynex - Premium Multivendor eCommerce Platform
+# 🛒 tynex - Premium Multivendor eCommerce Platform
 
-Tynex is a modern, high-performance Multivendor eCommerce platform built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **TailwindCSS v4**. The application is optimized for speed, visual elegance (supporting light/dark theme modes), Server-Side Rendering (SSR), and Search Engine Optimization (SEO).
+tynex is a modern, high-performance Multivendor eCommerce platform built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **TailwindCSS v4**. The application is optimized for speed, visual elegance (supporting light/dark theme modes), Server-Side Rendering (SSR), and Search Engine Optimization (SEO).
 
 ---
 
@@ -123,7 +123,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Get In Touch & Support Center ",
-  description: "Reach out to Tynex customer support.",
+  description: "Reach out to tynex customer support.",
 };
 
 export default function SupportLayout({ children }: { children: React.ReactNode }) {
@@ -140,7 +140,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = decoded.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   return {
     title: `${title} - Buy Online at Best Price in BD `,
-    description: `Buy ${title} in Bangladesh from Tynex with official brand warranty.`,
+    description: `Buy ${title} in Bangladesh from tynex with official brand warranty.`,
   };
 }
 ```

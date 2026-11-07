@@ -8,7 +8,7 @@ type SwapIconProps = {
 };
 
 const SwapIcon: React.FC<SwapIconProps> = ({
-  color = "#000000",
+  color = "#B57908",
   width = 16,
   height = 16,
   className = "",

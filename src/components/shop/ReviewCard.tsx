@@ -35,7 +35,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
         <Image
           src={quote}
           alt="Quote"
-          className="w-4.5 text-[#000000] inline-block"
+          className="w-4.5 text-[#6D3F0E] inline-block"
         />
       </p>
       <hr className="border-[#EEEEEE] my-[15px] w-4/5" />
@@ -52,12 +52,12 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             />
           </div>
         ) : (
-          <div className="w-12 h-12 rounded-full bg-[#000000] flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-full bg-[#6D3F0E] flex items-center justify-center shrink-0">
             <span className="text-white text-sm font-bold">{initials}</span>
           </div>
         )}
         <div>
-          <p className="font-semibold text-[#000000]">{review.authorName}</p>
+          <p className="font-semibold text-[#6D3F0E]">{review.authorName}</p>
           <p className="text-sm text-[#747474]">{review.designation}</p>
         </div>
       </div>

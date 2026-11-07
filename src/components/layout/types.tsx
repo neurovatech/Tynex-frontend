@@ -180,10 +180,10 @@ export const exploreCategories: CategoryItem[] = [
     label: "Mobile",
     icon: <MobileIcon />,
     children: [
-      { label: "iPhone", count: 16, logo: "https://dazzle.sgp1.cdn.digitaloceanspaces.com/29366/apple.jpg" },
-      { label: "Samsung", count: 16, logo: "https://dazzle.sgp1.cdn.digitaloceanspaces.com/29367/SAMSUNG.jpg" },
-      { label: "Xioame", count: 12, logo: "https://dazzle.sgp1.cdn.digitaloceanspaces.com/45205/logo(1).jpg" },
-      { label: "Motorala", count: 0, logo: "https://dazzle.sgp1.cdn.digitaloceanspaces.com/45206/logo(2).jpg" },
+      { label: "iPhone", count: 16, logo: "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F29366%2Fapple.jpg&w=256&q=75" },
+      { label: "Samsung", count: 16, logo: "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F29367%2FSAMSUNG.jpg&w=256&q=75" },
+      { label: "Xioame", count: 12, logo: "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F45205%2Flogo(1).jpg&w=256&q=75" },
+      { label: "Motorala", count: 0, logo: "https://tynex.com.bd/_next/image?url=https%3A%2F%2Ftynex.sgp1.cdn.digitaloceanspaces.com%2F45206%2Flogo(2).jpg&w=256&q=75" },
     ],
   },
   {

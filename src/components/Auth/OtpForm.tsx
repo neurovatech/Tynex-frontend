@@ -177,21 +177,21 @@ const OtpForm: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="w-12 h-12 rounded-xl bg-[#000000DB] hover:bg-[#000000DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
+            className="w-12 h-12 rounded-xl bg-[#222222DB] hover:bg-[#222222DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
           >
             <GoogleIcon />
           </button>
 
           <button
             type="button"
-            className="w-12 h-12 rounded-xl bg-[#000000DB] hover:bg-[#000000DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
+            className="w-12 h-12 rounded-xl bg-[#222222DB] hover:bg-[#222222DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
           >
             <FacebookIcon />
           </button>
 
           {/* <button
             type="button"
-            className="w-12 h-12 rounded-xl bg-[#000000DB] hover:bg-[#000000DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
+            className="w-12 h-12 rounded-xl bg-[#222222DB] hover:bg-[#222222DB]/70 flex items-center justify-center transition-colors duration-200 shadow-sm"
           >
             <InstragramIcon />
           </button> */}

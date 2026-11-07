@@ -3,7 +3,7 @@
 "use client";
 import React, { useState, useCallback, useEffect } from "react";
 import GlobalModal from "@/components/share/GlobalModal";
-import { CareOption } from "./TynexCare";
+import { CareOption } from "./DazzleCare";
 import { api } from "@/lib/api";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -24,7 +24,7 @@ interface LivePriceResponse {
 interface Props {
   product?: any;
   currentPrice?: number;
-  tynexCareOptions?: CareOption[];
+  dazzleCareOptions?: CareOption[];
   selectedCareIds?: string[];
   productUUID?: string;
   variantUUID?: string;
@@ -34,7 +34,7 @@ interface Props {
 export default function TransparentProfitMeterArea({
   product,
   currentPrice = 0,
-  tynexCareOptions = [],
+  dazzleCareOptions = [],
   selectedCareIds = [],
   productUUID,
   variantUUID,
@@ -50,26 +50,26 @@ export default function TransparentProfitMeterArea({
 
   // ── Instant Replacement Calculator state ─────────────────────────────────
   const [calcCareId, setCalcCareId] = useState<string | null>(() =>
-    selectedCareIds[0] ?? tynexCareOptions[0]?.id ?? null
+    selectedCareIds[0] ?? dazzleCareOptions[0]?.id ?? null
   );
 
   useEffect(() => {
-    if (tynexCareOptions.length > 0) {
-      if (!calcCareId || !tynexCareOptions.some((o) => o.id === calcCareId)) {
-        setCalcCareId(selectedCareIds[0] ?? tynexCareOptions[0].id);
+    if (dazzleCareOptions.length > 0) {
+      if (!calcCareId || !dazzleCareOptions.some((o) => o.id === calcCareId)) {
+        setCalcCareId(selectedCareIds[0] ?? dazzleCareOptions[0].id);
       }
     }
-  }, [tynexCareOptions, selectedCareIds, calcCareId]);
+  }, [dazzleCareOptions, selectedCareIds, calcCareId]);
 
   const price = currentPrice > 0 ? currentPrice : product?.discountedPrice ?? 0;
   const regularPrice = product?.regularPrice ?? price;
   const expectedProfit = Math.round((price * (product?.profitRatio ?? 0)) / 100);
 
-  const selectedCareOpt = tynexCareOptions.find((o) => o.id === calcCareId) ?? tynexCareOptions[0] ?? null;
+  const selectedCareOpt = dazzleCareOptions.find((o) => o.id === calcCareId) ?? dazzleCareOptions[0] ?? null;
   const careWarrantyDays = selectedCareOpt?.warrantyDays && selectedCareOpt.warrantyDays > 0 ? selectedCareOpt.warrantyDays : 365;
   const keepDays = careWarrantyDays;
   const carePrice = selectedCareOpt?.price ?? 0;
-  const tynexEnabled = !!selectedCareOpt;
+  const dazzleEnabled = !!selectedCareOpt;
   const costPerDay = keepDays > 0 ? carePrice / keepDays : 0;
   const keepYrs = (keepDays / 365).toFixed(1);
 
@@ -119,14 +119,14 @@ export default function TransparentProfitMeterArea({
     try { return JSON.parse(liveData.priceInfo)?.stores ?? []; } catch { return []; }
   })();
 
-  const tynexPrice = liveData?.discountedPrice ?? price;
+  const dazzlePrice = liveData?.discountedPrice ?? price;
 
   return (
     <div className="flex gap-3 my-6">
 
       {/* ── 1. Transparent Profit Meter button ── */}
       <button onClick={() => setShowProfit(true)}
-        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#000000] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
+        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#222222] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
       >
         <div className="flex flex-col items-center gap-2 w-full">
           <span className="rounded-lg p-1.5">
@@ -145,7 +145,7 @@ export default function TransparentProfitMeterArea({
 
       {/* ── 2. Instant Replacement Calculator button ── */}
       <button onClick={() => setShowCalc(true)}
-        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#000000] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
+        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#222222] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
       >
         <div className="flex flex-col items-center gap-2 w-full">
           <span className="rounded-lg p-1.5">
@@ -160,8 +160,8 @@ export default function TransparentProfitMeterArea({
       </button>
 
       {/* ── 3. Live Other Price Check button ── */}
-      <button onClick={handleOpenPriceCheck}
-        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#000000] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
+      {/* <button onClick={handleOpenPriceCheck}
+        className="flex-1 w-full mb-4 lg:mb-0 flex items-center justify-between gap-2 bg-[#EEEEEE] text-[#222222] font-semibold text-sm px-4 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
       >
         <div className="flex flex-col items-center gap-2 w-full">
           <span className="rounded-lg p-1.5">
@@ -173,11 +173,11 @@ export default function TransparentProfitMeterArea({
           </span>
           <span>Live other price check</span>
         </div>
-      </button>
+      </button> */}
 
       {/* ══ MODAL 1 — Transparent Profit Meter ══ */}
       <GlobalModal isOpen={showProfit} onClose={() => setShowProfit(false)} title="Transparent Profit Meter">
-        <div className="px-6 py-5 space-y-3 text-[#000000]">
+        <div className="px-6 py-5 space-y-3 text-[#222222]">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500 dark:text-white">Product price:</span>
             <span className="font-semibold dark:text-white">{price > 0 ? fmt(price) : "0"}</span>
@@ -188,7 +188,7 @@ export default function TransparentProfitMeterArea({
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500 dark:text-white">Expected profit:</span>
-            <span className="font-semibold text-[#000000] dark:text-white">~{fmt(expectedProfit)}</span>
+            <span className="font-semibold text-[#7A4F1E] dark:text-white">~{fmt(expectedProfit)}</span>
           </div>
           {regularPrice > price && (
             <>
@@ -211,11 +211,11 @@ export default function TransparentProfitMeterArea({
 
       {/* ══ MODAL 2 — Instant Replacement Calculator ══ */}
       <GlobalModal isOpen={showCalc} onClose={() => setShowCalc(false)} title="Instant Replacement Calculator">
-        <div className="px-6 py-5 space-y-5 text-[#000000]">
+        <div className="px-6 py-5 space-y-5 text-[#222222]">
           <div className="flex items-end justify-between">
             <div>
               <p className="text-xs text-gray-500 mb-1 dark:text-white">Cost per day · over <span className="font-semibold text-gray-700 dark:text-white">{keepYrs} years</span></p>
-              <p className="text-4xl font-bold text-[#000000] dark:text-white">{fmt(costPerDay)}/day</p>
+              <p className="text-4xl font-bold text-[#7A4F1E] dark:text-white">{fmt(costPerDay)}/day</p>
             </div>
             <div className="text-right">
               <p className="text-xs text-gray-400 uppercase tracking-wide mb-1 dark:text-white">YOU PAY ONCE</p>
@@ -227,27 +227,27 @@ export default function TransparentProfitMeterArea({
               <span>How long will you keep it?</span>
               <span className="font-semibold text-gray-700 dark:text-white">{keepYrs} yrs · {keepDays} days</span>
             </div>
-            <input type="range" min={180} max={1825} step={30} value={keepDays} disabled className="w-full accent-[#000000] h-1.5 cursor-not-allowed opacity-70" />
+            <input type="range" min={180} max={1825} step={30} value={keepDays} disabled className="w-full accent-[#7A4F1E] h-1.5 cursor-not-allowed opacity-70" />
             <div className="flex justify-between text-[10px] text-gray-400 mt-1 dark:text-white">
               {["0.5y","1y","2y","3y","4y","5y"].map((l) => <span key={l}>{l}</span>)}
             </div>
           </div>
-          {tynexCareOptions.length > 0 ? (
+          {dazzleCareOptions.length > 0 ? (
             <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
-              <p className="text-sm font-semibold text-gray-700">Include Tynex&apos;s free replacement guarantee</p>
+              <p className="text-sm font-semibold text-gray-700">Include tynex&apos;s free replacement guarantee</p>
               <div className="space-y-2">
-                {tynexCareOptions.map((opt) => {
+                {dazzleCareOptions.map((opt) => {
                   const isActive = calcCareId === opt.id;
                   const wYrs = opt.warrantyDays ? (opt.warrantyDays / 365).toFixed(1) : null;
                   return (
                     <button key={opt.id} onClick={() => handleCareToggle(opt.id)}
-                      className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg border transition-all text-sm ${isActive ? "border-[#000000] bg-[#FFF8F0]" : "border-gray-200 bg-white hover:border-gray-300"}`}
+                      className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg border transition-all text-sm ${isActive ? "border-[#7A4F1E] bg-[#FFF8F0]" : "border-gray-200 bg-white hover:border-gray-300"}`}
                     >
                       <div className="flex items-center gap-2">
-                        <div className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ${isActive ? "bg-[#000000]" : "bg-gray-300"}`}>
+                        <div className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ${isActive ? "bg-[#7A4F1E]" : "bg-gray-300"}`}>
                           <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${isActive ? "translate-x-5" : "translate-x-0"}`} />
                         </div>
-                        <span className={isActive ? "text-[#000000] font-semibold" : "text-gray-700"}>
+                        <span className={isActive ? "text-[#7A4F1E] font-semibold" : "text-gray-700"}>
                           {opt.title}{wYrs && <span className="ml-1 text-xs text-gray-400 font-normal">({wYrs}yr)</span>}
                         </span>
                       </div>
@@ -256,7 +256,7 @@ export default function TransparentProfitMeterArea({
                   );
                 })}
               </div>
-              {tynexEnabled && (
+              {dazzleEnabled && (
                 <p className="text-xs text-gray-500 leading-relaxed ">
                   If anything breaks in {(careWarrantyDays / 365).toFixed(1)} years we replace it once, free. Cost per day: <strong>{fmt(costPerDay)}/day</strong>.
                 </p>
@@ -264,7 +264,7 @@ export default function TransparentProfitMeterArea({
             </div>
           ) : (
             <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 dark:text-white">
-              <p className="text-sm text-gray-500">No Tynex Care plans are available for this product.</p>
+              <p className="text-sm text-gray-500">No tynex Care plans are available for this product.</p>
             </div>
           )}
           <p className="text-xs text-gray-400 leading-relaxed dark:text-white">This calculator helps you understand the true daily value of your purchase over its expected lifetime.</p>
@@ -278,7 +278,7 @@ export default function TransparentProfitMeterArea({
           {/* Loading state */}
           {liveLoading && (
             <div className="flex flex-col items-center justify-center py-10 gap-3">
-              <svg className="w-8 h-8 animate-spin text-[#000000]" fill="none" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 animate-spin text-[#7A4F1E]" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
               </svg>
@@ -293,7 +293,7 @@ export default function TransparentProfitMeterArea({
               <p className="text-sm font-semibold text-red-500">{liveError}</p>
               <button
                 onClick={() => { setLiveData(null); setLiveError(null); handleOpenPriceCheck(); }}
-                className="text-xs text-[#000000] underline mt-1"
+                className="text-xs text-[#7A4F1E] underline mt-1"
               >
                 Try again
               </button>
@@ -311,11 +311,11 @@ export default function TransparentProfitMeterArea({
               {/* Savings headline */}
               {stores.length > 0 && (() => {
                 const avgOthers = stores.reduce((s, st) => s + st.price_bdt, 0) / stores.length;
-                const youSave = avgOthers - tynexPrice;
+                const youSave = avgOthers - dazzlePrice;
                 return youSave > 0 ? (
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white">
                     <span>You save</span>
-                    <span className="text-3xl font-bold text-[#000000] dark:text-[#d1a77d]">{fmt(youSave)}</span>
+                    <span className="text-3xl font-bold text-[#7A4F1E] dark:text-[#D4A97A]">{fmt(youSave)}</span>
                     <span className="text-gray-500 dark:text-white">vs avg of others</span>
                   </div>
                 ) : null;
@@ -323,24 +323,24 @@ export default function TransparentProfitMeterArea({
 
               {/* Price table */}
               <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 overflow-hidden text-sm">
-                {/* Tynex row */}
+                {/* tynex row */}
                 <div className="flex items-center justify-between px-4 py-3 bg-[#FFFBF5]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-gray-400">#1</span>
-                    <span className="font-bold text-gray-800">Tynex</span>
-                    <span className="text-[10px] font-semibold bg-[#000000] text-white px-2 py-0.5 rounded-full">You</span>
+                    <span className="font-bold text-gray-800">tynex</span>
+                    <span className="text-[10px] font-semibold bg-[#7A4F1E] text-white px-2 py-0.5 rounded-full">You</span>
                   </div>
-                  <span className="font-bold text-[#000000]">{fmt(tynexPrice)}</span>
+                  <span className="font-bold text-[#7A4F1E]">{fmt(dazzlePrice)}</span>
                 </div>
 
                 {/* Competitor rows */}
                 {stores.map((store, i) => {
-                  const diff = store.price_bdt - tynexPrice;
+                  const diff = store.price_bdt - dazzlePrice;
                   return (
                     <div key={i} className="flex items-center justify-between px-4 py-3 bg-white">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-gray-400">#{i + 2}</span>
-                        <span className="text-gray-700 dark:text-[#d1a77d]">{store.store_name}</span>
+                        <span className="text-gray-700 dark:text-[#D4A97A]">{store.store_name}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         {diff > 0 && <span className="text-xs text-red-500 font-medium">+{fmt(diff)}</span>}
@@ -353,7 +353,7 @@ export default function TransparentProfitMeterArea({
               </div>
 
               <p className="text-xs text-gray-400 dark:text-white leading-relaxed">
-                Prices are fetched live from public sources and may vary slightly. Tynex guarantees the lowest price or we match it.
+                Prices are fetched live from public sources and may vary slightly. tynex guarantees the lowest price or we match it.
               </p>
             </>
           )}

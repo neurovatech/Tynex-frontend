@@ -46,7 +46,7 @@ const LIMIT = 10;
 //           <button key={p} onClick={() => onPageChange(p as number)}
 //             className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
 //               p === page
-//                 ? "bg-[#000000] text-white"
+//                 ? "bg-[#6D3F0E] text-white"
 //                 : "border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
 //             }`}
 //           >{p}</button>
@@ -143,7 +143,11 @@ export default function CampaignDetailClient({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      // Start the next page ~2400px (about one page of products on a phone) BEFORE the sentinel is on screen. Loading only once it is
+      // visible meant the skeleton and the new rows were inserted while the content below the
+      // list (SEO text, footer) was already in view, shoving it down (CLS). Appending while
+      // that content is still off-screen moves nothing the visitor can see.
+      { rootMargin: "0px 0px 2400px 0px", threshold: 0 }
     );
     const el = loaderRef.current;
     if (el) observer.observe(el);
@@ -216,7 +220,7 @@ export default function CampaignDetailClient({
       {/* Countdown + Filter row */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-[#000000] dark:text-white text-sm font-medium">Offer Ending In</span>
+          <span className="text-[#101518] dark:text-white text-sm font-medium">Offer Ending In</span>
           {endDate && endDate > new Date() && <CountdownBadges size="md" endDate={endDate} />}
         </div>
 
@@ -224,12 +228,12 @@ export default function CampaignDetailClient({
           onClick={() => setShowFilter((v) => !v)}
           className={`flex items-center gap-1.5 text-sm rounded-[10px] py-1.5 px-3 border transition-colors ${
             hasActiveFilter
-              ? "border-[#000000] text-[#000000] bg-[#000000]/5"
+              ? "border-[#6D3F0E] text-[#6D3F0E] bg-[#6D3F0E]/5"
               : "border-[#EEEEEE] dark:border-white/10 text-gray-700 dark:text-white"
           }`}
         >
           <SlidersHorizontal size={14} />
-          Filter {hasActiveFilter && <span className="w-1.5 h-1.5 rounded-full bg-[#000000] inline-block" />}
+          Filter {hasActiveFilter && <span className="w-1.5 h-1.5 rounded-full bg-[#6D3F0E] inline-block" />}
         </button>
       </div>
 
@@ -241,20 +245,20 @@ export default function CampaignDetailClient({
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Min Price (৳)</label>
               <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
                 placeholder="e.g. 1000"
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#000000]/30 transition"
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#6D3F0E]/30 transition"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Max Price (৳)</label>
               <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
                 placeholder="e.g. 50000"
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#000000]/30 transition"
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#6D3F0E]/30 transition"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Stock Status</label>
               <select value={stockStatus} onChange={(e) => setStockStatus(e.target.value as "" | "0" | "1")}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#000000]/30 transition appearance-none cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#6D3F0E]/30 transition appearance-none cursor-pointer"
               >
                 <option value="">All</option>
                 <option value="1">In Stock</option>
@@ -267,7 +271,7 @@ export default function CampaignDetailClient({
               className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
             >Clear</button>
             <button onClick={handleApply}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold transition-colors"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] text-white text-sm font-semibold transition-colors"
             >Apply Filters</button>
           </div>
         </div>
@@ -276,7 +280,7 @@ export default function CampaignDetailClient({
       {/* Description */}
       {campaignDescription && (
         <div className="bg-amber-50 dark:bg-[#1A1A1A] border border-amber-100 dark:border-gray-700 rounded-xl p-5 mb-8">
-          <p className="text-[#000000] dark:text-gray-200 leading-7 text-sm">{campaignDescription}</p>
+          <p className="text-[#222222] dark:text-gray-200 leading-7 text-sm">{campaignDescription}</p>
         </div>
       )}
 
@@ -285,7 +289,7 @@ export default function CampaignDetailClient({
         <p className="text-xs text-gray-400 mb-4">
           {totalCount.toLocaleString()} products found
           {hasActiveFilter && (
-            <button onClick={handleClear} className="ml-2 text-[#000000] dark:text-[#d1a77d] hover:underline">
+            <button onClick={handleClear} className="ml-2 text-[#6D3F0E] dark:text-[#d4a97a] hover:underline">
               Clear filters
             </button>
           )}
@@ -297,7 +301,7 @@ export default function CampaignDetailClient({
         <div className="text-center py-20">
           <p className="text-gray-400 text-sm">No products found for this offer.</p>
           {hasActiveFilter && (
-            <button onClick={handleClear} className="mt-2 text-xs text-[#000000] dark:text-[#d1a77d] hover:underline">
+            <button onClick={handleClear} className="mt-2 text-xs text-[#6D3F0E] dark:text-[#d4a97a] hover:underline">
               Clear filters
             </button>
           )}

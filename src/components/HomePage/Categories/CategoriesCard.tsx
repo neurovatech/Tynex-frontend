@@ -222,13 +222,13 @@ function CategoriesCard({
         {/* h2, not h1: this is a section heading inside the homepage, whose
             single h1 describes the page as a whole. Two h1s (or an h1 that says
             "Categories") breaks the heading hierarchy Lighthouse checks. */}
-        <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+        <h2 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
           Categories
         </h2>
         {seeAllBtn && (
           <Link
             href="/categories"
-            className="text-sm font-medium text-primary bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#d1a77d]! transition-colors duration-300"
+            className="text-sm font-medium text-primary bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#CB843B]! transition-colors duration-300"
           >
             See all
           </Link>
@@ -300,8 +300,8 @@ function CategoriesCard({
                       w-full aspect-square rounded-[28px] overflow-hidden transition-all duration-300
                       flex items-center justify-center p-3 sm:p-4 relative
                       bg-[#F5F5F5] border border-[#F5F5F5] shadow-sm
-                      dark:bg-[#342a20] dark:border-[#000000]
-                      group-hover:bg-[#fcf5ed] group-hover:border-[#d1a77d]
+                      dark:bg-[#342a20] dark:border-[#B57908]
+                      group-hover:bg-[#fcf5ed] group-hover:border-[#E9CCAE]
                     `}
                   >
                     <div className="relative w-full h-full flex items-center justify-center">
@@ -313,7 +313,7 @@ function CategoriesCard({
                     </div>
                   </div>
 
-                  <h3 className="w-full text-[14px] sm:text-[14px] font-medium text-primary pt-1 sm:pt-2 text-center transition-colors duration-300 group-hover:text-[#d1a77d] line-clamp-2 leading-tight min-h-[22px] sm:min-h-[26px] lg:min-h-[36px] flex items-start justify-center">
+                  <h3 className="w-full text-[14px] sm:text-[14px] font-medium text-primary pt-1 sm:pt-2 text-center transition-colors duration-300 group-hover:text-[#CB843B] line-clamp-2 leading-tight min-h-[22px] sm:min-h-[26px] lg:min-h-[36px] flex items-start justify-center">
                     {hasName ? (
                       item.category_name
                     ) : (

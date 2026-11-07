@@ -56,7 +56,7 @@ export function organizationSchema(settings?: {
   return clean({
     "@type": "Organization",
     "@id": ORG_ID,
-    name: settings?.siteTitle || "Tynex",
+    name: settings?.siteTitle || "tynex",
     url: SITE_URL,
     logo: settings?.siteLogo,
     image: settings?.siteLogo,
@@ -77,7 +77,7 @@ export function organizationSchema(settings?: {
 // ─── LocalBusiness ─────────────────────────────────────────────────────────────
 /**
  * Uses whatever contact fields site-settings actually has. `contactAddress` is
- * a free-text CMS field (e.g. "Tynex, Bangladesh"), not a structured
+ * a free-text CMS field (e.g. "tynex, Bangladesh"), not a structured
  * street/city/postal breakdown — schema.org's `address` accepts a plain
  * string, so it's passed through as-is rather than fabricated into a fake
  * PostalAddress. A real street address in the CMS would let this emit a
@@ -96,7 +96,7 @@ export function localBusinessSchema(settings?: {
   return clean({
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#localbusiness`,
-    name: settings?.siteTitle || "Tynex",
+    name: settings?.siteTitle || "tynex",
     url: SITE_URL,
     image: settings?.siteLogo,
     telephone: settings?.contactPhone,
@@ -112,7 +112,7 @@ export function webSiteSchema(settings?: { siteTitle?: string }) {
     "@type": "WebSite",
     "@id": SITE_ID,
     url: SITE_URL,
-    name: settings?.siteTitle || "Tynex",
+    name: settings?.siteTitle || "tynex",
     publisher: { "@id": ORG_ID },
     potentialAction: {
       "@type": "SearchAction",
@@ -143,6 +143,7 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
 export interface ProductSchemaInput {
   productName?: string;
   productSlug?: string;
+  productUuid?: string;
   productCode?: string;
   brandName?: string;
   description?: string;
@@ -208,6 +209,11 @@ export function productSchema(p: ProductSchemaInput) {
     "@type": "Product",
     name: p.productName,
     description: toPlainText(p.metaTags?.description) || toPlainText(p.shortDesc) || toPlainText(p.description),
+    // schema.org `productID` = the stable product id this shop uses EVERYWHERE
+    // else — Meta Catalog `g:id`, Pixel `content_ids`, CAPI `contents[].id`
+    // (all productUuid; see docs/meta-catalog-frontend-done.txt for why not
+    // productCode). Emitted alongside the existing sku/mpn, which stay as is.
+    productID: p.productUuid || undefined,
     sku: p.productCode || undefined,
     // No distinct manufacturer part number exists in the catalogue API, so
     // this reuses the same real productCode already used as `sku` — the same

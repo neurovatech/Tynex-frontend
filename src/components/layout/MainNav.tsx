@@ -11,11 +11,9 @@ import { useAppSelector } from "@/store/hooks";
 import { useUserProfile, getInitials } from "@/hooks/useUserProfile";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import NoImages from "@/images/no_images.png";
-import { Users } from 'lucide-react';
+import { Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import LogoWhite from "@/images/header-logo-white.svg";
-
-
 
 export default function MainNav() {
   const token = useAppSelector((state) => state.auth.token);
@@ -36,7 +34,9 @@ export default function MainNav() {
   // Client mount হওয়ার পরেই actual state দেখাবে।
   // এতে server↔client HTML match করে, hydration error হয় না।
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [bounce, setBounce] = useState(false);
   const prevCount = useRef(cartCount);
@@ -51,8 +51,8 @@ export default function MainNav() {
   }, [cartCount]);
 
   // mount হওয়ার আগে server HTML-এর মতো করে render করো
-  const isLoggedIn   = mounted && !!token;
-  const displayCart  = mounted ? cartCount : 0;
+  const isLoggedIn = mounted && !!token;
+  const displayCart = mounted ? cartCount : 0;
 
   return (
     <div className="border-b border-white/5">
@@ -61,12 +61,12 @@ export default function MainNav() {
           <Link href="/" className="shrink-0 mr-2">
             <div className="text-3xl flex font-black text-white tracking-tighter leading-none">
               <Image
-    src={LogoWhite}
-    width={130}
-    height={30}
-    alt="Tynex logo"
-    priority
-  />
+                src={LogoWhite}
+                width={130}
+                height={30}
+                alt="Tynex logo"
+                priority
+              />
             </div>
           </Link>
 
@@ -114,7 +114,7 @@ export default function MainNav() {
                       className="w-full h-full object-cover rounded-xl"
                     />
                   ) : (
-                        <UserIcon className="text-primary_color" />
+                    <UserIcon className="text-primary_color" />
                   )
                 ) : (
                   <UserIcon className="text-primary_color" />

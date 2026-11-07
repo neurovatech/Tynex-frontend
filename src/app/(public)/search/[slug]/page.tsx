@@ -60,13 +60,13 @@ function toTitleCase(slug: string): string {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const brandName = toTitleCase(slug);
-  const ogTitle = `${brandName} Products | Tynex`;
-  const ogDescription = `Browse ${brandName} products at Tynex — Bangladesh's premium tech store.`;
+  const ogTitle = `${brandName} Products | tynex`;
+  const ogDescription = `Browse ${brandName} products at tynex — Bangladesh's premium tech store.`;
   const ogImage = DEFAULT_OG_IMAGE;
 
   return {
     title: `${brandName} Products — Buy Online at Best Price in Bangladesh`,
-    description: `Shop the complete ${brandName} collection at Tynex. Best prices, official warranty, and fast delivery across Bangladesh.`,
+    description: `Shop the complete ${brandName} collection at tynex. Best prices, official warranty, and fast delivery across Bangladesh.`,
     // Canonical intentionally points at /brands/{slug}, NOT this URL: this route
     // renders the same brand-product listing (it queries the same /brands/{slug}
     // endpoints), so it is duplicate content. Pointing the canonical at the brand
@@ -109,6 +109,7 @@ export default async function SearchList({ params }: PageProps) {
       `/products?${new URLSearchParams({
         brandSlug: slug,
         page:      "1",
+        stockAssort: "1",
         limit:     String(LIMIT),
       }).toString()}`,
       { next: { revalidate: 60 } } 

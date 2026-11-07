@@ -1,4 +1,4 @@
-TYNEX — GOOGLE / FACEBOOK LOGIN: WHAT THE BACKEND NEEDS TO BUILD
+tynex — GOOGLE / FACEBOOK LOGIN: WHAT THE BACKEND NEEDS TO BUILD
 ==================================================================
 For: Backend developer
 From: Frontend

@@ -1,4 +1,4 @@
-TYNEX — PAYMENT GATEWAY RETURN PAGES: URL/QUERY CONTRACT
+tynex — PAYMENT GATEWAY RETURN PAGES: URL/QUERY CONTRACT
 ============================================================
 For: Backend developer
 From: Frontend

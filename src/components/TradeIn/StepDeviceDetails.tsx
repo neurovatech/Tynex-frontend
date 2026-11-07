@@ -62,7 +62,7 @@ export default function StepDeviceDetails({ selection, onConditionSelect, onRemo
       <div className="text-center mb-5">
         <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
           Selling your{" "}
-          <span className="text-[#000000] dark:text-[#d1a77d]">
+          <span className="text-[#6D3F0E] dark:text-[#d4a97a]">
             {selection.brand?.brand_name} {variantDetail.variantName}
           </span>{" "}
           can bring you
@@ -115,7 +115,7 @@ export default function StepDeviceDetails({ selection, onConditionSelect, onRemo
               >
                 <span className="font-semibold text-gray-900 dark:text-white">{cond.title}</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-[#000000] dark:text-[#d1a77d] font-bold">
+                  <span className="text-[#6D3F0E] dark:text-[#d4a97a] font-bold">
                     {formatPrice(cond.devicePrice)}
                   </span>
                   {isOpen
@@ -147,7 +147,7 @@ export default function StepDeviceDetails({ selection, onConditionSelect, onRemo
             const active = conditions.find((c) => c.ticId === activeId) ?? conditions[0];
             if (active) onConditionSelect(active);
           }}
-          className="px-6 py-2.5 rounded-xl bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold transition-colors"
+          className="px-6 py-2.5 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] text-white text-sm font-semibold transition-colors"
         >
           Trade-In now
         </button>
@@ -159,7 +159,7 @@ export default function StepDeviceDetails({ selection, onConditionSelect, onRemo
             const active = conditions.find((c) => c.ticId === activeId) ?? conditions[0];
             if (active) onConditionSelect(active);
           }}
-          className="px-8 py-3 rounded-xl bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold transition-colors"
+          className="px-8 py-3 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] text-white text-sm font-semibold transition-colors"
         >
           Trade-In now
         </button>

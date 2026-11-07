@@ -42,7 +42,7 @@ export interface OrderTrackingData {
   // Delivery type
   isHomeDelivery?: boolean;
   isStorePickup?: boolean;
-  /** Store's own address, e.g. "Tynex Bashundhara City, Shop No: 023, ...". Only present for store-pickup orders. */
+  /** Store's own address, e.g. "tynex Bashundhara City, Shop No: 023, ...". Only present for store-pickup orders. */
   storeLocation?: string;
   // Notes
   deliveryIns?: string | null;
@@ -199,11 +199,11 @@ function OrderTrackingContent() {
 
       {/* ── Header & Search ── */}
       <div className="pt-10 flex flex-col items-center text-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-[#000000]/10 dark:bg-[#d1a77d]/20 flex items-center justify-center text-[#000000] dark:text-[#d1a77d]">
+        <div className="w-14 h-14 rounded-2xl bg-[#7B4F1E]/10 dark:bg-[#bd9961]/20 flex items-center justify-center text-[#7B4F1E] dark:text-[#bd9961]">
           <Truck size={28} />
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold text-[#000000] dark:text-white">Track Your Order</h1>
+          <h1 className="text-2xl font-extrabold text-[#101518] dark:text-white">Track Your Order</h1>
           <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-1 max-w-md">
             Enter your order number to see real-time status, timeline, and delivery details.
           </p>
@@ -216,17 +216,17 @@ function OrderTrackingContent() {
                 type="text"
                 value={searchId}
                 onChange={(e) => { setSearchId(e.target.value); setValidationError(null); }}
-                className={`w-full text-[14px] text-[#000000] bg-white dark:bg-[#2A2622] dark:text-white border ${
+                className={`w-full text-[14px] text-[#222] bg-white dark:bg-[#2A2622] dark:text-white border ${
                   validationError
                     ? "border-red-500 ring-2 ring-red-500/20"
-                    : "border-gray-300 dark:border-gray-800 focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+                    : "border-gray-300 dark:border-gray-800 focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
                 } rounded-xl py-3.5 pl-4 pr-32 outline-none shadow-sm transition-all`}
                 placeholder="e.g. DECO-68B43-02052"
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="absolute right-1.5 bg-[#000000] hover:bg-[#684219] disabled:opacity-60 text-white font-semibold py-2.5 px-5 rounded-lg transition-colors flex items-center gap-2 text-[13px] cursor-pointer"
+                className="absolute right-1.5 bg-[#7B4F1E] hover:bg-[#684219] disabled:opacity-60 text-white font-semibold py-2.5 px-5 rounded-lg transition-colors flex items-center gap-2 text-[13px] cursor-pointer"
               >
                 {loading ? <><Loader2 size={15} className="animate-spin" /> Tracking...</> : <><Search size={15} /> Track</>}
               </button>
@@ -293,7 +293,7 @@ function OrderTrackingContent() {
                 <div className="flex flex-wrap items-start justify-between gap-3 pb-4 border-b border-gray-100 dark:border-gray-800">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Package size={18} className="text-[#000000]" />
+                      <Package size={18} className="text-[#7B4F1E]" />
                       <h2 className="text-[16px] font-extrabold text-gray-900 dark:text-white">
                         Order #{order.orderNo}
                       </h2>
@@ -333,7 +333,7 @@ function OrderTrackingContent() {
                   {/* Customer */}
                   <div className="bg-gray-50 dark:bg-[#2E2A26] rounded-xl p-4 border border-gray-100 dark:border-gray-800 space-y-1.5">
                     <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                      <User size={12} className="text-[#000000]" /> Customer
+                      <User size={12} className="text-[#7B4F1E]" /> Customer
                     </p>
                     <p className="font-bold text-[14px] text-gray-900 dark:text-white">{order.fullName}</p>
                     <p className="text-[13px] text-gray-600 dark:text-gray-300 flex items-center gap-1">
@@ -344,7 +344,7 @@ function OrderTrackingContent() {
                   {/* Address */}
                   <div className="bg-gray-50 dark:bg-[#2E2A26] rounded-xl p-4 border border-gray-100 dark:border-gray-800 space-y-1.5">
                     <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                      <MapPin size={12} className="text-[#000000]" />
+                      <MapPin size={12} className="text-[#7B4F1E]" />
                       {isPickup ? "Pickup Location" : "Delivery Address"}
                     </p>
                     {isPickup ? (
@@ -405,18 +405,18 @@ function OrderTrackingContent() {
               {/* Timeline card */}
               <div className="bg-white dark:bg-[#25221F] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
                 <h3 className="text-[13px] font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-                  <Clock size={15} className="text-[#000000]" /> Status Timeline
+                  <Clock size={15} className="text-[#7B4F1E]" /> Status Timeline
                 </h3>
                 {order.statusTimeline?.length > 0 ? (
-                  <div className="relative border-l-2 border-[#000000]/30 dark:border-[#d1a77d]/30 ml-3 space-y-6 pb-1">
+                  <div className="relative border-l-2 border-[#7B4F1E]/30 dark:border-[#bd9961]/30 ml-3 space-y-6 pb-1">
                     {order.statusTimeline.map((item, idx) => {
                       const isLatest = idx === order.statusTimeline.length - 1;
                       return (
                         <div key={idx} className="relative pl-6">
                           <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                             isLatest
-                              ? "bg-[#000000] border-white dark:border-[#25221F] ring-4 ring-[#000000]/20"
-                              : "bg-[#000000]/60 border-white dark:border-[#25221F]"
+                              ? "bg-[#7B4F1E] border-white dark:border-[#25221F] ring-4 ring-[#7B4F1E]/20"
+                              : "bg-[#7B4F1E]/60 border-white dark:border-[#25221F]"
                           }`}>
                             <div className="w-1.5 h-1.5 rounded-full bg-white" />
                           </div>
@@ -447,7 +447,7 @@ function OrderTrackingContent() {
               {/* Bill summary */}
               <div className="bg-white dark:bg-[#25221F] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm space-y-3">
                 <h3 className="text-[13px] font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-3">
-                  <FileText size={14} className="text-[#000000]" /> Bill Summary
+                  <FileText size={14} className="text-[#7B4F1E]" /> Bill Summary
                 </h3>
                 <div className="space-y-2.5 text-[13px]">
                   <div className="flex justify-between text-gray-600 dark:text-gray-400">
@@ -472,7 +472,7 @@ function OrderTrackingContent() {
                   )}
                   <div className="border-t border-dashed border-gray-200 dark:border-gray-700 pt-3 flex justify-between items-center">
                     <span className="font-bold text-[14px] text-gray-900 dark:text-white">Grand Total</span>
-                    <span className="font-extrabold text-[#000000] dark:text-[#d1a77d] text-[16px]">{formatCurrency(grandTotal)}</span>
+                    <span className="font-extrabold text-[#7B4F1E] dark:text-[#bd9961] text-[16px]">{formatCurrency(grandTotal)}</span>
                   </div>
                   {order.orderFullPaid ? (
                     <div className="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 p-2.5 rounded-lg text-[12px] font-bold text-center border border-emerald-200 dark:border-emerald-900/50">
@@ -489,7 +489,7 @@ function OrderTrackingContent() {
               {/* Alert logs */}
               <div className="bg-white dark:bg-[#25221F] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm space-y-3">
                 <h3 className="text-[13px] font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                  <Mail size={14} className="text-[#000000]" /> Activity Logs
+                  <Mail size={14} className="text-[#7B4F1E]" /> Activity Logs
                 </h3>
                 {order.alertsLogs?.length > 0 ? (
                   <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
@@ -518,7 +518,7 @@ function OrderTrackingContent() {
       {/* ── Empty state ── */}
       {!order && !loading && !apiError && (
         <div className="mt-12 max-w-md mx-auto text-center p-8 bg-white dark:bg-[#25221F] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm space-y-3">
-          <div className="w-12 h-12 rounded-full bg-[#000000]/10 dark:bg-[#d1a77d]/20 text-[#000000] dark:text-[#d1a77d] flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-full bg-[#7B4F1E]/10 dark:bg-[#bd9961]/20 text-[#7B4F1E] dark:text-[#bd9961] flex items-center justify-center mx-auto">
             <Info size={22} />
           </div>
           <h3 className="text-[15px] font-bold text-gray-900 dark:text-white">Enter Order Number</h3>
@@ -530,7 +530,7 @@ function OrderTrackingContent() {
 
       {/* ── Back link ── */}
       <div className="mt-10 flex justify-center">
-        <Link href="/" className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-[#000000] dark:text-gray-400 dark:hover:text-[#d1a77d] transition font-medium">
+        <Link href="/" className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-[#7B4F1E] dark:text-gray-400 dark:hover:text-[#bd9961] transition font-medium">
           <ChevronLeft size={15} /> Back to Home
         </Link>
       </div>
@@ -544,7 +544,7 @@ export default function OrderTracking() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#000000]" size={30} />
+        <Loader2 className="animate-spin text-[#7B4F1E]" size={30} />
       </div>
     }>
       <OrderTrackingContent />

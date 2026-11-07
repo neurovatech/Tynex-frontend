@@ -73,7 +73,7 @@ export default function AddCouponModal({
             onClick={() => setActiveTab("coupon")}
             className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
               activeTab === "coupon"
-                ? "bg-[#000000] text-white"
+                ? "bg-[#7B4F1E] text-white"
                 : "bg-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -83,7 +83,7 @@ export default function AddCouponModal({
             onClick={() => setActiveTab("points")}
             className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
               activeTab === "points"
-                ? "bg-[#000000] text-white"
+                ? "bg-[#7B4F1E] text-white"
                 : "bg-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -100,7 +100,7 @@ export default function AddCouponModal({
             >
               {/* Code row */}
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-5 h-5 rounded-full bg-[#000000] flex items-center justify-center text-white flex-shrink-0">
+                <div className="w-5 h-5 rounded-full bg-[#7B4F1E] flex items-center justify-center text-white flex-shrink-0">
                   <CouponIcon />
                 </div>
                 <span className="text-xs font-bold text-gray-800 tracking-wide">
@@ -123,8 +123,8 @@ export default function AddCouponModal({
                   onClick={() => handleApply(coupon)}
                   className={`px-4 py-1.5 rounded-lg border text-xs font-semibold transition ${
                     appliedId === coupon.id
-                      ? "bg-[#000000] text-white border-[#000000]"
-                      : "border-[#d1a77d] text-[#000000] hover:bg-[#FDF3E7]"
+                      ? "bg-[#7B4F1E] text-white border-[#7B4F1E]"
+                      : "border-[#E9CCAE] text-[#7B4F1E] hover:bg-[#FDF3E7]"
                   }`}
                 >
                   {appliedId === coupon.id ? "Applied" : "Apply"}
@@ -137,7 +137,7 @@ export default function AddCouponModal({
         {/* Okay button */}
         <button
           onClick={onClose}
-          className="w-full mt-5 py-3.5 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
+          className="w-full mt-5 py-3.5 rounded-xl bg-[#7B4F1E] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition"
         >
           OKAY
         </button>

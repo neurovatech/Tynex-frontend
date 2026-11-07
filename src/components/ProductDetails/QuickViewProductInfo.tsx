@@ -41,7 +41,7 @@ const QuickViewProductInfo: React.FC<ProductInfoProps> = ({
     <div className="space-y-3">
       {/* Title + actions */}
       <div className="flex items-start justify-between gap-3">
-        {/* <h1 className="text-xl sm:text-2xl font-bold text-[#000000] leading-snug">
+        {/* <h1 className="text-xl sm:text-2xl font-bold text-[#222222] leading-snug">
           {title}
         </h1> */}
 
@@ -55,20 +55,20 @@ const QuickViewProductInfo: React.FC<ProductInfoProps> = ({
         </div>
 
         <div className="">
-          <span className="text-[#000000] dark:text-white">
-            Code: <span className="font-semibold text-[#000000] dark:text-white">#{code}</span>
+          <span className="text-[#222222] dark:text-white">
+            Code: <span className="font-semibold text-[#222222] dark:text-white">#{code}</span>
           </span>
         </div>
       </div>
 
-      <h1 className="text-xl sm:text-2xl font-bold text-[#000000] dark:text-white leading-snug">
+      <h1 className="text-xl sm:text-2xl font-bold text-[#222222] dark:text-white leading-snug">
         {title}
       </h1>
 
       {/* Brand + Code */}
       <div className="flex items-center justify-between gap-2 text-sm">
         <div className="flex gap-2 items-center  pr-2">
-          <span className="text-[24px] font-extrabold text-[#000000]">
+          <span className="text-[24px] font-extrabold text-[#B57908]">
             {formatPrice(price)}
           </span>
           <span className="text-[16px] text-[#747474] dark:text-white line-through">
@@ -77,7 +77,7 @@ const QuickViewProductInfo: React.FC<ProductInfoProps> = ({
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-sm font-semibold text-[#000000] dark:text-white">
+          <span className="text-sm font-semibold text-[#222222] dark:text-white">
             Quantity :
           </span>
           <QuantitySelector defaultValue={1} />
@@ -88,7 +88,7 @@ const QuickViewProductInfo: React.FC<ProductInfoProps> = ({
       <div className="space-y-1.5 ">
         {/* <div className="flex flex-wrap items-center gap-2 text-sm">
           {stockNote && (
-            <span className="flex items-center gap-1 text-[#000000] font-medium">
+            <span className="flex items-center gap-1 text-[#222222] font-medium">
               <Flame className="text-orange-500" size={13} /> {stockNote}
             </span>
           )}
@@ -99,7 +99,7 @@ const QuickViewProductInfo: React.FC<ProductInfoProps> = ({
               {" "}
               <WarrantyIcon />{" "}
             </span>
-            <span className="bg-linear-to-r from-[#000000] to-[#D3791B] bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-[#6D3F0E] to-[#D3791B] bg-clip-text text-transparent">
               {warrantyNote}
             </span>
           </div>

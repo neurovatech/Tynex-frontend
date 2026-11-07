@@ -27,7 +27,7 @@ function TestBg() {
 <defs>
 <linearGradient id="paint0_linear_1864_16907" x1="720" y1="225.432" x2="720" y2="-353.876" gradientUnits="userSpaceOnUse">
 <stop offset="0.124658" stopColor="#0C0C0C"/>
-<stop offset="0.894433" stopColor="#d1a77d" stopOpacity="0.39"/>
+<stop offset="0.894433" stopColor="#E9CCAE" stopOpacity="0.39"/>
 </linearGradient>
 <linearGradient id="paint1_linear_1864_16907" x1="719.999" y1="-3.63477" x2="719.999" y2="149.986" gradientUnits="userSpaceOnUse">
 <stop stopColor="white" stopOpacity="0.18"/>

@@ -49,7 +49,7 @@ export default function OfferCard({ campaign }: { campaign: Campaign }) {
 
         <Link
           href={`/offer/${campaign.slug}`}
-          className="flex items-center justify-between bg-[#000000] text-white rounded-[14px] px-[15px] py-3.5 text-sm font-semibold tracking-widest hover:bg-[#000000]/90 transition-colors uppercase mt-auto"
+          className="flex items-center justify-between bg-[#222222] text-white rounded-[14px] px-[15px] py-3.5 text-sm font-semibold tracking-widest hover:bg-[#222222]/90 transition-colors uppercase mt-auto"
         >
           See Details
           <span className="w-6 h-6 rounded-full border border-[#FACC15] flex items-center justify-center">

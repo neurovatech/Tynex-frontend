@@ -249,7 +249,7 @@ function OnlineExclusive() {
 
       <div className="max-w-355 mx-auto pt-6 px-4 e_slider">
         <div className="flex justify-between items-center pb-4 ">
-          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             {" "}
             Online Exclusive Products
           </h3>
@@ -307,7 +307,7 @@ function OnlineExclusive() {
 
       <div className="max-w-355 mx-auto pt-6 px-4 e_slider">
         <div className="flex justify-between items-center pb-4 ">
-          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             {" "}
             Best Selling Items
           </h3>
@@ -319,7 +319,7 @@ function OnlineExclusive() {
       </div>
       <div className="max-w-355 mx-auto pt-6 px-4 e_slider">
         <div className="flex justify-between items-center pb-4 ">
-          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+          <h3 className="md:text-[32px] text-[20px] font-bold transition-colors text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
             {" "}
             Deals of the Day
           </h3>

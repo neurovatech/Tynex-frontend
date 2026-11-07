@@ -51,10 +51,14 @@ export default function CartPageCom() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
-  // CartView — fired once per page view, not on every cart mutation.
+  // CartView — fired once per page view, not on every cart mutation, and only
+  // once the cart actually has items: on a direct load/refresh of /cart the
+  // persisted cart rehydrates after mount, so firing on first run reported an
+  // empty cart (value 0) for a cart that wasn't empty. An empty cart view has
+  // no catalog meaning anyway.
   const cartViewTracked = useRef(false);
   useEffect(() => {
-    if (cartViewTracked.current) return;
+    if (cartViewTracked.current || cartItems.length === 0) return;
     cartViewTracked.current = true;
     trackCartView(
       cartItems.map((i) => ({
@@ -66,7 +70,7 @@ export default function CartPageCom() {
       })),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cartItems.length]);
   const token = useAppSelector((state) => state.auth.token);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -244,9 +248,9 @@ export default function CartPageCom() {
   };
   const rate = rateMap[selectedCurrency] || 1;
 
-  // Product-only — `baseSubtotal` itself still carries the Tynex Care
+  // Product-only — `baseSubtotal` itself still carries the tynex Care
   // amount (used for `baseTotalBill` below), this is just what's LABELED
-  // "Subtotal" so "Subtotal + Tynex Care = Total" is an arithmetic
+  // "Subtotal" so "Subtotal + tynex Care = Total" is an arithmetic
   // identity the receipt proves, instead of Total silently already
   // including Care while the Care line looked like a separate, unadded sum.
   const subtotal = ((baseSubtotal - careTotal) / rate).toLocaleString(undefined, {
@@ -286,7 +290,7 @@ export default function CartPageCom() {
                 <p className="text-sm mt-1">Add some products to get started</p>
                 <Link
                   href="/"
-                  className="inline-block mt-4 bg-[#d1a77d] text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-[#c89a6b] transition"
+                  className="inline-block mt-4 bg-[#D4A97A] text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-[#c89a6b] transition"
                 >
                   Continue Shopping
                 </Link>
@@ -307,7 +311,7 @@ export default function CartPageCom() {
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
-                  className="flex-1 min-w-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] text-gray-800 dark:text-white"
+                  className="flex-1 min-w-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A97A] text-gray-800 dark:text-white"
                 />
                 <button
                   type="button"
@@ -326,7 +330,7 @@ export default function CartPageCom() {
                   value={voucherCode}
                   onChange={(e) => setVoucherCode(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleApplyVoucher()}
-                  className="flex-1 min-w-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#d1a77d] text-gray-800 dark:text-white"
+                  className="flex-1 min-w-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A97A] text-gray-800 dark:text-white"
                 />
                 <button
                   type="button"
@@ -352,9 +356,9 @@ export default function CartPageCom() {
               {careTotal > 0 && (
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-gray-500 dark:text-gray-300">
-                    Tynex Care
+                    tynex Care
                   </span>
-                  <span className="text-sm font-bold text-[#000000] dark:text-[#d1a77d]">
+                  <span className="text-sm font-bold text-[#B57908] dark:text-[#D4A97A]">
                     +{careTotalFmt} {selectedCurrency}
                   </span>
                 </div>
@@ -373,14 +377,14 @@ export default function CartPageCom() {
               <div className="flex gap-3 mt-4">
                 <Link
                   href="/"
-                  className="flex-1 inline-flex items-center justify-center text-sm font-medium text-white hover:opacity-80 transition bg-[#d1a77d] rounded-lg px-3 py-3"
+                  className="flex-1 inline-flex items-center justify-center text-sm font-medium text-white hover:opacity-80 transition bg-[#D4A97A] rounded-lg px-3 py-3"
                 >
                   Continue Shopping
                 </Link>
                 <button
                   onClick={handleCheckout}
                   disabled={isLoading}
-                  className="flex-1 inline-flex items-center justify-center text-sm font-medium text-white hover:opacity-80 transition bg-[#000000] dark:bg-[#2a2420] rounded-lg px-3 py-3 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="flex-1 inline-flex items-center justify-center text-sm font-medium text-white hover:opacity-80 transition bg-[#101518] dark:bg-[#2a2420] rounded-lg px-3 py-3 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <svg
@@ -485,7 +489,7 @@ export default function CartPageCom() {
 
             {/* Icon */}
             <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
-              <LogIn size={30} className="text-[#d1a77d]" />
+              <LogIn size={30} className="text-[#D4A97A]" />
             </div>
 
             {/* Text */}
@@ -509,7 +513,7 @@ export default function CartPageCom() {
               </button>
               <Link
                 href="/auth/login?redirect=/checkout"
-                className="flex-1 py-2.5 rounded-xl bg-[#d1a77d] hover:bg-[#c89a6b] text-white text-sm font-bold text-center transition"
+                className="flex-1 py-2.5 rounded-xl bg-[#D4A97A] hover:bg-[#c89a6b] text-white text-sm font-bold text-center transition"
                 onClick={() => setShowLoginModal(false)}
               >
                 Login Now
@@ -556,7 +560,7 @@ export default function CartPageCom() {
             {/* Action */}
             <button
               onClick={() => setInvalidCodeMessage(null)}
-              className="w-full py-2.5 rounded-xl bg-[#d1a77d] hover:bg-[#c89a6b] text-white text-sm font-bold transition cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-[#D4A97A] hover:bg-[#c89a6b] text-white text-sm font-bold transition cursor-pointer"
             >
               OK
             </button>

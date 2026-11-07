@@ -8,7 +8,7 @@ import ShopSelectorModal, { type Shop } from "./ShopSelectorModal";
 // ─── Shop data ────────────────────────────────────────────────────────────────
 const shops: Shop[] = [
   { id: "1", name: "Safe Sealed" },
-  { id: "2", name: "Tynex Life-style" },
+  { id: "2", name: "tynex Life-style" },
   { id: "3", name: "Safe Sealed" },
 ];
 

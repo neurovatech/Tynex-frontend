@@ -34,18 +34,18 @@ const TradeInPage = () => {
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 py-20 max-w-355 mx-auto">
         <div className="bg-white dark:bg-[#302d29] rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 px-10 py-12 flex flex-col items-center gap-5 max-w-sm w-full text-center">
           <div className="w-16 h-16 rounded-full bg-[#FFF8EC] dark:bg-[#3e2e1a] flex items-center justify-center">
-            <ShieldCheck size={28} className="text-[#000000]" />
+            <ShieldCheck size={28} className="text-[#6D3F0E]" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Login Required
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-            Please log in to your Tynex account to access the Trade-In service
+            Please log in to your tynex account to access the Trade-In service
             and get an instant quote for your device.
           </p>
           <Link
             href="/auth/login"
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#6D3F0E] hover:bg-[#5a3409] text-white text-sm font-semibold transition-colors"
           >
             <LogIn size={16} />
             Please Login First
@@ -54,7 +54,7 @@ const TradeInPage = () => {
             Don&apos;t have an account?{" "}
             <Link
               href="/auth/registration"
-              className="text-[#000000] dark:text-[#d1a77d] hover:underline font-medium"
+              className="text-[#6D3F0E] dark:text-[#d4a97a] hover:underline font-medium"
             >
               Register here
             </Link>
@@ -85,7 +85,7 @@ const TradeInPage = () => {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-[#EDEDED] dark:bg-[#444] dark:text-white p-3 text-sm rounded text-gray-600 cursor-pointer hover:bg-[#d1a77d] dark:hover:bg-[#555] transition-colors"
+                  className="bg-[#EDEDED] dark:bg-[#444] dark:text-white p-3 text-sm rounded text-gray-600 cursor-pointer hover:bg-[#E9CCAE] dark:hover:bg-[#555] transition-colors"
                 >
                   {item}
                 </div>

@@ -9,7 +9,7 @@ import NoData from "@/components/ui/NoData";
 export const metadata: Metadata = {
   title: "Blogs",
   description:
-    "Stay updated with the latest technology trends, smartphone reviews, gadget comparisons, and laptop guides in Bangladesh at Tynex.",
+    "Stay updated with the latest technology trends, smartphone reviews, gadget comparisons, and laptop guides in Bangladesh at tynex.",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────

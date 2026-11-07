@@ -221,7 +221,7 @@ export default function PaymentResultView({
             <>
               <Link
                 href={order ? `/order-tracking?orderNo=${encodeURIComponent(order.orderNo)}` : "/order-tracking"}
-                className="w-full py-3 rounded-xl bg-[#000000] hover:bg-[#684219] text-white font-bold text-sm transition-colors"
+                className="w-full py-3 rounded-xl bg-[#7B4F1E] hover:bg-[#684219] text-white font-bold text-sm transition-colors"
               >
                 Track Order
               </Link>
@@ -236,7 +236,7 @@ export default function PaymentResultView({
             <>
               <Link
                 href="/checkout"
-                className="w-full py-3 rounded-xl bg-[#000000] hover:bg-[#684219] text-white font-bold text-sm transition-colors"
+                className="w-full py-3 rounded-xl bg-[#7B4F1E] hover:bg-[#684219] text-white font-bold text-sm transition-colors"
               >
                 Try Again
               </Link>

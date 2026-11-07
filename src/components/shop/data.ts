@@ -111,33 +111,33 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: 1,
     title:
-      "Welcome to Tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh 000000",
+      "Welcome to tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh 000000",
     excerpt:
-      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than Tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
+      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
     color: "bg-purple-50",
   },
   {
     id: 2,
     title:
-      "Welcome to Tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
+      "Welcome to tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
     excerpt:
-      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than Tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
+      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
     color: "bg-blue-50",
   },
   {
     id: 3,
     title:
-      "Welcome to Tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
+      "Welcome to tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
     excerpt:
-      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than Tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
+      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
     color: "bg-green-50",
   },
   {
     id: 4,
     title:
-      "Welcome to Tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
+      "Welcome to tynex Mobile & Gadget Shop – Your Premier Destination for Cutting-Edge Devices in Bangladesh",
     excerpt:
-      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than Tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
+      "Looking for the best Apple products, the top smartphones, and the latest and greatest in the world of gadgets? Look no further than tynex Mobile & Gadget Shop—your ultimate tech haven in Bangladesh.",
     color: "bg-yellow-50",
   },
 ];

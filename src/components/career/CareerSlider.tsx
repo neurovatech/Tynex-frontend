@@ -42,7 +42,7 @@ export default function CareerSlider({ jobs }: CareerSliderProps) {
           </div>
 
           {/* Title */}
-          <h2 className="mt-2 text-xl font-semibold text-[#000000] dark:text-white">
+          <h2 className="mt-2 text-xl font-semibold text-[#222222] dark:text-white">
             {slide.title}
           </h2>
 

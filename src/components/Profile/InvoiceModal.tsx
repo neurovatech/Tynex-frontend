@@ -138,7 +138,7 @@ export default function InvoiceModal({
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7.5);
     doc.setTextColor(40, 40, 40);
-    doc.text("Tynex (Finlay Branch)", leftX, leftY);
+    doc.text("tynex (Finlay Branch)", leftX, leftY);
     leftY += 10;
 
     doc.setFont("helvetica", "normal");
@@ -156,7 +156,7 @@ export default function InvoiceModal({
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8.5);
-    doc.setTextColor(109, 63, 14); // #000000
+    doc.setTextColor(109, 63, 14); // #6D3F0E
     doc.text(`Invoice no: ${orderNo}`, rightX, rightY, { align: "right" });
     rightY += 11;
 
@@ -232,13 +232,13 @@ export default function InvoiceModal({
     const bannerH = 19;
 
     doc.setFillColor(250, 244, 235); // #FAF4EB
-    doc.setDrawColor(233, 204, 174); // #d1a77d
+    doc.setDrawColor(233, 204, 174); // #E9CCAE
     doc.setLineWidth(0.75);
     doc.roundedRect(marginX, bannerY, cardW, bannerH, 5, 5, "FD");
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
-    doc.setTextColor(123, 79, 30); // #000000
+    doc.setTextColor(123, 79, 30); // #7B4F1E
     doc.text("* Attention Please:", marginX + 10, bannerY + 12.5);
 
     doc.setFont("helvetica", "normal");
@@ -353,7 +353,7 @@ export default function InvoiceModal({
             data.cell.styles.textColor = [225, 29, 72];   // rose-600
             data.cell.styles.fontStyle = "bold";
           } else if (rowTitle === "Total") {
-            data.cell.styles.fillColor = [109, 63, 14];   // brand brown #000000
+            data.cell.styles.fillColor = [109, 63, 14];   // brand brown #6D3F0E
             data.cell.styles.textColor = [255, 255, 255];
             data.cell.styles.fontSize = 8.5;
             data.cell.styles.fontStyle = "bold";
@@ -371,12 +371,12 @@ export default function InvoiceModal({
         {/* Modal header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0E6D8] bg-[#FDFBF7]">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#000000]" />
-            <p className="text-[11px] font-bold tracking-widest text-[#000000] uppercase">Order Invoice</p>
+            <span className="w-2 h-2 rounded-full bg-[#B57908]" />
+            <p className="text-[11px] font-bold tracking-widest text-[#7B4F1E] uppercase">Order Invoice</p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={handleDownload}
-              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#000000] to-[#915413] hover:from-[#333333] hover:to-[#7a440c] text-white text-[11px] font-bold rounded-xl transition shadow-xs cursor-pointer">
+              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#6D3F0E] to-[#915413] hover:from-[#5a3409] hover:to-[#7a440c] text-white text-[11px] font-bold rounded-xl transition shadow-xs cursor-pointer">
               <Download size={13} /> Download PDF
             </button>
             <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition cursor-pointer">
@@ -386,7 +386,7 @@ export default function InvoiceModal({
         </div>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-[#000000] animate-spin" /></div>
+          <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-[#B57908] animate-spin" /></div>
         ) : (
           <div className="p-5 sm:p-6">
             {/* Invoice top card */}
@@ -394,9 +394,9 @@ export default function InvoiceModal({
               <div className="flex items-start justify-between flex-wrap gap-4">
                 {/* Brand left */}
                 <div>
-                  <Image src={LogoBlack} alt="Tynex" className="h-7 w-auto" priority />
+                  <Image src={LogoBlack} alt="tynex" className="h-7 w-auto" priority />
                   <p className="text-[10px] text-gray-600 mt-2 leading-relaxed max-w-[270px]">
-                    <strong className="text-gray-800">Tynex (Finlay Branch)</strong><br />
+                    <strong className="text-gray-800">tynex (Finlay Branch)</strong><br />
                     Shop NO: 414 &amp; 429, 4th Floor, Finlay Square, East Nasirabad<br />
                     Hotline: 09638001122 / Whatsapp: 01972999969<br />
                     BIN NO - 003313011-0505
@@ -404,7 +404,7 @@ export default function InvoiceModal({
                 </div>
                 {/* Invoice info right */}
                 <div className="text-right text-[10px]">
-                  <p className="font-extrabold text-[#000000] text-[11px]">Invoice no: {orderNo}</p>
+                  <p className="font-extrabold text-[#6D3F0E] text-[11px]">Invoice no: {orderNo}</p>
                   <p className="text-gray-500 text-[9.5px] mt-0.5">Date: {fmtDate(d?.createdAt || order.createdAt)}</p>
                   {d && (
                     <div className="mt-2 text-[10px] text-gray-600 leading-relaxed">
@@ -435,7 +435,7 @@ export default function InvoiceModal({
             </div>
 
             {/* Notice */}
-            <div className="bg-[#FAF4EB] border border-[#d1a77d] rounded-xl px-4 py-2.5 mb-4 text-[9.5px] text-[#000000] font-medium leading-relaxed flex items-center gap-2">
+            <div className="bg-[#FAF4EB] border border-[#E9CCAE] rounded-xl px-4 py-2.5 mb-4 text-[9.5px] text-[#7B4F1E] font-medium leading-relaxed flex items-center gap-2">
               <span>⭐</span>
               <span><strong>Attention Please:</strong> tynex sells only original Products. We offer anytime double money back guarantee if the product is not original.</span>
             </div>
@@ -468,7 +468,7 @@ export default function InvoiceModal({
                           <td className="p-2.5 leading-snug">
                             {isCarePlan ? (
                               <div className="flex items-start gap-1.5">
-                                <span className="inline-block mt-0.5 shrink-0 px-1.5 py-0.2 rounded text-[8px] font-extrabold bg-amber-100 text-[#000000] border border-amber-200">
+                                <span className="inline-block mt-0.5 shrink-0 px-1.5 py-0.2 rounded text-[8px] font-extrabold bg-amber-100 text-[#7B4F1E] border border-amber-200">
                                   CARE
                                 </span>
                                 <span className="font-semibold text-gray-800">{item.productName}</span>
@@ -531,7 +531,7 @@ export default function InvoiceModal({
                     <td colSpan={4} className="p-2.5 font-bold text-rose-900">Due Amount</td>
                     <td className="p-2.5 text-right whitespace-nowrap font-extrabold text-rose-600">{fmtBDTLabel(duAmt)}</td>
                   </tr>
-                  <tr className="bg-gradient-to-r from-[#000000] via-[#854A11] to-[#000000] text-white">
+                  <tr className="bg-gradient-to-r from-[#6D3F0E] via-[#854A11] to-[#B57908] text-white">
                     <td colSpan={4} className="p-3 font-extrabold text-white text-[11px] md:text-xs tracking-wide">Total</td>
                     <td className="p-3 text-right whitespace-nowrap font-black text-white text-[11px] md:text-xs tracking-wide">{fmtBDTLabel(correctTotal)}</td>
                   </tr>

@@ -39,9 +39,9 @@ const DELIVERY_OPTIONS: { id: DeliveryOption; label: string; sub: string; fee: n
 ];
 
 const STORES = [
-  { id: "banani", name: "Banani Branch (Tynex Flagship)" },
-  { id: "dhanmondi", name: "Dhanmondi Branch (Tynex Express)" },
-  { id: "mirpur", name: "Mirpur Branch (Tynex Hub)" },
+  { id: "banani", name: "Banani Branch (tynex Flagship)" },
+  { id: "dhanmondi", name: "Dhanmondi Branch (tynex Express)" },
+  { id: "mirpur", name: "Mirpur Branch (tynex Hub)" },
 ];
 
 const TIME_SLOTS = [
@@ -105,7 +105,7 @@ export default function CartSidebar({
               onClick={() => onCurrencyChange(cur.code)}
               className={`py-1.5 px-1 rounded-lg text-xs font-bold border transition-all duration-200 cursor-pointer ${
                 selectedCurrency === cur.code
-                  ? "bg-[#000000] border-[#000000] text-white shadow-xs"
+                  ? "bg-[#7B4F1E] border-[#7B4F1E] text-white shadow-xs"
                   : "bg-white dark:bg-[#3E3A35] border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50"
               }`}
             >
@@ -131,7 +131,7 @@ export default function CartSidebar({
               </div>
               <span className="text-sm font-medium text-gray-800 dark:text-gray-200">Delivery Address</span>
             </div>
-            <span className="text-sm font-semibold text-[#000000] dark:text-[#d1a77d]">
+            <span className="text-sm font-semibold text-[#7B4F1E] dark:text-[#bd9961]">
               {hasAddress ? "Edit" : "Add"}
             </span>
           </button>
@@ -162,16 +162,16 @@ export default function CartSidebar({
                 <p className="text-xs text-gray-400 dark:text-gray-400 mt-0.5">{opt.sub}</p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-bold text-[#000000] dark:text-[#d1a77d]">
+                <span className="text-xs font-bold text-[#7B4F1E] dark:text-[#bd9961]">
                   {opt.fee === 0 ? "Free" : `+${sym}${opt.fee}`}
                 </span>
                 <div
                   className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
-                    selectedDelivery === opt.id ? "border-[#000000]" : "border-gray-300 dark:border-gray-700"
+                    selectedDelivery === opt.id ? "border-[#7B4F1E]" : "border-gray-300 dark:border-gray-700"
                   }`}
                 >
                   {selectedDelivery === opt.id && (
-                    <div className="w-2 h-2 rounded-full bg-[#000000]" />
+                    <div className="w-2 h-2 rounded-full bg-[#7B4F1E]" />
                   )}
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function CartSidebar({
             <select
               value={selectedStore}
               onChange={(e) => onStoreChange(e.target.value)}
-              className="w-full text-sm bg-white dark:bg-[#3E3A35] border border-gray-200 dark:border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-[#000000]"
+              className="w-full text-sm bg-white dark:bg-[#3E3A35] border border-gray-200 dark:border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-[#7B4F1E]"
             >
               {STORES.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -213,7 +213,7 @@ export default function CartSidebar({
             <select
               value={selectedTimeSlot}
               onChange={(e) => onTimeSlotChange(e.target.value)}
-              className="w-full text-sm bg-white dark:bg-[#3E3A35] border border-gray-200 dark:border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-[#000000]"
+              className="w-full text-sm bg-white dark:bg-[#3E3A35] border border-gray-200 dark:border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-[#7B4F1E]"
             >
               {TIME_SLOTS.map((slot) => (
                 <option key={slot} value={slot}>
@@ -244,7 +244,7 @@ export default function CartSidebar({
         className="w-full flex items-center justify-between bg-[#FDF3E7] dark:bg-[#342D26] rounded-xl px-4 py-3.5 hover:bg-[#faebd4] dark:hover:bg-[#4E4338] transition"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#000000] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-[#7B4F1E] flex items-center justify-center">
             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M17 17h.01M7 17h.01M17 7h.01M3 12h18M12 3v18" />
             </svg>
@@ -322,7 +322,7 @@ export default function CartSidebar({
 
           <div className="pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
             <span className="text-sm font-bold text-gray-900 dark:text-white">Total Bill</span>
-            <span className="text-base font-bold text-[#000000] dark:text-[#d1a77d]">
+            <span className="text-base font-bold text-[#7B4F1E] dark:text-[#bd9961]">
               {sym}
               {(
                 parseFloat(totalBill.replace(/,/g, "")) -
@@ -332,7 +332,7 @@ export default function CartSidebar({
 
             
           </div>
-          <button className="bg-[#d1a77d] hover:bg-[#c89a6b]  text-white w-full font-medium py-2 px-4 rounded-lg transition">
+          <button className="bg-[#D4A97A] hover:bg-[#c89a6b]  text-white w-full font-medium py-2 px-4 rounded-lg transition">
               Confirm Order
             </button>
         </div>

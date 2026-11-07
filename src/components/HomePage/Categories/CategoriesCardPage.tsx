@@ -195,13 +195,13 @@ function CategoriesCard({
     <div className="md:px-12.5 px-4">
       {/* ── Header ── */}
       <div className="flex justify-between items-center">
-        <h1 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white">
+        <h1 className="md:text-[32px] text-[18px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white">
           Categories
         </h1>
         {seeAllBtn && (
           <Link
             href="/categories"
-            className="text-sm font-medium text-primary bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#d1a77d]! transition-colors duration-300"
+            className="text-sm font-medium text-primary bg-orange-50 border-orange-200 px-4 py-2 rounded-[10px] dark:text-[#2e2b28] hover:underline hover:text-[#CB843B]! transition-colors duration-300"
           >
             See all
           </Link>
@@ -237,7 +237,7 @@ function CategoriesCard({
 
               return (
                 <Link key={item.uuid} href={href} className="flex flex-col items-center">
-                  <div className="relative w-full aspect-square bg-[#F5F5F5] rounded-4xl p-6 md:p-8 transition-all duration-300 hover:scale-105 hover:bg-[#fcf5ed] hover:border-[#d1a77d] border border-[#F5F5F5]">
+                  <div className="relative w-full aspect-square bg-[#F5F5F5] rounded-4xl p-6 md:p-8 transition-all duration-300 hover:scale-105 hover:bg-[#fcf5ed] hover:border-[#E9CCAE] border border-[#F5F5F5]">
                     <Image
                       src={hasImage ? item.thumbnail_img : NoImg}
                       alt={hasName ? item.category_name : "Category"}
@@ -250,7 +250,7 @@ function CategoriesCard({
                       }}
                     />
                   </div>
-                  <h2 className="w-full text-[14px] sm:text-[14px] font-medium text-primary pt-1 sm:pt-2 text-center transition-colors duration-300 group-hover:text-[#d1a77d] line-clamp-2 leading-tight min-h-[22px] sm:min-h-[26px] lg:min-h-[36px] flex items-start justify-center">
+                  <h2 className="w-full text-[14px] sm:text-[14px] font-medium text-primary pt-1 sm:pt-2 text-center transition-colors duration-300 group-hover:text-[#CB843B] line-clamp-2 leading-tight min-h-[22px] sm:min-h-[26px] lg:min-h-[36px] flex items-start justify-center">
                     {hasName ? (
                       item.category_name
                     ) : (

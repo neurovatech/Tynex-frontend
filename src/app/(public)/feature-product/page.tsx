@@ -16,7 +16,7 @@ export default async function FeatureProductsPage() {
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <div className="mt-6 md:px-12.5 px-4">
-        <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#000000_0%,#d1a77d_46.15%,#000000_100%)] dark:text-white mb-6">
+        <h2 className="md:text-[32px] text-[20px] font-bold text-transparent bg-clip-text bg-[linear-gradient(90deg,#101518_0%,#E9CCAE_46.15%,#B57908_100%)] dark:text-white mb-6">
           Feature Products
         </h2>
         <ShowcaseProductGrid

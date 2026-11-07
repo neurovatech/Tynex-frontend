@@ -1,4 +1,4 @@
-TYNEX — META PIXEL + CONVERSIONS API MIGRATION: FRONTEND AUDIT ও যা করা হয়েছে
+tynex — META PIXEL + CONVERSIONS API MIGRATION: FRONTEND AUDIT ও যা করা হয়েছে
 ================================================================================
 তারিখ: ২০২৬-০৯-২৮
 

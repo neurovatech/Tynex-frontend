@@ -32,7 +32,7 @@ const Coupons = () => {
             onClick={() => setActiveTab(index)}
             className={`px-4 py-2 text-sm md:text-base font-bold rounded-lg transition-all duration-300 ${
               activeTab === index
-                ? "bg-[#d1a77d] text-primary"
+                ? "bg-[#E9CCAE] text-primary"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -63,7 +63,7 @@ const Coupons = () => {
                   </span>
                 </div>
                 <h2 className="text-base font-medium">
-                  <span className="text-[#000000] dark:text-white">
+                  <span className="text-[#222222] dark:text-white">
                     10% off upto
                   </span>{" "}
                   <span className="text-[#575757] dark:text-gray-300">
@@ -78,7 +78,7 @@ const Coupons = () => {
               {/* Bottom Section */}
               <div className="py-3 px-3.5 flex justify-between items-center bg-[#F7F7F7] dark:bg-[#393430]">
                 <p className="text-xs text-[#747474] font-medium">For Phone</p>
-                <button className="px-3.5 py-2 border border-[#d1a77d] text-[#000000] font-semibold rounded-xl bg-white hover:bg-[#fdf8f3] transition-colors shadow-[0px_0px_6px_3px_#d1a77d52]">
+                <button className="px-3.5 py-2 border border-[#E9CCAE] text-[#6D3F0E] font-semibold rounded-xl bg-white hover:bg-[#fdf8f3] transition-colors shadow-[0px_0px_6px_3px_#E9CCAE52]">
                   Apply
                 </button>
               </div>

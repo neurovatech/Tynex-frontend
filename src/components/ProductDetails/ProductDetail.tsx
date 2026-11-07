@@ -10,9 +10,10 @@ import ProductVariants from "./ProductVariants";
 import ProductCard from "./ProductCrad";
 import BuyMore from "./BuyMore";
 import ProductColorVariants from "./ProductColorVariants";
-import TynexCare, { CareOption } from "./TynexCare";
+import DazzleCare, { CareOption } from "./DazzleCare";
 import ContactOptions from "./ContactOptions";
 import CheckAvailability from "./CheckAvailability";
+import CheckAvailabilityTwo from "./CheckAvailabilityTwo";
 import TransparentProfitMeterArea from "./TransparentProfitMeterArea";
 import FrequentlyBoughtTogether from "./FrequentlyBoughtTogether";
 import ProductSpecifications from "./ProductSpecifications";
@@ -72,9 +73,9 @@ type PlanAccessoriesResponse = {
 interface ProductDetailProps {
   product: any | null;
   /**
-   * Variants / Tynex Care source data fetched on the server (ISR). Seeding the
+   * Variants / tynex Care source data fetched on the server (ISR). Seeding the
    * two queries below with it means the "Color / RAM & Storage" block (~250px)
-   * and the "Tynex Care" block (~470px) are part of the server HTML instead of
+   * and the "tynex Care" block (~470px) are part of the server HTML instead of
    * popping in after two client requests — which pushed everything under them
    * (price, Buy buttons, delivery info) down ~720px on every product view
    * (layout shift ~0.07-0.08). If a server fetch failed these are undefined
@@ -120,6 +121,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
       initialData: initialVariants,
     });
 
+    console.log("variantApiData", variantApiData)
+
   const { data: planAccessoriesData } = useQuery<PlanAccessoriesResponse>({
     queryKey: ["plan-accessories", product?.productUuid],
     queryFn: () =>
@@ -137,12 +140,15 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
   useEffect(() => {
     if (groups.length === 0) return;
+    // isEcd: true যে variant এ আছে সেটাকে default হিসেবে select করব
+    // যদি কোনো isEcd variant না থাকে তাহলে প্রথম variant select হবে
+    const ecdVariant = variants.find((v) => v.isEcd);
     const initial: Record<string, string> = {};
     groups.forEach((group) => {
-      const firstVal = variants.find((v) => v.attributes[group])?.attributes[
-        group
-      ];
-      if (firstVal) initial[group] = firstVal;
+      const val =
+        ecdVariant?.attributes[group] ??
+        variants.find((v) => v.attributes[group])?.attributes[group];
+      if (val) initial[group] = val;
     });
     setSelectedAttrs(initial);
   }, [groups, variants]);
@@ -160,11 +166,33 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
     );
   }, [groups, variants, selectedAttrs]);
 
+  /**
+   * Variant the pre-order notice is about. `selectedVariant` only exists after the effect
+   * above has picked the default options, i.e. after hydration — a notice keyed on it alone
+   * would pop in late and push the whole selector down. Until a selection exists, use the
+   * very variant that effect is about to select (first option of every group), so the notice
+   * is already in the server HTML.
+   */
+  const noticeVariant = useMemo(() => {
+    if (selectedVariant) return selectedVariant;
+    if (groups.length === 0 || Object.keys(selectedAttrs).length > 0) return null;
+    // Pre-hydration এ isEcd: true variant কে default হিসেবে ব্যবহার করব
+    const ecdVariant = variants.find((v) => v.isEcd);
+    const defaults: Record<string, string | undefined> = {};
+    groups.forEach((g) => {
+      defaults[g] =
+        ecdVariant?.attributes[g] ??
+        variants.find((v) => v.attributes[g])?.attributes[g];
+    });
+    return (
+      variants.find((v) => groups.every((g) => v.attributes[g] === defaults[g])) ?? null
+    );
+  }, [selectedVariant, groups, variants, selectedAttrs]);
+
   const isOptionAvailable = (group: string, option: string) =>
     variants.some(
       (v) =>
         v.attributes[group] === option &&
-        v.attributes["_isTba"] !== "true" &&
         Object.entries(selectedAttrs)
           .filter(([g]) => g !== group)
           .every(([g, val]) => v.attributes[g] === val),
@@ -299,8 +327,50 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   // Shared by StickyPurchaseBar and the variant-selector banner — one
   // definition of "this exact selection doesn't exist as a real variant".
   const isSelectionUnavailable =
-    price === 0 ||
+    (!selectedVariant?.isTba && price === 0) ||
     (!isVariantLoading && variants.length > 0 && selectedVariant === null);
+
+  const variantNotice = useMemo(() => {
+    if (isSelectionUnavailable || !noticeVariant) return null;
+    if (noticeVariant.isTba) {
+      return {
+        icon: "⏳",
+        text: "Coming soon.",
+        containerClass:
+          "bg-[#E9CCAE]/10 dark:bg-[#3e3329] border-[#E9CCAE]/50 dark:border-[#4a3f36]",
+        textClass: "text-[#B57908] dark:text-[#E9CCAE]",
+      };
+    }
+    if (noticeVariant.isPreOrder) {
+      return {
+        icon: "⏳",
+        text: "Pre-order now to be among the first to receive it.",
+        containerClass:
+          "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40",
+        textClass: "text-amber-700 dark:text-amber-400",
+      };
+    }
+    if (noticeVariant.isLs) {
+      return {
+        icon: "🏬",
+        text: "Available at our outlets.",
+        containerClass:
+          "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/40",
+        textClass: "text-emerald-700 dark:text-emerald-400",
+      };
+    }
+    if (noticeVariant.isFs) {
+      return {
+        icon: "✈️",
+        text: "Ships from our overseas warehouse. Delivery in 7–15 days.",
+        // Project theme color — gold/warm palette (আগে sky/blue ছিল যেটা wrong দেখাচ্ছিল)
+        containerClass:
+          "bg-[#E9CCAE]/10 dark:bg-[#3e3329] border-[#E9CCAE]/50 dark:border-[#4a3f36]",
+        textClass: "text-[#B57908] dark:text-[#E9CCAE]",
+      };
+    }
+    return null;
+  }, [isSelectionUnavailable, noticeVariant]);
 
   // Toast fires once per transition into "unavailable" (keyed on selectedAttrs
   // so re-selecting the same bad combination — e.g. toggling Color back and
@@ -349,18 +419,18 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   }, [product?.productUuid]);
 
   // ── Plan Accessories data processing ─────────────────────────
-  const { tynexCareOptions, frequentlyBoughtProducts, buyMoreProducts } =
+  const { dazzleCareOptions, frequentlyBoughtProducts, buyMoreProducts } =
     useMemo(() => {
       const groups = planAccessoriesData?.data;
       if (!groups || !Array.isArray(groups)) {
         return {
-          tynexCareOptions: [],
+          dazzleCareOptions: [],
           frequentlyBoughtProducts: [],
           buyMoreProducts: [],
         };
       }
 
-      const tynexCareGroup = groups.find((g) => g.planGroup === "Dazzle_Care");
+      const dazzleCareGroup = groups.find((g) => g.planGroup === "Dazzle_Care");
       const frequentlyBuyTogetherGroup = groups.find(
         (g) => g.planGroup === "Frequently_Buy_Together",
       );
@@ -368,8 +438,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         (g) => g.planGroup === "Buy_More_Save_More",
       );
 
-      // Map Tynex Care options
-      const dcOptions = (tynexCareGroup?.items ?? []).map((item) => {
+      // Map Dazzle Care options
+      const dcOptions = (dazzleCareGroup?.items ?? []).map((item) => {
         const parenIdx = item.productName.indexOf("(");
         const colonIdx = item.productName.indexOf(":");
         let title = item.productName;
@@ -462,7 +532,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
       const bmsmProducts = mapAccessoryItems(buyMoreSaveMoreGroup?.items);
 
       return {
-        tynexCareOptions: dcOptions,
+        dazzleCareOptions: dcOptions,
         frequentlyBoughtProducts: fbtProducts,
         buyMoreProducts: bmsmProducts,
       };
@@ -470,8 +540,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
   // ── Derived care plan totals (offer + regular) ─────────────────
   const selectedCareOptions = useMemo(
-    () => tynexCareOptions.filter((o) => selectedCareIds.includes(o.id)),
-    [selectedCareIds, tynexCareOptions],
+    () => dazzleCareOptions.filter((o) => selectedCareIds.includes(o.id)),
+    [selectedCareIds, dazzleCareOptions],
   );
   const careTotalOffer = selectedCareOptions.reduce(
     (s, o) => s + (o.price > 0 ? o.price : 0),
@@ -621,7 +691,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         qty={qty}
         onQtyChange={setQty}
         isUnavailable={isSelectionUnavailable}
-        isTba={product?.isTba ?? false}
+        isTba={selectedVariant?.isTba ?? product?.isTba ?? false}
         endOfLife={product?.endOfLife ?? false}
         onExploreFinancing={() => setEmiOpen(true)}
         onStoreAvailability={() => setStoreAvailabilityOpen(true)}
@@ -741,6 +811,35 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                     </p>
                   </div>
                 )}
+                {!isSelectionUnavailable && variantNotice && (
+                  <div
+                    className={`flex items-center gap-2 border rounded-xl px-4 py-3 mb-4 ${variantNotice.containerClass}`}
+                  >
+                    <span className="text-lg">{variantNotice.icon}</span>
+                    <p
+                      className={`text-sm font-semibold flex gap-2 ${variantNotice.textClass}`}
+                    >
+                      {variantNotice.text}
+
+
+{/* {noticeVariant?.isLs ? "Check branch availability" : ""} */}
+{noticeVariant?.isLs ? <CheckAvailabilityTwo
+                product={product}
+                selectedVariant={selectedVariant}
+                currentPrice={(selectedVariant && selectedVariant.price > 0
+                    ? selectedVariant.price
+                    : price ?? 0) + careTotalOffer}
+                externalEmiOpen={emiOpen}
+                onExternalEmiClose={() => setEmiOpen(false)}
+                externalAvailabilityOpen={storeAvailabilityOpen}
+                onExternalAvailabilityClose={() =>
+                  setStoreAvailabilityOpen(false)
+                }
+              /> : ""}
+                    </p>
+                  </div>
+                )}
+
                 {colorVariantGroups.length > 0 && (
                   <ProductColorVariants
                     groups={colorVariantGroups}
@@ -773,7 +872,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                     <div className="hidden items-center gap-2 shrink-0">
                       {selectedVariant.price > 0 ? (
                         <>
-                          <span className="text-base font-extrabold text-[#000000]">
+                          <span className="text-base font-extrabold text-[#B57908]">
                             BDT {selectedVariant.price.toLocaleString()}
                           </span>
                           {selectedVariant.mrp > selectedVariant.price && (
@@ -793,13 +892,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               </div>
             )}
 
-            {/* {tynexCareOptions.length > 0 && ( */}
+            {/* {dazzleCareOptions.length > 0 && ( */}
 
             {/* )} */}
-            {tynexCareOptions.length > 0 && (
+            {dazzleCareOptions.length > 0 && (
               <div className="pt-5">
-                <TynexCare
-                  options={tynexCareOptions}
+                <DazzleCare
+                  options={dazzleCareOptions}
                   onSelectionChange={setSelectedCareIds}
                 />
               </div>
@@ -824,7 +923,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               <TransparentProfitMeterArea
                 product={product}
                 currentPrice={price}
-                tynexCareOptions={tynexCareOptions}
+                dazzleCareOptions={dazzleCareOptions}
                 selectedCareIds={selectedCareIds}
                 productUUID={product?.productUuid}
                 variantUUID={selectedVariant?.id}
@@ -910,7 +1009,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 onClick={() => setShowDescription(false)}
                 className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
                   !showDescription
-                    ? "bg-[#d1a77d] text-black shadow-sm"
+                    ? "bg-[#E9CCAE] text-black shadow-sm"
                     : "bg-[#F7F7F7] dark:bg-[#3e3329] text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#4a3f36]"
                 }`}
               >
@@ -939,7 +1038,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 }}
                 className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
                   showDescription
-                    ? "bg-[#d1a77d] text-black shadow-sm"
+                    ? "bg-[#E9CCAE] text-black shadow-sm"
                     : "bg-[#F7F7F7] dark:bg-[#3e3329] text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#4a3f36]"
                 }`}
               >

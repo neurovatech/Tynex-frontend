@@ -19,8 +19,6 @@ import type { ApiCategory } from "./Header";
 import { useAppSelector } from "@/store/hooks";
 import { useTheme } from "next-themes";
 import ThemeToggle from "./ThemeToggle";
-import LogoWhite from "@/images/header-logo-white.svg";
-
 
 interface Props {
   categories?: ApiCategory[];
@@ -44,7 +42,7 @@ export default function MobileHeader({ categories }: Props) {
   // instead of hydration flagging a server/client attribute mismatch.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const iconColor = mounted && resolvedTheme === "dark" ? "#fff" : "#000000";
+  const iconColor = mounted && resolvedTheme === "dark" ? "#fff" : "#222";
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -101,10 +99,10 @@ export default function MobileHeader({ categories }: Props) {
         <Link href="/" className="shrink-0 mr-2">
           <div className="text-3xl flex font-black text-white tracking-tighter leading-none">
             <Image
-              src={LogoWhite}
+              src="https://dazzle.sgp1.cdn.digitaloceanspaces.com/site/header-logo-white.svg"
               width={150}
               height={50}
-              alt="Tynex logo"
+              alt="tynex logo"
             />
           </div>
         </Link>
@@ -115,7 +113,7 @@ export default function MobileHeader({ categories }: Props) {
           <Link
             href="/shop-location"
              aria-label="Shop location"
-            className="w-10 h-10 rounded-xl bg-background flex items-center justify-center text-[#000000] dark:text-white"
+            className="w-10 h-10 rounded-xl bg-background flex items-center justify-center text-[#222222] dark:text-white"
           >
             <Locationicon aria-hidden="true" />
           </Link>

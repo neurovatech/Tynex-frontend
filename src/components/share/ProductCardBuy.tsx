@@ -293,7 +293,7 @@ export default function ProductCardBuy({
             <button
               onClick={handleWishlistToggle}
               disabled={isAddingWishlist}
-              className="flex-1 flex items-center justify-center gap-2 h-11 px-1 rounded-[13px] text-[13px] sm:text-[14px] font-semibold border transition-all duration-300 active:scale-95 bg-[#000000] border-[#000000] text-white hover:bg-[#333333] hover:shadow-md disabled:opacity-60 disabled:cursor-wait"
+              className="flex-1 flex items-center justify-center gap-2 h-11 px-1 rounded-[13px] text-[13px] sm:text-[14px] font-semibold border transition-all duration-300 active:scale-95 bg-[#6D3F0E] border-[#6D3F0E] text-white hover:bg-[#5a3300] hover:shadow-md disabled:opacity-60 disabled:cursor-wait"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 shrink-0">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -307,7 +307,7 @@ export default function ProductCardBuy({
               className={`flex-1 flex items-center justify-center gap-2 h-11 px-1 rounded-[13px] text-[13px] sm:text-[14px] leading-none font-semibold border transition-all duration-300 active:scale-95 disabled:opacity-60 disabled:cursor-wait ${
                 isWishlisted
                   ? "bg-red-50 border-red-300 text-red-500"
-                  : "bg-white border-orange-200 text-[#000000] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
+                  : "bg-white border-orange-200 text-[#6D3F0E] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
               }`}
               aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
@@ -337,12 +337,12 @@ export default function ProductCardBuy({
           <button
             onClick={handleAddToCart}
             disabled={loadingCart}
-            className={`flex-1 flex items-center justify-center gap-2.5 h-11 py-[5px] px-1 rounded-[13px] text-[16px] leading-none font-semibold border transition-all duration-300 active:scale-95 shadow-[0px_0px_8px_4px_#d1a77d52] ${
+            className={`flex-1 flex items-center justify-center gap-2.5 h-11 py-[5px] px-1 rounded-[13px] text-[16px] leading-none font-semibold border transition-all duration-300 active:scale-95 shadow-[0px_0px_8px_4px_#E9CCAE52] ${
               loadingCart
                 ? "bg-gray-100 border-gray-200 text-gray-400 cursor-wait"
                 : addedToCart
                   ? "bg-green-500 border-green-500 text-white"
-                  : "bg-white border-orange-200 text-[#000000] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
+                  : "bg-white border-orange-200 text-[#6D3F0E] hover:bg-orange-50 hover:border-orange-400 hover:shadow-md"
             }`}
           >
             {loadingCart ? (

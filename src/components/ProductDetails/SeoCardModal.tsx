@@ -35,42 +35,42 @@ export default function SeoCardModal({ cards }: Props) {
 
   const laptopCategories = [ { name: "Apple MacBook", href: "/categories/laptop/apple-macbook", }, { name: "iMac", href: "/categories/laptop/imac", }, { name: "Gaming Laptop", href: "/categories/laptop/gaming-laptop", }, { name: "Ultrabook", href: "/categories/laptop/ultrabook-2-in-1-laptop", }, { name: "2-in-1 Laptops", href: "/categories/laptop/ultrabook-2-in-1-laptop", }, { name: "Mac Studio", href: "/categories/laptop/mac-studio", }, ];
 
-  const benefits = [ { title: "Official Warranty", description: "All products come with an official manufacturer warranty.", }, { title: "Best Prices in Bangladesh", description: "We offer competitive pricing across all product categories.", }, { title: "Free Nationwide Delivery", description: "Enjoy free delivery on your purchases (conditions apply).", }, { title: "Flexible EMI & Exchange Options", description: "Benefit from easy payment plans and upgrade opportunities.", }, { title: "100% Authentic Products", description: "Shop with confidence knowing you are getting genuine products.", }, { title: "Multiple Store Locations", description: "Visit us in person at any of our convenient locations.", }, { title: "Tynex Premium Service", description: "Our dedicated support team is here to assist you before and after your purchase.", }, { title: "Tynex Care+ for Apple Products", description: "Exclusive benefits including direct replacement within one year for eligible issues. (Condition Applied)", }, ];
+  const benefits = [ { title: "Official Warranty", description: "All products come with an official manufacturer warranty.", }, { title: "Best Prices in Bangladesh", description: "We offer competitive pricing across all product categories.", }, { title: "Free Nationwide Delivery", description: "Enjoy free delivery on your purchases (conditions apply).", }, { title: "Flexible EMI & Exchange Options", description: "Benefit from easy payment plans and upgrade opportunities.", }, { title: "100% Authentic Products", description: "Shop with confidence knowing you are getting genuine products.", }, { title: "Multiple Store Locations", description: "Visit us in person at any of our convenient locations.", }, { title: "tynex Premium Service", description: "Our dedicated support team is here to assist you before and after your purchase.", }, { title: "tynex Care+ for Apple Products", description: "Exclusive benefits including direct replacement within one year for eligible issues. (Condition Applied)", }, ];
 
   const faqs = [
-    { q: "Is Tynex a trusted store for authentic smartphones and gadgets in Bangladesh?", a: "Yes, Tynex is one of Bangladesh's most trusted stores for smartphones, laptops, and gadgets. We provide genuine, high-quality products from leading brands with official warranties and dedicated customer support." },
-    { q: "What brands does Tynex offer for phones, laptops, and gadgets?", a: "Tynex carries over 113 popular brands, including Apple, Samsung, Xiaomi, Huawei, Oppo, Vivo, OnePlus, Google, Dell, HP, and more. Our wide selection ensures that you can find the best device for your needs." },
-    { q: "Does Tynex offer a warranty on products?", a: "Yes, all our products come with official warranties. Additionally, Apple products are eligible for Tynex Care+, which provides further protection and a replacement service within the first year (conditions apply)." },
-    { q: "Can I order online from Tynex and get delivery anywhere in Bangladesh?", a: "Absolutely! Tynex offers nationwide delivery on all orders placed through our website, allowing you to shop conveniently from home. Free delivery is available on select products (conditions apply)." },
+    { q: "Is tynex a trusted store for authentic smartphones and gadgets in Bangladesh?", a: "Yes, tynex is one of Bangladesh's most trusted stores for smartphones, laptops, and gadgets. We provide genuine, high-quality products from leading brands with official warranties and dedicated customer support." },
+    { q: "What brands does tynex offer for phones, laptops, and gadgets?", a: "tynex carries over 113 popular brands, including Apple, Samsung, Xiaomi, Huawei, Oppo, Vivo, OnePlus, Google, Dell, HP, and more. Our wide selection ensures that you can find the best device for your needs." },
+    { q: "Does tynex offer a warranty on products?", a: "Yes, all our products come with official warranties. Additionally, Apple products are eligible for tynex Care+, which provides further protection and a replacement service within the first year (conditions apply)." },
+    { q: "Can I order online from tynex and get delivery anywhere in Bangladesh?", a: "Absolutely! tynex offers nationwide delivery on all orders placed through our website, allowing you to shop conveniently from home. Free delivery is available on select products (conditions apply)." },
     {
-      q: "Does Tynex offer any installment payment plans?",
+      q: "Does tynex offer any installment payment plans?",
       a: (
         <>
           Yes,{" "}
           <Link href="/emi-policy" className="text-blue-700 underline underline-offset-2">
-            Tynex offers an EMI
+            tynex offers an EMI
           </Link>{" "}
           option for purchases above BDT 5,000, available with credit cards from 39 partner banks. You can select installment plans up to 36 months to make purchases more manageable.
         </>
       ),
     },
     {
-      q: "What is Tynex Care+?",
+      q: "What is tynex Care+?",
       a: (
         <>
           <Link href="/warranty-policy" className="text-blue-700 underline underline-offset-2">
-            Tynex Care+
+            tynex Care+
           </Link>{" "}
           is an exclusive service for Apple products. It includes hardware and software issue coverage, fast replacement, and a high resale value. This program allows customers to get a replacement device within 3-5 days if any covered issues occur within the first year.
         </>
       ),
     },
-    { q: "Can I exchange my old device for a new one at Tynex?", a: "Yes, Tynex offers an exchange facility with an exchange bonus. Simply bring your old device, and our team will guide you on the exchange value and the best upgrade options available." },
-    { q: "Where are Tynex's store locations in Bangladesh?", a: "Tynex has multiple branches across Bangladesh. Dhaka: Jamuna Future Park (North Court and West Court), Centre Point Shopping Mall & Bashundhara Shopping Mall. Chittagong: Finlay Square, Meridian Kohinur City and Sanmar Ocean City. We're also expanding with new locations at Bashundhara City Shopping Mall and Centre Point Shopping Mall in Dhaka." },
-    { q: "What customer support does Tynex provide?", a: "Tynex offers 24/7 customer support to assist with any inquiries, order updates, and technical issues. You can reach us via our hotline at 09638001122 (10 AM - 10 PM) or contact us through our website or social media." },
-    { q: "How can I be sure I'm getting a genuine product from Tynex?", a: "Tynex guarantees the authenticity of every product. We source directly from authorized distributors and manufacturers, ensuring every item is genuine and backed by an official warranty." },
-    { q: "Does Tynex accept pre-orders for upcoming devices?", a: "Yes, Tynex accepts pre-orders for new and upcoming devices. Place your pre-order, and we'll ensure delivery within 15 days for any electronic product you choose." },
-    { q: "Can I return or exchange a product if I'm not satisfied?", a: "Tynex aims for complete customer satisfaction. If you encounter any issues, our support team is ready to assist. For specific return and exchange policies, please contact our team for guidance." },
+    { q: "Can I exchange my old device for a new one at tynex?", a: "Yes, tynex offers an exchange facility with an exchange bonus. Simply bring your old device, and our team will guide you on the exchange value and the best upgrade options available." },
+    { q: "Where are tynex's store locations in Bangladesh?", a: "tynex has multiple branches across Bangladesh. Dhaka: Jamuna Future Park (North Court and West Court), Centre Point Shopping Mall & Bashundhara Shopping Mall. Chittagong: Finlay Square, Meridian Kohinur City and Sanmar Ocean City. We're also expanding with new locations at Bashundhara City Shopping Mall and Centre Point Shopping Mall in Dhaka." },
+    { q: "What customer support does tynex provide?", a: "tynex offers 24/7 customer support to assist with any inquiries, order updates, and technical issues. You can reach us via our hotline at 09638001122 (10 AM - 10 PM) or contact us through our website or social media." },
+    { q: "How can I be sure I'm getting a genuine product from tynex?", a: "tynex guarantees the authenticity of every product. We source directly from authorized distributors and manufacturers, ensuring every item is genuine and backed by an official warranty." },
+    { q: "Does tynex accept pre-orders for upcoming devices?", a: "Yes, tynex accepts pre-orders for new and upcoming devices. Place your pre-order, and we'll ensure delivery within 15 days for any electronic product you choose." },
+    { q: "Can I return or exchange a product if I'm not satisfied?", a: "tynex aims for complete customer satisfaction. If you encounter any issues, our support team is ready to assist. For specific return and exchange policies, please contact our team for guidance." },
   ];
 
   // Each entry of the main grid, kept in the SAME order/markup as before —
@@ -78,9 +78,9 @@ export default function SeoCardModal({ cards }: Props) {
   const gridSections = [
     // 1
     <div key="best-smartphone" className="rounded-2xl p-6 bg-blue-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Tynex - The Best Smartphone Shop in Bangladesh </h1>
+      <h1 className="font-bold"> tynex - The Best Smartphone Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
-        Tynex offers an extensive selection of smartphones from leading
+        tynex offers an extensive selection of smartphones from leading
         brands to suit every preference and budget. We feature top global
         brands like{" "}
         <Link href="/brands/apple" className="text-blue-700 underline underline-offset-2"> Apple iPhone </Link>,{" "}
@@ -96,7 +96,7 @@ export default function SeoCardModal({ cards }: Props) {
         , Nokia, Sony, Huawei, Asus, Infinix, Tecno, ZTE, Poco, iQOO, Nothing
         and many more. With each purchase, enjoy the assurance of 100%
         authenticity, competitive prices, and official warranties, making
-        Tynex the best smartphone retailer in Bangladesh.
+        tynex the best smartphone retailer in Bangladesh.
       </h2>
     </div>,
 
@@ -112,7 +112,7 @@ export default function SeoCardModal({ cards }: Props) {
             {index < tabletBrands.length - 2 ? ", " : index === tabletBrands.length - 2 ? ", and " : ""}
           </span>
         ))}
-        , catering to professionals, students, and casual users alike. With options from Amazon, OnePlus, and Honor, Tynex ensures a variety of choices for entertainment, productivity, and creative needs, complete with reliable after-sales support and fast delivery.{" "}
+        , catering to professionals, students, and casual users alike. With options from Amazon, OnePlus, and Honor, tynex ensures a variety of choices for entertainment, productivity, and creative needs, complete with reliable after-sales support and fast delivery.{" "}
       </h2>
     </div>,
 
@@ -128,7 +128,7 @@ export default function SeoCardModal({ cards }: Props) {
             {index < laptopCategories.length - 2 ? ", " : index === laptopCategories.length - 2 ? ", or " : ""}
           </span>
         ))}
-        , Tynex’s laptop selection has it all. We carry premium brands, offering models for gaming, business, or casual use. Our laptops are available with flexible EMI options, official warranties, and knowledgeable support to help you choose the perfect device for your needs.{" "}
+        , tynex’s laptop selection has it all. We carry premium brands, offering models for gaming, business, or casual use. Our laptops are available with flexible EMI options, official warranties, and knowledgeable support to help you choose the perfect device for your needs.{" "}
       </h2>
     </div>,
 
@@ -137,7 +137,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best MacBook and iMac Selling Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        As a top retailer of Apple products, Tynex offers a range of MacBooks, iMacs, and Mac Studios. Our Apple inventory caters to professionals seeking high-performance devices for creative tasks, from video editing to design work. Every Apple product at Tynex includes official warranties and access to our premium support team for a seamless experience.{" "}
+        As a top retailer of Apple products, tynex offers a range of MacBooks, iMacs, and Mac Studios. Our Apple inventory caters to professionals seeking high-performance devices for creative tasks, from video editing to design work. Every Apple product at tynex includes official warranties and access to our premium support team for a seamless experience.{" "}
       </h2>
     </div>,
 
@@ -146,7 +146,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Apple Gadget Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Tynex’s Apple gadget selection extends beyond phones and laptops, offering iPhones, AirPods, Apple Watches,iPads, MacBooks, and iMacs that complete your Apple ecosystem. With our Tynex Care+ program, enjoy the peace of mind of a direct replacement within a year for many Apple devices, alongside competitive pricing and top-quality customer service.{" "}
+        tynex’s Apple gadget selection extends beyond phones and laptops, offering iPhones, AirPods, Apple Watches,iPads, MacBooks, and iMacs that complete your Apple ecosystem. With our tynex Care+ program, enjoy the peace of mind of a direct replacement within a year for many Apple devices, alongside competitive pricing and top-quality customer service.{" "}
       </h2>
     </div>,
 
@@ -155,7 +155,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Online Mobile Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Tynex’s online store provides a full range of devices and accessories with the convenience of nationwide delivery. We offer thousands of products, from flagship smartphones to essential accessories, all available online with secure shopping and authentic product guarantees. Experience the quality of Tynex from the comfort of your home.{" "}
+        tynex’s online store provides a full range of devices and accessories with the convenience of nationwide delivery. We offer thousands of products, from flagship smartphones to essential accessories, all available online with secure shopping and authentic product guarantees. Experience the quality of tynex from the comfort of your home.{" "}
       </h2>
     </div>,
 
@@ -164,7 +164,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Smartwatch Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        For wearable technology, Tynex offers an extensive collection of smartwatches from brands like Apple Watch, Samsung Galaxy Watch, Fitbit, Garmin, Huawei Watch, Amazfit, Fossil, Kieslect, Mibro, Xiaomi Watch, Redmi Watch, Realme Watch, Oppo, Honor, Diesel, Zeblaze, Noise, boAt,iMilab, Kospet, Haylou. Whether you &rsquo; re focused on fitness or connectivity, our selection caters to all needs. Tynex’s commitment to genuine products, warranties, and competitive pricing makes us a trusted choice for smartwatches in Bangladesh.{" "}
+        For wearable technology, tynex offers an extensive collection of smartwatches from brands like Apple Watch, Samsung Galaxy Watch, Fitbit, Garmin, Huawei Watch, Amazfit, Fossil, Kieslect, Mibro, Xiaomi Watch, Redmi Watch, Realme Watch, Oppo, Honor, Diesel, Zeblaze, Noise, boAt,iMilab, Kospet, Haylou. Whether you &rsquo; re focused on fitness or connectivity, our selection caters to all needs. tynex’s commitment to genuine products, warranties, and competitive pricing makes us a trusted choice for smartwatches in Bangladesh.{" "}
       </h2>
     </div>,
 
@@ -173,7 +173,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Top AirPods & Earbuds Shop in Dhaka </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Experience top-quality sound with our wide range of Apple AirPods, True Wireless Earbuds, Bluetooth Headphones, Noise-Cancelling Headphones, Over-Ear and In-Ear Headphones, Bone Conduction Headphones, In-Ear Monitors. Tynex’s curated audio collection includes True Wireless earbuds, noise-canceling options, and bone-conduction headphones, ensuring you find the perfect match for your listening needs, all backed by official warranties.{" "}
+        Experience top-quality sound with our wide range of Apple AirPods, True Wireless Earbuds, Bluetooth Headphones, Noise-Cancelling Headphones, Over-Ear and In-Ear Headphones, Bone Conduction Headphones, In-Ear Monitors. tynex’s curated audio collection includes True Wireless earbuds, noise-canceling options, and bone-conduction headphones, ensuring you find the perfect match for your listening needs, all backed by official warranties.{" "}
       </h2>
     </div>,
 
@@ -182,7 +182,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Gadget and Accessories Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Tynex offers a diverse range of gadgets, including Adapters and Cables, Chargers and Power Banks, Screen Protectors and Phone Cases, Laptop Sleeves and MacBook Cases, Keyboards, Mice, Stylus Pens, Wireless Chargers and Charging Docks, External Hard Drives and USB Hubs, Smartwatch Bands and Camera Lens Protectors, Bluetooth Trackers and Car Chargers, Webcams and Docking Stations. Our gadget collection is designed to elevate your lifestyle, with each product carefully selected for quality and durability. Find the latest technology and essential accessories, all guaranteed authentic and competitively priced.{" "}
+        tynex offers a diverse range of gadgets, including Adapters and Cables, Chargers and Power Banks, Screen Protectors and Phone Cases, Laptop Sleeves and MacBook Cases, Keyboards, Mice, Stylus Pens, Wireless Chargers and Charging Docks, External Hard Drives and USB Hubs, Smartwatch Bands and Camera Lens Protectors, Bluetooth Trackers and Car Chargers, Webcams and Docking Stations. Our gadget collection is designed to elevate your lifestyle, with each product carefully selected for quality and durability. Find the latest technology and essential accessories, all guaranteed authentic and competitively priced.{" "}
       </h2>
     </div>,
 
@@ -191,7 +191,7 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Sounds, Headphones, and Microphone Selling Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        From Adapters and Cables to Chargers, Power Banks, Screen Protectors and Phone Cases, Laptop Sleeves and MacBook Cases, Keyboards, Mice, and Stylus Pens, Wireless Chargers and Charging Docks, External Hard Drives and USB Hubs, Smartwatch Bands and Camera Lens Protectors, Bluetooth Trackers and Car Chargers, Webcams and Docking Stations, Tynex’s audio section has you covered. We provide top-quality sound equipment for music lovers, gamers, and professionals, ensuring clear audio and reliable performance. Each product comes with a warranty, so you can enjoy the best in sound with complete confidence.{" "}
+        From Adapters and Cables to Chargers, Power Banks, Screen Protectors and Phone Cases, Laptop Sleeves and MacBook Cases, Keyboards, Mice, and Stylus Pens, Wireless Chargers and Charging Docks, External Hard Drives and USB Hubs, Smartwatch Bands and Camera Lens Protectors, Bluetooth Trackers and Car Chargers, Webcams and Docking Stations, tynex’s audio section has you covered. We provide top-quality sound equipment for music lovers, gamers, and professionals, ensuring clear audio and reliable performance. Each product comes with a warranty, so you can enjoy the best in sound with complete confidence.{" "}
       </h2>
     </div>,
 
@@ -200,22 +200,22 @@ export default function SeoCardModal({ cards }: Props) {
       <h1 className="font-bold"> Best Smart TV Selling Shop in Bangladesh </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Enhance your home entertainment with Tynex’s range of Smart TVs from Sony, Samsung, and Xiaomi. Our Smart TVs offer cutting-edge technology, stunning visuals, and seamless connectivity options. With competitive pricing, delivery options, and quality assurance, Tynex is your trusted source for Smart TVs in Bangladesh.{" "}
+        Enhance your home entertainment with tynex’s range of Smart TVs from Sony, Samsung, and Xiaomi. Our Smart TVs offer cutting-edge technology, stunning visuals, and seamless connectivity options. With competitive pricing, delivery options, and quality assurance, tynex is your trusted source for Smart TVs in Bangladesh.{" "}
       </h2>
     </div>,
 
     // 12
     <div key="who-is-tynex" className="rounded-2xl p-6 bg-purple-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Who is Tynex? </h1>
+      <h1 className="font-bold"> Who is tynex? </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        Tynex is a leading retailer in Bangladesh, specializing in smartphones, laptops, tablets, smartwatches, gadgets, and accessories. Since 2015, Tynex has served over 987,000 unique customers, delivered more than 1.89 million products, and built a strong community of over 1.9 million social media followers. With over 13,000 5-star Google reviews, 11 physical showrooms, a dedicated team of 187+ employees and more than 13,000 successful warranty claims, Tynex has maintained a 99.7% customer satisfaction rate. Additionally, Tynex operates global hubs in Dubai, Hong Kong and Singapore.{" "}
+        tynex is a leading retailer in Bangladesh, specializing in smartphones, laptops, tablets, smartwatches, gadgets, and accessories. Since 2015, tynex has served over 987,000 unique customers, delivered more than 1.89 million products, and built a strong community of over 1.9 million social media followers. With over 13,000 5-star Google reviews, 11 physical showrooms, a dedicated team of 187+ employees and more than 13,000 successful warranty claims, tynex has maintained a 99.7% customer satisfaction rate. Additionally, tynex operates global hubs in Dubai, Hong Kong and Singapore.{" "}
       </h2>
     </div>,
 
     // 13
     <div key="why-buy-from-tynex" className="rounded-2xl p-6 bg-blue-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Why Should You Buy from Tynex? </h1>
+      <h1 className="font-bold"> Why Should You Buy from tynex? </h1>
       <ul className="list-disc space-y-2 pl-6 font-[Georgia,serif] text-base leading-[1.38] my-4 text-black dark:text-white">
         {benefits.map((benefit) => (
           <li key={benefit.title} className="pl-1">
@@ -227,16 +227,16 @@ export default function SeoCardModal({ cards }: Props) {
 
     // 14
     <div key="social-presence" className="rounded-2xl p-6 bg-green-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Tynex’s Social Presence and Reputation </h1>
+      <h1 className="font-bold"> tynex’s Social Presence and Reputation </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {" "}
-        With a strong social media presence of over 1.2 million followers on Facebook, Tynex engages actively with its community. We value our customers&lsquo; feedback and continuously strive to improve. Our reputation is built on transparency, reliability, and customer satisfaction.{" "}
+        With a strong social media presence of over 1.2 million followers on Facebook, tynex engages actively with its community. We value our customers&lsquo; feedback and continuously strive to improve. Our reputation is built on transparency, reliability, and customer satisfaction.{" "}
       </h2>
     </div>,
 
     // 15
     <div key="shop-address-map" className="rounded-2xl p-6 bg-white-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Tynex’s Shop Address and Map </h1>
+      <h1 className="font-bold"> tynex’s Shop Address and Map </h1>
       <div className="my-4 space-y-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         <h2>
           <strong className="font-bold">Hotline</strong>: 09638001122
@@ -267,7 +267,7 @@ export default function SeoCardModal({ cards }: Props) {
               </ul>
             </li>
             <li>
-              <h2 className="font-bold">Tynex Hypermarket - Bashundhara City Shopping Mall</h2>
+              <h2 className="font-bold">tynex Hypermarket - Bashundhara City Shopping Mall</h2>
               <ul className="mt-1 list-disc space-y-1 pl-6">
                 <li>Shop No: 35 to 51, Block-B, Level 7 (Gold Floor), Bashundhara City Shopping Mall, Dhaka</li>
               </ul>
@@ -297,9 +297,9 @@ export default function SeoCardModal({ cards }: Props) {
 
     // 16
     <div key="awards" className="rounded-2xl p-6 bg-purple-50 dark:bg-[#1b1b1b] shadow-sm">
-      <h1 className="font-bold"> Tynex’s Awards and Acknowledgments </h1>
+      <h1 className="font-bold"> tynex’s Awards and Acknowledgments </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
-        Tynex has been recognized for excellence in retail and customer service within the tech industry. Our dedication to quality and innovation has earned us accolades, reinforcing our position as a leader in Bangladesh’s gadget retail market.
+        tynex has been recognized for excellence in retail and customer service within the tech industry. Our dedication to quality and innovation has earned us accolades, reinforcing our position as a leader in Bangladesh’s gadget retail market.
       </h2>
     </div>,
   ];
@@ -310,12 +310,12 @@ export default function SeoCardModal({ cards }: Props) {
     <div key="testimonials" className="rounded-2xl p-6 bg-blue-50 dark:bg-[#1b1b1b] shadow-sm mb-4">
       <h1 className="font-bold"> Why Customers Believe in Us and What They Say About Us </h1>
       <h2 className="my-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
-        Our customers trust Tynex for our commitment to authenticity and exceptional service. Testimonials highlight our reliable after-sales support, wide product range, and the overall seamless shopping experience. We are proud to have built lasting relationships with our customers.
+        Our customers trust tynex for our commitment to authenticity and exceptional service. Testimonials highlight our reliable after-sales support, wide product range, and the overall seamless shopping experience. We are proud to have built lasting relationships with our customers.
       </h2>
     </div>,
 
     <div key="faqs" className="rounded-2xl p-6 bg-green-50 dark:bg-[#1b1b1b] shadow-sm sm:col-span-2">
-      <h1 className="font-bold"> Frequently Asked Questions about Tynex </h1>
+      <h1 className="font-bold"> Frequently Asked Questions about tynex </h1>
       <div className="my-4 space-y-4 font-[Georgia,serif] text-base leading-[1.38] text-black dark:text-white">
         {faqs.map((faq, i) => (
           <div key={faq.q}>

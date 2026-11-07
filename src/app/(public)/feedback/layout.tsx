@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Send Your Feedback",
-  description: "Share your experience with Tynex. Send your reviews, ratings, and feedback to help us serve you better.",
+  description: "Share your experience with tynex. Send your reviews, ratings, and feedback to help us serve you better.",
 };
 
 export default function FeedbackLayout({

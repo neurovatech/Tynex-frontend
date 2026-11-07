@@ -123,7 +123,7 @@ function FlashSaleProduct({
       <div className="lg:col-span-4">
         <SortDropdown />
       </div>
-      <div className="lg:col-span-12 bg-[#000000] px-4 rounded-sm">
+      <div className="lg:col-span-12 bg-[#6d3f0e] px-4 rounded-sm">
         <GlobalCountdown title="Flash Sale" targetDate="2026-06-10T23:59:59" />
       </div>
 

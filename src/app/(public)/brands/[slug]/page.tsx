@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from "next";
-import { Suspense, cache } from "react";
+import { cache } from "react";
 import BrandProducts, { CategoryItem } from "@/components/Brands/BrandProduct";
 import Breadcrumb from "@/components/share/Breadcrumb";
 import { api } from "@/lib/api";
@@ -11,6 +11,9 @@ import {
   absoluteUrl,
 } from "@/lib/seo-config";
 import JsonLd from "@/components/share/JsonLd";
+import { prefetchBanner, prefetchShowcase } from "@/lib/showcase-prefetch";
+import type { BannerEscalateResponse } from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { BrandShowcaseResponse } from "@/components/Brands/BrandShowcaseSections";
 import {
   buildJsonLd,
   breadcrumbSchema,
@@ -26,6 +29,8 @@ export interface ProductItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  /** Real stock ("In Stock" / "Out of Stock") — only meaningful when the list call sent stockAssort=1, see lib/stock.ts */
+  stockStatus?: string;
   regularPrice: number;
   discountedPrice: number;
   disRate: number;
@@ -96,7 +101,7 @@ interface PageProps {
    * `?fromCategory=` is set by the mega menu — see brandHref() in ExplorePanel.
    * Deliberately not `category`, which the chip row uses for sub-category slugs.
    */
-  searchParams: Promise<{ fromCategory?: string }>;
+  searchParams: Promise<{ fromCategory?: string; category?: string }>;
 }
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -147,11 +152,11 @@ export async function generateMetadata({
     `${brandName} Products — Buy Online at Best Price in Bangladesh`;
   const description =
     seo?.description?.trim() ||
-    `Shop the complete ${brandName} collection at Tynex. Best prices, official warranty, and fast delivery across Bangladesh.`;
-  const ogTitle = seo?.title?.trim() || `${brandName} Products | Tynex`;
+    `Shop the complete ${brandName} collection at tynex. Best prices, official warranty, and fast delivery across Bangladesh.`;
+  const ogTitle = seo?.title?.trim() || `${brandName} Products | tynex`;
   const ogDescription =
     seo?.description?.trim() ||
-    `Browse ${brandName} products at Tynex — Bangladesh's premium tech store.`;
+    `Browse ${brandName} products at tynex — Bangladesh's premium tech store.`;
   const canonical = seo?.canonical?.trim() || `/brands/${slug}`;
   // No brand artwork is fetched in this metadata pass, so this resolves to the
   // site default rather than shipping a preview with no image at all.
@@ -189,7 +194,7 @@ export default async function BrandDetailsPage({
   searchParams,
 }: PageProps) {
   const { slug } = await params;
-  const { fromCategory } = await searchParams;
+  const { fromCategory, category } = await searchParams;
   const brandName = toTitleCase(slug);
 
   /*
@@ -216,6 +221,7 @@ export default async function BrandDetailsPage({
       `/products?${new URLSearchParams({
         brandSlug: slug,
         page: "1",
+        stockAssort: "1",
         limit: String(LIMIT),
         ...(requestedCategory ? { categorySlug: requestedCategory } : {}),
       }).toString()}`,
@@ -259,6 +265,7 @@ export default async function BrandDetailsPage({
         `/products?${new URLSearchParams({
           brandSlug: slug,
           page: "1",
+          stockAssort: "1",
           limit: String(LIMIT),
         }).toString()}`,
         { next: { revalidate: 60 } },
@@ -275,6 +282,19 @@ export default async function BrandDetailsPage({
 
   const priceData: any =
     attrResult.status === "fulfilled" ? attrResult.value?.priceData : undefined;
+
+  // Banner + Top Selling/Trending: fetched here (not in the browser) so the block is
+  // in the first HTML at its final size instead of a skeleton that later swaps or
+  // collapses. The slug/param pairs mirror exactly what BrandProduct asks for.
+  const chip = category?.trim() || null; // sub-category chip in the URL
+  const [initialBanner, initialShowcase] = await Promise.all([
+    prefetchBanner<BannerEscalateResponse>(chip || slug, "brand", Boolean(chip)),
+    chip
+      ? prefetchShowcase<BrandShowcaseResponse>(chip, "subCategory", true)
+      : activeTopCategory
+        ? prefetchShowcase<BrandShowcaseResponse>(activeTopCategory, "category")
+        : prefetchShowcase<BrandShowcaseResponse>(slug, "brand"),
+  ]);
 
   // Same cached call generateMetadata made, so this costs nothing extra.
   const brandSeo = await getBrandSeo(slug);
@@ -303,19 +323,22 @@ export default async function BrandDetailsPage({
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
-        {/* BrandProducts renders category buttons + FilterSidebar + Suspense-wrapped product list */}
-        <Suspense>
-          <BrandProducts
-            brandSlug={slug}
-            categories={categories}
-            attributes={attributes}
-            priceData={priceData}
-            initialProducts={initialProductData.data}
-            initialTotalCount={initialProductData.totalCount}
-            initialTotalPages={initialProductData.totalPages}
-            initialTopCategory={activeTopCategory}
-          />
-        </Suspense>
+        {/* BrandProducts renders category buttons + FilterSidebar + the product list.
+            Deliberately NOT inside <Suspense>: with a boundary here the whole block was
+            streamed in after the shell, so the SEO text below it was painted at the top
+            first and then pushed ~2,400px down when the list swapped in (CLS 0.8). */}
+        <BrandProducts
+          brandSlug={slug}
+          categories={categories}
+          attributes={attributes}
+          priceData={priceData}
+          initialProducts={initialProductData.data}
+          initialTotalCount={initialProductData.totalCount}
+          initialTotalPages={initialProductData.totalPages}
+          initialTopCategory={activeTopCategory}
+          initialBanner={initialBanner}
+          initialShowcase={initialShowcase}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start  relative">
           <div className="lg:col-span-3 md:block hidden"></div>
@@ -324,22 +347,22 @@ export default async function BrandDetailsPage({
               <section className="px-4 overflow-hidden">
                 <div className="max-w-4xl">
                   <article
-                    className="text-sm leading-relaxed text-[#000000] dark:text-white
-                           [&_h1]:text-[#000000] [&_h1]:dark:text-white [&_h1]:font-bold [&_h1]:text-2xl [&_h1]:mt-6 [&_h1]:mb-3
-                           [&_h2]:text-[#000000] [&_h2]:dark:text-white [&_h2]:font-bold [&_h2]:text-xl [&_h2]:mt-6 [&_h2]:mb-3
-                           [&_h3]:text-[#000000] [&_h3]:dark:text-white [&_h3]:font-semibold [&_h3]:text-lg [&_h3]:mt-5 [&_h3]:mb-2
-                           [&_h4]:text-[#000000] [&_h4]:dark:text-white [&_h4]:font-semibold [&_h4]:mt-4 [&_h4]:mb-2
-                           [&_p]:text-[#000000] [&_p]:dark:text-gray-300 [&_p]:mb-3
-                           [&_li]:text-[#000000] [&_li]:dark:text-gray-300 [&_li]:mb-1
+                    className="text-sm leading-relaxed text-[#222] dark:text-white
+                           [&_h1]:text-[#222] [&_h1]:dark:text-white [&_h1]:font-bold [&_h1]:text-2xl [&_h1]:mt-6 [&_h1]:mb-3
+                           [&_h2]:text-[#222] [&_h2]:dark:text-white [&_h2]:font-bold [&_h2]:text-xl [&_h2]:mt-6 [&_h2]:mb-3
+                           [&_h3]:text-[#222] [&_h3]:dark:text-white [&_h3]:font-semibold [&_h3]:text-lg [&_h3]:mt-5 [&_h3]:mb-2
+                           [&_h4]:text-[#222] [&_h4]:dark:text-white [&_h4]:font-semibold [&_h4]:mt-4 [&_h4]:mb-2
+                           [&_p]:text-[#222] [&_p]:dark:text-gray-300 [&_p]:mb-3
+                           [&_li]:text-[#222] [&_li]:dark:text-gray-300 [&_li]:mb-1
                            [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3
                            [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3
-                           [&_span]:text-[#000000] [&_span]:dark:text-gray-300!
-                           [&_strong]:text-[#000000] [&_strong]:dark:text-white
-                           [&_a]:text-[#d1a77d] [&_a]:underline
+                           [&_span]:text-[#222] [&_span]:dark:text-gray-300!
+                           [&_strong]:text-[#222] [&_strong]:dark:text-white
+                           [&_a]:text-[#CB843B] [&_a]:underline
                            [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg
                            [&_table]:w-full [&_table]:border [&_table]:border-gray-200 [&_table]:dark:border-[#4a443f]
                            [&_td]:border [&_td]:border-gray-200 [&_td]:dark:border-[#4a443f] [&_td]:p-2
-                           [&_td]:text-[#000000] [&_td]:dark:text-gray-300"
+                           [&_td]:text-[#222] [&_td]:dark:text-gray-300"
                     dangerouslySetInnerHTML={{ __html: brandSeoContent }}
                   />
                 </div>

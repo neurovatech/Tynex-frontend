@@ -89,7 +89,7 @@ const ContactOptions: React.FC<ContactOptionsProps> = ({
           </defs>
         </svg>
       ),
-      bg: "bg-[#d1a77d47]",
+      bg: "bg-[#E9CCAE47]",
     },
     {
       label: "Messenger",
@@ -132,7 +132,7 @@ const ContactOptions: React.FC<ContactOptionsProps> = ({
           </defs>
         </svg>
       ),
-      bg: "bg-[#d1a77d47]",
+      bg: "bg-[#E9CCAE47]",
     },
     {
       label: "Call Us",
@@ -147,17 +147,17 @@ const ContactOptions: React.FC<ContactOptionsProps> = ({
         >
           <path
             d="M15.0702 18.811C14.2506 18.811 13.0992 18.5146 11.3751 17.5513C9.27856 16.3756 7.65691 15.2902 5.5717 13.2104C3.56123 11.2012 2.58287 9.90038 1.21358 7.40871C-0.333323 4.59539 -0.0696275 3.12071 0.225141 2.49045C0.576175 1.73715 1.09433 1.2866 1.76407 0.839406C2.14447 0.59017 2.54704 0.376518 2.96665 0.201161C3.00864 0.183106 3.04769 0.16589 3.08255 0.150354C3.2904 0.0567165 3.60532 -0.0847891 4.00422 0.0663742C4.27044 0.16631 4.5081 0.3708 4.88013 0.738211C5.64308 1.49067 6.68569 3.16648 7.07031 3.98948C7.32855 4.54417 7.49945 4.91032 7.49987 5.32098C7.49987 5.80176 7.25801 6.17253 6.9645 6.57269C6.90949 6.64786 6.85491 6.71966 6.802 6.78936C6.48246 7.20926 6.41233 7.33061 6.45852 7.54728C6.55216 7.98271 7.25045 9.27894 8.39803 10.424C9.54561 11.5691 10.8045 12.2233 11.2416 12.3165C11.4675 12.3648 11.5914 12.2917 12.0247 11.9608C12.0868 11.9134 12.1507 11.8642 12.2174 11.8151C12.665 11.4821 13.0186 11.2466 13.488 11.2466H13.4906C13.8991 11.2466 14.2489 11.4238 14.8283 11.716C15.5842 12.0973 17.3104 13.1265 18.0674 13.8903C18.4357 14.2614 18.641 14.4983 18.7414 14.7641C18.8925 15.1642 18.7502 15.4779 18.6574 15.6878C18.6419 15.7227 18.6246 15.7609 18.6066 15.8033C18.4298 16.2222 18.2149 16.6239 17.9646 17.0034C17.5182 17.671 17.066 18.1879 16.311 18.5394C15.9233 18.7228 15.499 18.8157 15.0702 18.811Z"
-            fill="#000000"
+            fill="#6D3F0E"
           />
         </svg>
       ),
-      bg: "bg-[#d1a77d47]",
+      bg: "bg-[#E9CCAE47]",
     },
   ];
 
   return (
     <div className="space-y-2">
-      <h4 className="text-[20px] font-bold text-[#000000] dark:text-white tracking-wider">
+      <h4 className="text-[20px] font-bold text-[#222222] dark:text-white tracking-wider">
         Also Order From
       </h4>
       <div className="grid grid-cols-3 gap-2">
@@ -169,7 +169,7 @@ const ContactOptions: React.FC<ContactOptionsProps> = ({
             className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl transition-colors ${opt.bg} py-[30px] cursor-pointer hover:opacity-80`}
           >
             {opt.icon}
-            <span className="text-[14px] font-semibold text-[#000000] dark:text-white">
+            <span className="text-[14px] font-semibold text-[#222222] dark:text-white">
               {opt.label}
             </span>
           </button>

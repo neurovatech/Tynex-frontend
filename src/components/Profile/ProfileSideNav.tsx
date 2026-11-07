@@ -202,7 +202,7 @@ const EditProfileModal: React.FC<EditModalProps> = ({ onClose }) => {
               onChange={(e) => setFullName(e.target.value)}
               required
               placeholder="Enter your full name"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/40 transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#6D3F0E]/40 transition"
             />
           </div>
 
@@ -217,7 +217,7 @@ const EditProfileModal: React.FC<EditModalProps> = ({ onClose }) => {
               onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
               required
               placeholder="Numbers only"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/40 transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#6D3F0E]/40 transition"
             />
           </div>
 
@@ -232,7 +232,7 @@ const EditProfileModal: React.FC<EditModalProps> = ({ onClose }) => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Enter your address"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/40 transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1E1B18] text-gray-900 dark:text-white placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#6D3F0E]/40 transition"
             />
           </div>
 
@@ -328,7 +328,7 @@ const ProfileSideNav: React.FC<ProfileSideNavProps> = ({
               ) : profileData?.userAvatar ? (
                 <UserIcon className="text-primary_color" />
               ) : initials ? (
-                <span className="text-xl font-bold text-[#000000]">
+                <span className="text-xl font-bold text-[#6D3F0E]">
                   {initials}
                 </span>
               ) : (
@@ -401,7 +401,7 @@ const ProfileSideNav: React.FC<ProfileSideNavProps> = ({
                 key={label}
                 onClick={() => onMenuClick(label as ActiveLabel)}
                 className={`group flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-colors 
-                  ${isActive ? "bg-[#000000] text-white" : "text-gray-400 hover:bg-[#000000]! hover:text-white"}`}
+                  ${isActive ? "bg-[#6D3F0E] text-white" : "text-gray-400 hover:bg-[#6D3F0E]! hover:text-white"}`}
               >
                 <div className="flex items-center gap-2.5">
                   <Icon
@@ -453,10 +453,10 @@ const ProfileSideNav: React.FC<ProfileSideNavProps> = ({
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2.5 px-3 py-2.5 w-full text-gray-400 hover:text-[#d1a77d] transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2.5 w-full text-gray-400 hover:text-[#d4a97a] transition-colors"
           >
             <LogOut size={18} />
-            <span className="text-sm font-medium text-gray-800 dark:text-white hover:text-[#d1a77d]">
+            <span className="text-sm font-medium text-gray-800 dark:text-white hover:text-[#d4a97a]">
               Logout
             </span>
           </button>

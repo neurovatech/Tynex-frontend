@@ -1,4 +1,4 @@
-# Tynex Frontend — Performance Remediation Plan
+# tynex Frontend — Performance Remediation Plan
 
 Companion to [PERFORMANCE_AUDIT.md](PERFORMANCE_AUDIT.md). Ordered by ROI (impact vs. risk), per the audit's High-Impact/Low-Risk → High-Impact/Medium-Risk → Everything-else framing. Nothing in this plan has been implemented yet — this is the proposed sequence, pending approval.
 

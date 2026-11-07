@@ -52,7 +52,7 @@ export default function ProductCard({
             onClick={onAdd}
             disabled={!inStock || adding || !onAdd}
             aria-label={`Add ${name} to cart`}
-            className="absolute -bottom-3 right-3 flex items-center gap-1.5 bg-white dark:bg-[#1f1a16] border border-[#d1a77d] text-[#000000] dark:text-[#d1a77d] text-xs font-semibold px-3.5 py-1.5 rounded-full shadow-md hover:bg-[#FBF3E9] dark:hover:bg-[#342a20] active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#1f1a16]"
+            className="absolute -bottom-3 right-3 flex items-center gap-1.5 bg-white dark:bg-[#1f1a16] border border-[#D4A97A] text-[#B57908] dark:text-[#D4A97A] text-xs font-semibold px-3.5 py-1.5 rounded-full shadow-md hover:bg-[#FBF3E9] dark:hover:bg-[#342a20] active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#1f1a16]"
           >
             <ShoppingCart size={14} />
             {adding ? "Adding..." : "Add"}

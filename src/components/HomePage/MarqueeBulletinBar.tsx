@@ -25,10 +25,10 @@ interface NewsScrollResponse {
 // ─── Fallback static items (shown while loading or on error) ──────────────────
 
 const FALLBACK_ITEMS: NewsItem[] = [
-  { newsUUID: "1", title: "🎉 Welcome to Tynex Commerce",                    linkUrl: "/",                openNewTab: false },
+  { newsUUID: "1", title: "🎉 Welcome to tynex Commerce",                    linkUrl: "/",                openNewTab: false },
   { newsUUID: "2", title: "🔥 Mega Sale – Up to 70% OFF on Selected Products", linkUrl: "/offer",           openNewTab: false },
   { newsUUID: "3", title: "🚚 Free Delivery on Orders Above ৳999",             linkUrl: "/delivery-policy", openNewTab: false },
-  { newsUUID: "4", title: "📱 Download the Tynex Mobile App Today",           linkUrl: "/",                openNewTab: false },
+  { newsUUID: "4", title: "📱 Download the tynex Mobile App Today",           linkUrl: "/",                openNewTab: false },
   { newsUUID: "5", title: "💳 Secure Payment with bKash, Nagad & Cards",       linkUrl: "/",                openNewTab: false },
 ];
 

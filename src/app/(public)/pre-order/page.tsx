@@ -104,7 +104,7 @@ const PreOrderPage: React.FC = () => {
 
   /* ── shared input classes ── */
   const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:border-[#d1a77d] focus:ring-2 focus:ring-[#d1a77d]/20 transition-all duration-200";
+    "w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:border-[#bd9961] focus:ring-2 focus:ring-[#bd9961]/20 transition-all duration-200";
 
   const errCls = "text-xs text-red-500 mt-1 pl-1";
 
@@ -117,7 +117,7 @@ const PreOrderPage: React.FC = () => {
             Looking For Something Different?
           </h1>
 
-          <p className="mt-1.5 text-sm font-medium text-[#d1a77d] dark:text-[#d1a77d]">
+          <p className="mt-1.5 text-sm font-medium text-[#bd9961] dark:text-[#D4A97A]">
             Put Your Information in The Box...
           </p>
         </div>
@@ -151,11 +151,11 @@ const PreOrderPage: React.FC = () => {
                 className={`relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 py-5
               ${
                 isDragging
-                  ? "border-[#d1a77d] bg-[#d1a77d]/10"
-                  : "border-[#d1a77d]/50 bg-[#d1a77d]/5 hover:border-[#d1a77d] hover:bg-[#d1a77d]/10"
+                  ? "border-[#bd9961] bg-[#bd9961]/10"
+                  : "border-[#bd9961]/50 bg-[#bd9961]/5 hover:border-[#bd9961] hover:bg-[#bd9961]/10"
               }`}
               >
-                <div className="w-9 h-9 rounded-lg bg-gray-900 dark:bg-[#d1a77d] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-gray-900 dark:bg-[#D4A97A] flex items-center justify-center">
                   <ImagePlus size={18} className="text-white dark:text-black" />
                 </div>
 
@@ -292,7 +292,7 @@ const PreOrderPage: React.FC = () => {
                     className="peer sr-only"
                   />
 
-                  <div className="w-4 h-4 rounded border border-[#E5E5E5] dark:border-gray-700 bg-white dark:bg-[#1A1A1A] peer-checked:bg-[#d1a77d] peer-checked:border-[#d1a77d] transition-all duration-200 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded border border-[#E5E5E5] dark:border-gray-700 bg-white dark:bg-[#1A1A1A] peer-checked:bg-[#bd9961] peer-checked:border-[#bd9961] transition-all duration-200 flex items-center justify-center">
                     <svg
                       className="w-2.5 h-2.5 text-white opacity-0 peer-checked:opacity-100"
                       fill="none"
@@ -309,7 +309,7 @@ const PreOrderPage: React.FC = () => {
                   I accept{" "}
                   <Link
                     href="/terms-conditions"
-                    className="text-[#d1a77d] dark:text-[#d1a77d] font-semibold underline underline-offset-2 hover:text-[#a8844f] transition-colors"
+                    className="text-[#bd9961] dark:text-[#D4A97A] font-semibold underline underline-offset-2 hover:text-[#a8844f] transition-colors"
                   >
                     Terms & Conditions
                   </Link>
@@ -325,7 +325,7 @@ const PreOrderPage: React.FC = () => {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="w-full py-3.5 mt-1 rounded-xl bg-[#F5EDE0] dark:bg-[#d1a77d]/15 border border-[#E8D8C0] dark:border-[#d1a77d]/30 text-[#8B6B3D] dark:text-[#d1a77d] text-sm font-bold tracking-[0.15em] uppercase hover:bg-[#EDE0CC] dark:hover:bg-[#d1a77d]/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+              className="w-full py-3.5 mt-1 rounded-xl bg-[#F5EDE0] dark:bg-[#D4A97A]/15 border border-[#E8D8C0] dark:border-[#D4A97A]/30 text-[#8B6B3D] dark:text-[#D4A97A] text-sm font-bold tracking-[0.15em] uppercase hover:bg-[#EDE0CC] dark:hover:bg-[#D4A97A]/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
             >
               {mutation.isPending ? (
                 <span className="flex items-center justify-center gap-2">

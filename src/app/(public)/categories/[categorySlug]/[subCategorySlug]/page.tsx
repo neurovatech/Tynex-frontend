@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { withStockAssort } from "@/lib/stock";
 import CategoriesProduct from "@/components/CategoriesPages/CategoriesProduct/CategoriesProduct";
 
 import Breadcrumb from "@/components/share/Breadcrumb";
 import { api } from "@/lib/api";
 import type { Metadata } from "next";
 import { lookupCategoryNames, toTitleCase } from "@/lib/category-lookup";
+import { prefetchBanner, prefetchShowcase } from "@/lib/showcase-prefetch";
+import type { BannerEscalateResponse } from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { CategoryShowcaseResponse } from "@/components/CategoriesPages/CategoryShowcaseSections";
 import {
   SITE_NAME,
   OG_LOCALE,
@@ -81,10 +85,10 @@ export async function generateMetadata({
   const cmsDescription = seoText(seo?.description);
 
   const ogTitle =
-    cmsTitle || `${subCategoryName} - ${categoryName}${pageLabel} | Tynex`;
+    cmsTitle || `${subCategoryName} - ${categoryName}${pageLabel} | tynex`;
   const ogDescription =
     cmsDescription ||
-    `Browse ${subCategoryName} products at Tynex — Bangladesh's premium tech store.`;
+    `Browse ${subCategoryName} products at tynex — Bangladesh's premium tech store.`;
   // Prefer the sub-category's own artwork, then the parent category's.
   const ogImage = buildOgImage(
     subCategoryImage || categoryImage,
@@ -105,7 +109,7 @@ export async function generateMetadata({
       `${subCategoryName} - ${categoryName}${pageLabel}`,
     description:
       cmsDescription ||
-      `Shop the best selection of ${subCategoryName} in our ${categoryName} category at Tynex. Best prices, official warranty, and fast delivery across Bangladesh.${currentPage > 1 ? ` Viewing page ${currentPage}.` : ""}`,
+      `Shop the best selection of ${subCategoryName} in our ${categoryName} category at tynex. Best prices, official warranty, and fast delivery across Bangladesh.${currentPage > 1 ? ` Viewing page ${currentPage}.` : ""}`,
     ...(seoText(seo?.keywords) ? { keywords: seoText(seo?.keywords) } : {}),
     alternates: { canonical },
     openGraph: {
@@ -158,6 +162,7 @@ export default async function SubCategoriesPage({
       const queryParams = new URLSearchParams({
         page: String(currentPage),
         limit: String(LIMIT),
+        stockAssort: "1",
         categorySlug,
         subCategorySlug,
       });
@@ -168,7 +173,7 @@ export default async function SubCategoriesPage({
       // response; every other combination is fetched fresh so it does not
       // become its own file in .next/cache/fetch-cache (search text is unbounded).
       const res = await api.get<any>(
-        `/products?${queryParams.toString()}`,
+        withStockAssort(`/products?${queryParams.toString()}`),
         currentPage <= 1 && !sort && !search
           ? { next: { revalidate: 60 } }
           : { cache: "no-store" },
@@ -264,13 +269,23 @@ export default async function SubCategoriesPage({
     }
   }
 
-  const [productData, banners, brands, { attributes, priceData }] =
-    await Promise.all([
-      fetchProducts(),
-      fetchBanners(),
-      fetchBrands(),
-      fetchAttributes(),
-    ]);
+  // Banner + Top Selling/Trending are fetched here rather than in the browser so
+  // the block is in the first HTML at its final size (no skeleton -> collapse).
+  const [
+    productData,
+    banners,
+    brands,
+    { attributes, priceData },
+    initialBanner,
+    initialShowcase,
+  ] = await Promise.all([
+    fetchProducts(),
+    fetchBanners(),
+    fetchBrands(),
+    fetchAttributes(),
+    prefetchBanner<BannerEscalateResponse>(subCategorySlug, "subCategory"),
+    prefetchShowcase<CategoryShowcaseResponse>(subCategorySlug, "subCategory"),
+  ]);
 
   // ── Breadcrumb ────────────────────────────────────────────────────────────────
   const breadcrumbItems = [
@@ -323,6 +338,8 @@ export default async function SubCategoriesPage({
           brands={brands}
           attributes={attributes}
           priceData={priceData}
+          initialBanner={initialBanner}
+          initialShowcase={initialShowcase}
         />
       </div>
 

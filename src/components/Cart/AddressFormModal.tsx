@@ -54,7 +54,7 @@ export default function AddressFormModal({
             placeholder="Enter your name"
             value={form.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
           />
         </div>
 
@@ -66,7 +66,7 @@ export default function AddressFormModal({
             placeholder="Enter phone number"
             value={form.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
           />
         </div>
 
@@ -78,7 +78,7 @@ export default function AddressFormModal({
             placeholder="Enter your full address"
             value={form.address}
             onChange={(e) => handleChange("address", e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
           />
         </div>
 
@@ -89,7 +89,7 @@ export default function AddressFormModal({
             <select
               value={form.district}
               onChange={(e) => handleChange("district", e.target.value)}
-              className="w-full appearance-none px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full appearance-none px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             >
               <option value="">Select district</option>
               {DISTRICTS.map((d) => (
@@ -109,7 +109,7 @@ export default function AddressFormModal({
             <select
               value={form.city}
               onChange={(e) => handleChange("city", e.target.value)}
-              className="w-full appearance-none px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#000000]/30 focus:border-[#000000]"
+              className="w-full appearance-none px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B4F1E]/30 focus:border-[#7B4F1E]"
             >
               <option value="">Select city</option>
               {CITIES.map((c) => (
@@ -133,7 +133,7 @@ export default function AddressFormModal({
           </button>
           <button
             onClick={handleApply}
-            className="flex-1 py-3 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#6A4219] transition"
+            className="flex-1 py-3 rounded-xl bg-[#7B4F1E] text-white text-sm font-semibold hover:bg-[#6A4219] transition"
           >
             APPLY
           </button>

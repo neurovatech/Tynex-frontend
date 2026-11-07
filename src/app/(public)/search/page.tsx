@@ -88,7 +88,7 @@ function SearchResults() {
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             placeholder="Search for the item"
-            className="w-full bg-white dark:bg-[#2e2b28] dark:text-white text-gray-800 placeholder-gray-400 rounded-xl px-5 pl-11 py-3 text-sm outline-none border border-gray-200 dark:border-gray-600 focus:border-[#d1a77d]/60 transition-all duration-200 shadow-sm"
+            className="w-full bg-white dark:bg-[#2e2b28] dark:text-white text-gray-800 placeholder-gray-400 rounded-xl px-5 pl-11 py-3 text-sm outline-none border border-gray-200 dark:border-gray-600 focus:border-[#D4A97A]/60 transition-all duration-200 shadow-sm"
           />
           {inputVal && (
             <button
@@ -102,7 +102,7 @@ function SearchResults() {
         </div>
         <button
           type="submit"
-          className="bg-[#000000] hover:bg-[#9a6507] text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+          className="bg-[#B57908] hover:bg-[#9a6507] text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
         >
           Search
         </button>
@@ -113,7 +113,7 @@ function SearchResults() {
         <div className="mb-6">
           <h1 className="text-xl font-bold text-gray-800 dark:text-white">
             Results for{" "}
-            <span className="text-[#000000]">&ldquo;{keyword}&rdquo;</span>
+            <span className="text-[#B57908]">&ldquo;{keyword}&rdquo;</span>
           </h1>
           {!isLoading && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -179,12 +179,12 @@ function SearchResults() {
 
               {/* Info */}
               <div className="p-3 flex flex-col flex-1 bg-[#f5f5f5] dark:bg-[#2a2420]">
-                <p className="font-semibold dark:text-white text-[15px]  h-11 text-[#575757] line-clamp-2 group-hover:text-[#000000] transition-colors">
+                <p className="font-semibold dark:text-white text-[15px]  h-11 text-[#575757] line-clamp-2 group-hover:text-[#B57908] transition-colors">
                   {p.productName}
                 </p>
                 <div className="flex items-baseline gap-1.5 mt-auto pt-2 flex-wrap">
                   {p.isTba ? (
-                    <div className="bg-[#000000] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+                    <div className="bg-[#6D3F0E] text-white text-[9px] sm:text-xs font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
                       To Be Announced
                     </div>
                   ) : (

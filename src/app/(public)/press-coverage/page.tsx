@@ -7,7 +7,7 @@ import NoData from "@/components/ui/NoData";
 
 export const metadata: Metadata = {
   title: "Press Coverage",
-  description: "Press Coverage the Tynex team! Explore press openings, career paths, and opportunities in tech, admin, design, and operations at Tynex Bangladesh.",
+  description: "Press Coverage the tynex team! Explore press openings, career paths, and opportunities in tech, admin, design, and operations at tynex Bangladesh.",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────

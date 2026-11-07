@@ -47,7 +47,7 @@ export default function StepSelectBrand({ selection, onSelect, onRemove }: Props
             <button
               key={brand.uuid}
               onClick={() => onSelect(brand)}
-              className="flex flex-col items-center justify-center gap-3 py-5 px-4 border border-gray-200 dark:border-white/10 rounded-2xl hover:border-[#000000] hover:shadow-md bg-white dark:bg-[#1e1c1a] transition-all duration-200 group"
+              className="flex flex-col items-center justify-center gap-3 py-5 px-4 border border-gray-200 dark:border-white/10 rounded-2xl hover:border-[#6D3F0E] hover:shadow-md bg-white dark:bg-[#1e1c1a] transition-all duration-200 group"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -56,7 +56,7 @@ export default function StepSelectBrand({ selection, onSelect, onRemove }: Props
                 className="h-12 w-28 object-contain"
                 onError={(e) => { (e.currentTarget as HTMLImageElement).src = NoImg.src; }}
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#000000] dark:group-hover:text-[#d1a77d] transition-colors">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#6D3F0E] dark:group-hover:text-[#d4a97a] transition-colors">
                 {brand.brand_name}
               </span>
             </button>

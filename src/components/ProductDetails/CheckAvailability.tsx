@@ -302,7 +302,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </p>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-[#000000] hover:bg-[#6C4419] text-white font-bold rounded-xl text-xs transition"
+              className="px-6 py-2.5 bg-[#7B4F1E] hover:bg-[#6C4419] text-white font-bold rounded-xl text-xs transition"
             >
               CLOSE
             </button>
@@ -348,10 +348,10 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   <div className="space-y-2">
                     {[
                       "Provide device details and get a price quote",
-                      "Book a home pick-up or visit the nearest Tynex store",
+                      "Book a home pick-up or visit the nearest tynex store",
                       "Your device will be assessed for condition",
                       "Opt for a certified data wipe service",
-                      "Trade-in and get instant cash on home pickup or Tynex Voucher on Store drop-off",
+                      "Trade-in and get instant cash on home pickup or tynex Voucher on Store drop-off",
                     ].map((text, i) => (
                       <div key={i} className="flex items-start gap-2">
                         <span className="mt-1 w-4 h-4 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 text-[10px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
@@ -363,7 +363,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <button
                   onClick={() => setStep(2)}
-                  className="w-full py-3.5 bg-[#000000] hover:bg-[#6C4419] text-white font-bold rounded-xl transition text-sm tracking-wide mt-2"
+                  className="w-full py-3.5 bg-[#7B4F1E] hover:bg-[#6C4419] text-white font-bold rounded-xl transition text-sm tracking-wide mt-2"
                 >
                   EXCHANGE NOW
                 </button>
@@ -443,7 +443,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <div className="mt-auto">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">How It Works</h3>
                   <div className="space-y-1.5">
-                    {["Provide device details and get a price quote", "Book a home pick-up or visit nearest Tynex store"].map((text, i) => (
+                    {["Provide device details and get a price quote", "Book a home pick-up or visit nearest tynex store"].map((text, i) => (
                       <div key={i} className="flex items-start gap-2">
                         <span className="mt-1 w-4 h-4 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 text-[10px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
                         <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">{text}</p>
@@ -463,7 +463,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   <button
                     onClick={() => selection.brand && setStep(3)}
                     disabled={!selection.brand}
-                    className="flex-1 py-3 bg-[#000000] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer"
+                    className="flex-1 py-3 bg-[#7B4F1E] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer"
                   >
                     CONTINUE
                   </button>
@@ -538,7 +538,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <div className="flex gap-3 mt-auto pt-2">
                   <button onClick={handleBack} className="flex-1 py-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl text-sm transition hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">BACK</button>
-                  <button onClick={() => selection.variant && setStep(4)} disabled={!selection.variant} className="flex-1 py-3 bg-[#000000] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer">CONTINUE</button>
+                  <button onClick={() => selection.variant && setStep(4)} disabled={!selection.variant} className="flex-1 py-3 bg-[#7B4F1E] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer">CONTINUE</button>
                 </div>
               </div>
             )}
@@ -617,7 +617,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                     <div className="flex gap-3 mt-auto pt-2">
                       <button onClick={handleBack} className="flex-1 py-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl text-sm transition hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">BACK</button>
-                      <button onClick={() => setStep(5)} disabled={!selection.condition} className="flex-1 py-3 bg-[#000000] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer">CONTINUE</button>
+                      <button onClick={() => setStep(5)} disabled={!selection.condition} className="flex-1 py-3 bg-[#7B4F1E] hover:bg-[#6C4419] disabled:opacity-40 text-white font-bold rounded-xl text-sm transition cursor-pointer">CONTINUE</button>
                     </div>
                   </>
                 )}
@@ -744,7 +744,7 @@ function ExchangeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   <button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="flex-1 py-3 bg-[#000000] hover:bg-[#6C4419] disabled:opacity-50 text-white font-bold rounded-xl text-sm transition cursor-pointer flex items-center justify-center gap-2"
+                    className="flex-1 py-3 bg-[#7B4F1E] hover:bg-[#6C4419] disabled:opacity-50 text-white font-bold rounded-xl text-sm transition cursor-pointer flex items-center justify-center gap-2"
                   >
                     {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                     {isSubmitting ? "SUBMITTING..." : "CONFIRM EXCHANGE"}
@@ -862,10 +862,17 @@ function parseEmiTable(html: string): EmiBankRow[] {
           .trim();
         if (!name) continue;
 
+        // Line the header up with this row from the RIGHT. The header row has
+        // an (empty) cell above the bank-name column, so its "3 Months" cell
+        // sits at the same index as the row's 3-month value; a header without
+        // that blank cell is one shorter, and the offset absorbs it. A fixed
+        // `idx + 1` shifted every value one month to the left of its heading
+        // (3 months showed the 6-month rate) and pushed 24/36 off the end.
+        const offset = cells.length - headerCells.length;
         const months: Record<number, number | null> = {};
         monthColumns.forEach((month, idx) => {
           if (!month || Number.isNaN(month)) return;
-          const raw = (cells[idx + 1]?.textContent || "")
+          const raw = (cells[idx + offset]?.textContent || "")
             .replace(/\u00A0/g, " ")
             .trim();
           const pctMatch = raw.match(/([\d.]+)\s*%/);
@@ -912,13 +919,6 @@ export default function CheckAvailability({
     onExternalAvailabilityClose?.();
   };
   const [isExchangeOpen, setIsExchangeOpen] = useState(false);
-  const [userCoords, setUserCoords] = useState<{
-    lat: number;
-    lon: number;
-  } | null>(null);
-  const [isLocating, setIsLocating] = useState(false);
-  const [distances, setDistances] = useState<Record<string, number>>({});
-  const [locError, setLocError] = useState<string | null>(null);
 
   // Extract UUIDs
   const productUUID =
@@ -936,27 +936,6 @@ export default function CheckAvailability({
     product?.variants?.[0]?.variantUuid ||
     "";
 
-  const [nearestBranchUUID, setNearestBranchUUID] = useState<string | null>(null);
-
-  // Fetch real stock availability from API when modal is open
-  const {
-    data: stockData,
-    isLoading: isStockLoading,
-    isError: isStockError,
-  } = useQuery<StockAvailabilityResponse>({
-    queryKey: ["check-stock-availability", productUUID, variantUUID, nearestBranchUUID],
-    queryFn: () =>
-      api.get<StockAvailabilityResponse>("/check-stock-availability", {
-        params: {
-          productUUID,
-          variantUUID,
-          ...(nearestBranchUUID ? { branchUUID: nearestBranchUUID } : {}),
-        },
-      }),
-    enabled: availabilityModalOpen && !!productUUID,
-  });
-
-  const branchesList = stockData?.data || [];
 
   // ---- EMI modal state ----
   const [isEmiOpen, setIsEmiOpen] = useState(false);
@@ -1014,79 +993,6 @@ export default function CheckAvailability({
 
   const numericAmount = Number(amount) || 0;
 
-  // Sync distances whenever userCoords or branchesList changes
-  useEffect(() => {
-    if (userCoords && branchesList.length > 0) {
-      const computedDistances: Record<string, number> = {};
-      branchesList.forEach((branch) => {
-        const bLat = parseFloat(branch.latitude);
-        const bLon = parseFloat(branch.longitude);
-        if (!isNaN(bLat) && !isNaN(bLon)) {
-          computedDistances[branch.uuid] = parseFloat(
-            calculateDistance(userCoords.lat, userCoords.lon, bLat, bLon).toFixed(2),
-          );
-        }
-      });
-      setDistances(computedDistances);
-    }
-  }, [userCoords, branchesList]);
-
-  const handleGeoLocation = () => {
-    setIsLocating(true);
-    setLocError(null);
-
-    const computeAllDistances = (lat: number, lon: number) => {
-      setUserCoords({ lat, lon });
-      const computedDistances: Record<string, number> = {};
-      branchesList.forEach((branch) => {
-        const bLat = parseFloat(branch.latitude);
-        const bLon = parseFloat(branch.longitude);
-        if (!isNaN(bLat) && !isNaN(bLon)) {
-          computedDistances[branch.uuid] = parseFloat(
-            calculateDistance(lat, lon, bLat, bLon).toFixed(2),
-          );
-        }
-      });
-      setDistances(computedDistances);
-
-      if (Object.keys(computedDistances).length > 0) {
-        const nearestId = Object.keys(computedDistances).reduce(
-          (a, b) => (computedDistances[a] < computedDistances[b] ? a : b),
-          "",
-        );
-        if (nearestId) {
-          setNearestBranchUUID(nearestId);
-        }
-      }
-
-      setIsLocating(false);
-    };
-
-    if (!navigator.geolocation) {
-      setLocError("Geolocation is not supported by your browser.");
-      computeAllDistances(23.7771, 90.4262);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        computeAllDistances(position.coords.latitude, position.coords.longitude);
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        setLocError(
-          "Location access denied. Using center coordinates of Dhaka instead.",
-        );
-        computeAllDistances(23.7771, 90.4262);
-      },
-    );
-  };
-
-  const nearestBranchId = Object.keys(distances).reduce(
-    (a, b) => (distances[a] < distances[b] ? a : b),
-    "",
-  );
-
   return (
     <div className="lg:flex gap-3 my-6">
       {/* Minimum Booking */}
@@ -1097,7 +1003,6 @@ export default function CheckAvailability({
           </span>
           <div className="flex flex-col items-start">
             <span>Check Availability </span>
-            {/* <span> {product?.minBookingPrice} BDT</span> */}
           </div>
         </div>
         <svg
@@ -1267,7 +1172,7 @@ export default function CheckAvailability({
             return (
               <div
                 key={month}
-                className="grid grid-cols-3 items-center gap-1 sm:gap-2 bg-gray-50 dark:bg-[#3e3329] border border-[#00000022] dark:border-[#000000] rounded-lg sm:rounded-xl px-2 sm:px-4 py-2 sm:py-3"
+                className="grid grid-cols-3 items-center gap-1 sm:gap-2 bg-gray-50 dark:bg-[#3e3329] border border-[#2222] dark:border-[#222] rounded-lg sm:rounded-xl px-2 sm:px-4 py-2 sm:py-3"
               >
                 <span className="text-[11px] sm:text-sm font-bold text-gray-800 dark:text-gray-100">
                   {month}

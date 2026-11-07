@@ -137,7 +137,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description =
     data?.campaign_description ||
     data?.campaignDescription ||
-    `Shop exclusive deals from the ${name} campaign at Tynex. Best prices on smartphones, laptops & gadgets in Bangladesh.`;
+    `Shop exclusive deals from the ${name} campaign at tynex. Best prices on smartphones, laptops & gadgets in Bangladesh.`;
   const image = data?.thumbnails ?? data?.campaignImage;
   const ogTitle = `${name} `;
   const ogImage = buildOgImage(image, name);

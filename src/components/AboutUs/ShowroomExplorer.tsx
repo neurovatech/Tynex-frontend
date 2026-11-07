@@ -9,10 +9,10 @@ interface Showroom {
 }
 
 const showrooms: Showroom[] = [
-  { city: "Dhaka", address: "Tynex HQ, Level 4, Block C, Dhaka, Bangladesh", phone: "+880 1711-XXXXXX" },
-  { city: "Dubai", address: "Tynex Middle East, Sheikh Zayed Road, Dubai, UAE", phone: "+971 4 123 XXXX" },
-  { city: "Hong Kong", address: "Tynex Far East Ltd, Kowloon, Hong Kong", phone: "+852 2345 XXXX" },
-  { city: "Singapore", address: "Tynex Southeast Asia, Orchard Road, Singapore", phone: "+65 6789 XXXX" },
+  { city: "Dhaka", address: "tynex HQ, Level 4, Block C, Dhaka, Bangladesh", phone: "+880 1711-XXXXXX" },
+  { city: "Dubai", address: "tynex Middle East, Sheikh Zayed Road, Dubai, UAE", phone: "+971 4 123 XXXX" },
+  { city: "Hong Kong", address: "tynex Far East Ltd, Kowloon, Hong Kong", phone: "+852 2345 XXXX" },
+  { city: "Singapore", address: "tynex Southeast Asia, Orchard Road, Singapore", phone: "+65 6789 XXXX" },
 ];
 
 export default function ShowroomExplorer() {
@@ -37,8 +37,8 @@ export default function ShowroomExplorer() {
             onClick={() => setSelectedCity(s.city)}
             className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 cursor-pointer ${
               selectedCity === s.city
-                ? "bg-[#d1a77d] text-black border-[#d1a77d] shadow-sm"
-                : "bg-white dark:bg-[#2A2724] text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#d1a77d]"
+                ? "bg-[#D4A97A] text-black border-[#D4A97A] shadow-sm"
+                : "bg-white dark:bg-[#2A2724] text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#D4A97A]"
             }`}
           >
             {s.city}
@@ -54,7 +54,7 @@ export default function ShowroomExplorer() {
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
           {currentShowroom.address}
         </p>
-        <p className="text-xs text-[#d1a77d] font-semibold">
+        <p className="text-xs text-[#D4A97A] font-semibold">
           Call: {currentShowroom.phone}
         </p>
       </div>

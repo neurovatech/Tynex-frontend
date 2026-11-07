@@ -45,7 +45,7 @@ const DeliveryInfo: React.FC<DeliveryInfoProps> = ({
           className={`${item.bg} rounded-2xl px-3 py-6 flex flex-col items-center text-center gap-1.5`}
         >
           <img src={item.icon.src} alt={item.label} className="w-6 h-6" />
-          <p className="text-[10px] sm:text-xs text-[#000000] font-medium leading-tight">{item.label}</p>
+          <p className="text-[10px] sm:text-xs text-[#222222] font-medium leading-tight">{item.label}</p>
           <p className="text-sm sm:text-base font-extrabold text-gray-800">{item.value}</p>
         </div>
       ))}

@@ -62,7 +62,7 @@ const prefixIconSizeClasses: Record<SelectSize, string> = {
 const variantClasses: Record<SelectVariant, string> = {
   default: "bg-white  border border-zinc-200 ",
   ghost:   "bg-zinc-100 dark:bg-zinc-800 border border-transparent",
-  pill:    "bg-white  border rounded-full text-[#000000] font-bold",
+  pill:    "bg-white  border rounded-full text-[#222222] font-bold",
 };
 
 const stateClasses: Record<SelectState, string> = {
@@ -72,7 +72,7 @@ const stateClasses: Record<SelectState, string> = {
 };
 
 const hintColorClasses: Record<SelectState, string> = {
-  default: "text-[#000000]",
+  default: "text-[#222222]",
   error:   "text-red-500",
   success: "text-emerald-600 ",
 };

@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 export const metadata: Metadata = {
   title: "Product Categories",
   description:
-    "Explore all product categories at Tynex, including Smartphones, Laptops, Smartwatches, Audio, Power Banks, and other gadget accessories.",
+    "Explore all product categories at tynex, including Smartphones, Laptops, Smartwatches, Audio, Power Banks, and other gadget accessories.",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────

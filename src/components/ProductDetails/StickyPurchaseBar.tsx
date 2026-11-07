@@ -7,7 +7,7 @@ import { addToCart } from "@/store/slices/cartSlice";
 import { useAddToWishlist, useRemoveFromWishlist } from "@/hooks/useWishlist";
 import { trackAddToCart } from "@/lib/analytics/pixelEvents";
 import toast from "react-hot-toast";
-import type { CareOption } from "./TynexCare";
+import type { CareOption } from "./DazzleCare";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { verifyOrderProduct, friendlyUnresolvedMessage } from "@/lib/verify-order-product";
@@ -392,7 +392,7 @@ export default function StickyPurchaseBar({
             <div className="flex flex-col justify-center shrink-0">
               {showTbaFlag ? (
                 /* TBA — price & availability hide, show TBA badge */
-                <span className="bg-[#000000] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">
+                <span className="bg-[#6D3F0E] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">
                   To Be Announced
                 </span>
               ) : isUnavailable ? (
@@ -468,7 +468,7 @@ export default function StickyPurchaseBar({
                   className={`shrink-0 md:px-6 px-4 sm:px-8 md:py-3 py-3 text-sm sm:text-base font-semibold rounded-full transition-all duration-200 whitespace-nowrap shadow-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-wait ${
                     isWishlisted
                       ? "bg-red-500 text-white"
-                      : "bg-[#d1a77d] hover:bg-[#D4B89A] text-black"
+                      : "bg-[#E9CCAE] hover:bg-[#D4B89A] text-black"
                   }`}
                 >
                   <svg
@@ -498,7 +498,7 @@ export default function StickyPurchaseBar({
                           ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60"
                           : addedToCart
                             ? "bg-green-500 text-white cursor-pointer"
-                            : "bg-[#d1a77d] hover:bg-[#D4B89A] active:bg-[#C0A486] text-black cursor-pointer"
+                            : "bg-[#E9CCAE] hover:bg-[#D4B89A] active:bg-[#C0A486] text-black cursor-pointer"
                       }`}
                   >
                     {isUnavailable ? (
@@ -533,7 +533,7 @@ export default function StickyPurchaseBar({
                       ${
                         isUnavailable || loadingBuyNow
                           ? "bg-gray-300 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60"
-                          : "bg-[#000000] hover:bg-[#444444] active:bg-[#000000] text-white"
+                          : "bg-[#222222] hover:bg-[#444444] active:bg-[#000000] text-white"
                       }`}
                   >
                     {loadingBuyNow ? (
@@ -571,13 +571,13 @@ export default function StickyPurchaseBar({
       </div>
 
       {/* WhatsApp FAB */}
-      <button
+      {/* <button
         onClick={handleWhatsApp}
         aria-label="Contact via WhatsApp"
         className="fixed md:bottom-5 bottom-10 mb-24 md:mb-0 right-4 z-9999999 w-12 h-12 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-full flex items-center justify-center shadow-lg transition-colors duration-150"
       >
         <WhatsAppIcon />
-      </button>
+      </button> */}
     </div>
   );
 }

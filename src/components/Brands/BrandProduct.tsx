@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect, Suspense, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import FilterSidebar, { AttributeGroup, PriceData } from "@/components/share/FilterSidebar";
 import BrandProductListClient from "@/components/Brands/BrandProductListClient";
 import BrandShowcaseSections from "@/components/Brands/BrandShowcaseSections";
-import BannerEscalate from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import BannerEscalate, { type BannerEscalateResponse } from "@/components/CategoriesPages/CategoriesBanner/BannerEscalate";
+import type { BrandShowcaseResponse } from "@/components/Brands/BrandShowcaseSections";
+import type { PrefetchedQuery } from "@/lib/showcase-prefetch";
 import { SlidersHorizontal, X } from "lucide-react";
 import { api } from "@/lib/api";
 
@@ -33,6 +35,9 @@ interface Props {
    * chips are sub-categories, this is their parent.
    */
   initialTopCategory?: string | null;
+  /** Banner + Top Selling/Trending answers fetched on the server — see lib/showcase-prefetch.ts. */
+  initialBanner?: PrefetchedQuery<BannerEscalateResponse>;
+  initialShowcase?: PrefetchedQuery<BrandShowcaseResponse>;
 }
 
 export interface ProductItem {
@@ -71,6 +76,8 @@ export default function BrandProducts({
   initialTotalCount,
   initialTotalPages,
   initialTopCategory = null,
+  initialBanner,
+  initialShowcase,
 }: Props) {
   const searchParams = useSearchParams();
 
@@ -192,7 +199,11 @@ export default function BrandProducts({
         const queryParams = new URLSearchParams();
         if (brandSlug) queryParams.set("brandSlug", brandSlug);
         if (activeCategory) queryParams.set("categorySlug", activeCategory);
+        // The stock FILTER is `stockStatus` (0 = out of stock, 1 = in stock) — verified
+        // live: /products/attributes only reacts to this one, `stockAssort` below is not
+        // a filter, so it alone left the sidebar counts ignoring the selected filter.
         if (stockStatus !== null) queryParams.set("stockStatus", stockStatus);
+        if (stockStatus !== null) queryParams.set("stockAssort", stockStatus);
         if (minPrice !== undefined) queryParams.set("minDiscountedPrice", String(minPrice));
         if (maxPrice !== undefined) queryParams.set("maxDiscountedPrice", String(maxPrice));
 
@@ -458,8 +469,8 @@ export default function BrandProducts({
           onClick={() => navigate(null)}
           className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 whitespace-nowrap shrink-0 ${
             activeCategory === null
-              ? "bg-[#000000] text-white border-[#000000]"
-              : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#000000] hover:text-[#000000] dark:hover:text-[#d1a77d]"
+              ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+              : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#6D3F0E] hover:text-[#6D3F0E] dark:hover:text-[#d4a97a]"
           }`}
         >
           All
@@ -474,8 +485,8 @@ export default function BrandProducts({
               onClick={() => navigate(cat.category_slug)}
               className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 whitespace-nowrap shrink-0 ${
                 activeCategory === cat.category_slug.trim()
-                  ? "bg-[#000000] text-white border-[#000000]"
-                  : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#000000] hover:text-[#000000] dark:hover:text-[#d1a77d]"
+                  ? "bg-[#6D3F0E] text-white border-[#6D3F0E]"
+                  : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-[#6D3F0E] hover:text-[#6D3F0E] dark:hover:text-[#d4a97a]"
               }`}
             >
               {cat.category_name}
@@ -502,7 +513,7 @@ export default function BrandProducts({
         </div>
 
         {/* Filter + Sort buttons — mobile only */}
-        <div className="md:hidden flex items-center fixed gap-3 bg-[#000000] px-3 py-2 rounded-full mb-3 bottom-20 z-88 left-1/2 transform -translate-x-1/2 shadow-[0px_4px_19.9px_0px_#00000066]">
+        <div className="md:hidden flex items-center fixed gap-3 bg-[#6d3f0e] px-3 py-2 rounded-full mb-3 bottom-20 z-88 left-1/2 transform -translate-x-1/2 shadow-[0px_4px_19.9px_0px_#00000066]">
           <button
             onClick={openFilterModal}
             className="flex items-center gap-1.5 text-sm font-semibold text-white shrink-0"
@@ -530,15 +541,16 @@ export default function BrandProducts({
             categorySlug={activeCategory || brandSlug}
             queryParam="category"
             activeBrandSlug={activeCategory || brandSlug}
+            initial={initialBanner}
           />
 
           {/* ── Top Selling + Trending — brand-specific from showcase-escalate ── */}
-          <BrandShowcaseSections brandSlug={brandSlug} activeCategory={activeCategory} topCategory={topCategory} />
+          <BrandShowcaseSections brandSlug={brandSlug} activeCategory={activeCategory} topCategory={topCategory} initial={initialShowcase} />
 
           {/* productList area */}
           <div ref={productListRef} className="scroll-mt-4">
           {/* React Query client list — filter/page changes never trigger SSR */}
-          <Suspense>
+          {/* No <Suspense> here: it made the list stream in after the shell (layout shift). */}
             <BrandProductListClient
               brandSlug={brandSlug}
               categorySlug={activeCategory ?? undefined}
@@ -571,7 +583,6 @@ export default function BrandProducts({
               initialTotalPages={initialTotalPages}
               filterApplyKey={filterApplyKey}
             />
-          </Suspense>
           </div>
         </div>
 
@@ -586,7 +597,7 @@ export default function BrandProducts({
             {/* Center Modal */}
             <div className="relative w-full max-w-sm bg-white dark:bg-[#1c1a17] rounded-3xl shadow-2xl z-10 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[65vh]">
               <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-200 dark:border-white/10">
-                <button onClick={closeFilterAndScroll} className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d1a77d] text-[#d1a77d]">
+                <button onClick={closeFilterAndScroll} className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d4a97a] text-[#d4a97a]">
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white">Filter</h3>
@@ -620,7 +631,7 @@ export default function BrandProducts({
                 </button>
                 <button
                   onClick={handleApplyFilters}
-                  className="flex-1 py-3 rounded-full bg-[#000000] text-white text-sm font-semibold"
+                  className="flex-1 py-3 rounded-full bg-[#6D3F0E] text-white text-sm font-semibold"
                 >
                   APPLY
                 </button>
@@ -637,7 +648,7 @@ export default function BrandProducts({
             <div className="relative w-[90%] max-w-sm bg-white dark:bg-[#1c1a17] rounded-3xl shadow-2xl z-10 pb-6 animate-in fade-in zoom-in-95 duration-200">
               {/* Header */}
               <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100 dark:border-white/10">
-                <button onClick={() => setIsSortOpen(false)} className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d1a77d] text-[#d1a77d]">
+                <button onClick={() => setIsSortOpen(false)} className="w-9 h-9 flex items-center justify-center rounded-full border border-[#d4a97a] text-[#d4a97a]">
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
                 <h3 className="text-base font-bold text-gray-900 dark:text-white">Sort By</h3>
@@ -662,7 +673,7 @@ export default function BrandProducts({
                     <span>{opt.label}</span>
                     <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                       pendingSort === opt.value
-                        ? "border-[#d1a77d] bg-[#d1a77d]"
+                        ? "border-[#d4a97a] bg-[#d4a97a]"
                         : "border-gray-300 dark:border-gray-600"
                     }`}>
                       {pendingSort === opt.value && (
@@ -684,7 +695,7 @@ export default function BrandProducts({
                 </button>
                 <button
                   onClick={handleApplySort}
-                  className="flex-1 py-3.5 rounded-full bg-[#000000] text-white text-sm font-semibold"
+                  className="flex-1 py-3.5 rounded-full bg-[#6D3F0E] text-white text-sm font-semibold"
                 >
                   APPLY
                 </button>

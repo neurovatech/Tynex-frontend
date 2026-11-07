@@ -17,9 +17,8 @@ import { api } from "@/lib/api";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import FooterEfcted from "@/images/footer_effected.svg";
-import FooterEf from "@/images/footer_shaw.png";
+import FooterEf from "@/images/footer_shaw.png"
 import LogoWhite from "@/images/header-logo-white.svg";
-
 // import LatestBlog from "./LatestBlog";
 // import { usePathname } from "next/navigation";
 
@@ -242,17 +241,13 @@ export default function Footer() {
 
         {/* <div className="absolute bottom-0 opacity-200 left-1/2 h-130 w-130 -translate-x-1/2 bg-[#463d34]/50 blur-3xl rounded-t-[200px]" /> */}
 
-        <div className="absolute left-1/2 top-2/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[950px] rounded-full bg-[#d1a77d5C] opacity-40 blur-[500px] pointer-events-none lg:hidden block" />
+        <div className="absolute left-1/2 top-2/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[950px] rounded-full bg-[#E9CCAE5C] opacity-40 blur-[500px] pointer-events-none lg:hidden block" />
 
         {/* <img src={FooterEf.src} alt="footer effec" /> */}
         {/* <Image src={FooterEf} alt="bKash" className="w-full mx-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40 bottom-0" /> */}
-        <Image
-          src={FooterEf}
-          alt="Footer Shadow"
-          className="absolute bottom-0 lg:block hidden"
-        />
+        <Image src={FooterEf} alt="Footer Shadow" className="absolute bottom-0 lg:block hidden" />
 
-        <div className="-mt-20 sm:-mt-30 rounded-t-4xl bg-[#000000] px-4 pb-8 pt-28 sm:pt-40 text-white sm:px-6 md:px-10 lg:px-16">
+        <div className="-mt-20 sm:-mt-30 rounded-t-4xl bg-[#101518] px-4 pb-8 pt-28 sm:pt-40 text-white sm:px-6 md:px-10 lg:px-16">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 lg:gap-15 relative z-9999">
             {/* FIX: was "lg:col-span-3" only — missing md:col-span made this
               collapse to a single 1/12 track on iPad, squeezing every word
@@ -261,23 +256,13 @@ export default function Footer() {
             <div className="md:col-span-4 lg:col-span-3">
               {/* Footer Logo — fallback to local Logo if API not loaded yet */}
               <Link href="/" className="">
-                {siteSettings?.footerLogo ? (
                   <Image
                     src={LogoWhite}
                     alt="Footer Logo"
                     width={150}
-                    height={50}
+              height={50}
                     // className="h-12 sm:h-15 w-[60%] sm:w-[70%] object-contain"
                   />
-                ) : (
-                  <Image
-                    src={LogoWhite}
-                    alt="Tynex Logo"
-                    width={150}
-                    height={50}
-                    // className="h-12 sm:h-15 w-[60%] sm:w-[70%] object-contain"
-                  />
-                )}
               </Link>
               <p className="mt-6 text-sm leading-7 text-gray-300">
                 {siteSettings?.footerText?.split(" ").slice(0, 25).join(" ")}
@@ -287,32 +272,32 @@ export default function Footer() {
                 <Link
                   href={siteSettings?.facebookUrl || "#"}
                   target="_blank"
-                  aria-label="Tynex on Facebook"
-                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#000000DB] text-sm cursor-pointer"
+                  aria-label="tynex on Facebook"
+                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#222222DB] text-sm cursor-pointer"
                 >
                   <FacebookIcon />
                 </Link>
                 <Link
                   href={siteSettings?.instagramUrl || "#"}
                   target="_blank"
-                  aria-label="Tynex on Instagram"
-                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#000000DB] text-sm cursor-pointer"
+                  aria-label="tynex on Instagram"
+                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#222222DB] text-sm cursor-pointer"
                 >
                   <InstragramIcon />
                 </Link>
                 <Link
                   href={siteSettings?.linkedinUrl || "#"}
                   target="_blank"
-                  aria-label="Tynex on LinkedIn"
-                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#000000DB] text-sm cursor-pointer"
+                  aria-label="tynex on LinkedIn"
+                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#222222DB] text-sm cursor-pointer"
                 >
                   <LinkindIcon />
                 </Link>
                 <Link
                   href={siteSettings?.youtubeUrl || "#"}
                   target="_blank"
-                  aria-label="Tynex on YouTube"
-                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#000000DB] text-sm cursor-pointer"
+                  aria-label="tynex on YouTube"
+                  className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#222222DB] text-sm cursor-pointer"
                 >
                   <YouTubeIcon />
                 </Link>
@@ -325,19 +310,19 @@ export default function Footer() {
                 <div className="flex flex-wrap gap-1 sm:gap-2">
                   <Link
                     target="_blank"
-                    href="https://play.google.com/store/apps/details?id=com.bd.com.dazzle.app&hl=en"
+                    href="https://play.google.com/store/apps/details?id=com.bd.com.tynex.app&hl=en"
                     className=""
                   >
                     <Image
                       className="border-2 border-[#282828] rounded-xl"
-                      src="https://dazzle.sgp1.cdn.digitaloceanspaces.com/site/google-play.svg"
+                      src="https://tynex.sgp1.cdn.digitaloceanspaces.com/site/google-play.svg"
                       width={130}
                       height={40}
                       alt="App Store"
                     />
                   </Link>
-                  {/* <Link target="_blank" href="https://apps.apple.com/us/app/dazzle-your-ai-photo-rizz/id6737238234" className="">
-                    <Image src="https://dazzle.sgp1.cdn.digitaloceanspaces.com/site/app-store.svg" width={130} height={40} alt="Google Play" />
+                  {/* <Link target="_blank" href="https://apps.apple.com/us/app/tynex-your-ai-photo-rizz/id6737238234" className="">
+                    <Image src="https://tynex.sgp1.cdn.digitaloceanspaces.com/site/app-store.svg" width={130} height={40} alt="Google Play" />
                   </Link> */}
                 </div>
               </div>

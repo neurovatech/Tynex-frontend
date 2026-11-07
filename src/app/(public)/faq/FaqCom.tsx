@@ -118,7 +118,7 @@ const DHAKA_BRANCHES: Branch[] = [
     ],
   },
   {
-    name: "Tynex Hypermarket- Bashundhara City Shopping Mall",
+    name: "tynex Hypermarket- Bashundhara City Shopping Mall",
     shops: [
       "Shop No: 35 to 51, Block-B, Level 7 (Gold Floor), Bashundhara City Shopping Mall, Dhaka",
     ],
@@ -165,30 +165,30 @@ export default function FaqCom() {
           <div className="rounded-sm bg-white px-10 py-10 shadow-sm dark:bg-[#202020] sm:px-14 sm:py-12">
             {/* Title */}
             <h1 className=" text-[28px] text-zinc-900 dark:text-zinc-100">
-              Tynex at a glance
+              tynex at a glance
             </h1>
 
-            {/* What is Tynex */}
+            {/* What is tynex */}
             <Block>
               <div className="mt-10">
-                <Question>What is Tynex?</Question>
+                <Question>What is tynex?</Question>
                 <Answer>
-                  <InlineLink href="https://tynex.com.bd/">Tynex</InlineLink>{" "}
+                  <InlineLink href="https://tynex.com.bd/">tynex</InlineLink>{" "}
                   is one of Bangladesh&apos;s leading retailers specializing
                   in smartphones and related accessories. Offering a broad
                   selection of the latest mobile devices from globally
-                  recognized brands, Tynex is dedicated to providing
+                  recognized brands, tynex is dedicated to providing
                   customers with authentic products, competitive pricing, and
                   exceptional service. Whether you shop in-store or online,
-                  Tynex ensures a seamless shopping experience tailored to
+                  tynex ensures a seamless shopping experience tailored to
                   your needs.
                 </Answer>
               </div>
             </Block>
 
-            {/* Where is Tynex located */}
+            {/* Where is tynex located */}
             <Block>
-              <Question>Where is Tynex located?</Question>
+              <Question>Where is tynex located?</Question>
 
               <div className="mt-4 overflow-hidden rounded-sm">
                 <LocationCityHeader>Dhaka Locations:</LocationCityHeader>
@@ -223,11 +223,11 @@ export default function FaqCom() {
               </div>
             </Block>
 
-            {/* Does Tynex have an online store */}
+            {/* Does tynex have an online store */}
             <Block>
-              <Question>Does Tynex have an online store?</Question>
+              <Question>Does tynex have an online store?</Question>
               <Answer>
-                Yes, Tynex operates a full-featured online store at{" "}
+                Yes, tynex operates a full-featured online store at{" "}
                 <InlineLink href="https://tynex.com.bd/">
                   https://tynex.com.bd/
                 </InlineLink>
@@ -243,11 +243,11 @@ export default function FaqCom() {
               </Answer>
             </Block>
 
-            {/* What products does Tynex offer */}
+            {/* What products does tynex offer */}
             <Block>
-              <Question>What products does Tynex offer?</Question>
+              <Question>What products does tynex offer?</Question>
               <Answer>
-                Tynex specializes in{" "}
+                tynex specializes in{" "}
                 <InlineLink href="https://tynex.com.bd/">smartphones</InlineLink>{" "}
                 and accessories. The product catalog includes flagship
                 smartphones, mid-range devices, budget-friendly models, and an
@@ -259,7 +259,7 @@ export default function FaqCom() {
                 <InlineLink href="https://tynex.com.bd/">
                   screen protectors
                 </InlineLink>
-                . Additionally, Tynex regularly updates its inventory to
+                . Additionally, tynex regularly updates its inventory to
                 include the newest releases and trending tech gadgets.
               </Answer>
             </Block>
@@ -267,10 +267,10 @@ export default function FaqCom() {
             {/* Which smartphone brands */}
             <Block>
               <Question>
-                Which smartphone brands are available at Tynex?
+                Which smartphone brands are available at tynex?
               </Question>
               <Answer>
-                Tynex proudly stocks devices from the world&apos;s top
+                tynex proudly stocks devices from the world&apos;s top
                 smartphone brands. Customers can find popular names such as{" "}
                 <InlineLink href="https://tynex.com.bd/">Apple</InlineLink>,{" "}
                 <InlineLink href="https://tynex.com.bd/">Samsung</InlineLink>,{" "}
@@ -286,9 +286,9 @@ export default function FaqCom() {
 
             {/* Are the products authentic */}
             <Block>
-              <Question>Are the products at Tynex authentic?</Question>
+              <Question>Are the products at tynex authentic?</Question>
               <Answer>
-                Yes, Tynex is committed to selling only 100% genuine
+                Yes, tynex is committed to selling only 100% genuine
                 products. Every item available in the store or online is
                 sourced directly from authorized distributors or
                 manufacturers. Customers can shop confidently, knowing that
@@ -300,10 +300,10 @@ export default function FaqCom() {
             {/* Warranty */}
             <Block>
               <Question>
-                Does Tynex provide a warranty on its products?
+                Does tynex provide a warranty on its products?
               </Question>
               <Answer>
-                Absolutely! All products purchased from Tynex include an
+                Absolutely! All products purchased from tynex include an
                 official warranty as per the manufacturer&apos;s guidelines.
                 The warranty covers manufacturing defects and other specified
                 issues, giving customers peace of mind about their purchases.
@@ -312,9 +312,9 @@ export default function FaqCom() {
 
             {/* Purchase online */}
             <Block>
-              <Question>Can I purchase products online from Tynex?</Question>
+              <Question>Can I purchase products online from tynex?</Question>
               <Answer>
-                Yes, Tynex&apos;s online store is designed for a seamless
+                Yes, tynex&apos;s online store is designed for a seamless
                 shopping experience. Customers can explore the product range,
                 view detailed specifications, and make secure purchases
                 directly through the website. The online store is
@@ -327,7 +327,7 @@ export default function FaqCom() {
             <Block>
               <Question>What payment methods are accepted online?</Question>
               <Answer>
-                Tynex accepts a variety of payment methods for online
+                tynex accepts a variety of payment methods for online
                 purchases, including credit cards, debit cards, mobile
                 banking platforms such as bKash and Nagad, and cash on
                 delivery for eligible orders. The secure payment gateway

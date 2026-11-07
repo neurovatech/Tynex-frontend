@@ -72,8 +72,8 @@ export default function PaymentMethodModal({
         {isVerifying ? (
           /* Payment verification loading screen simulator */
           <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center animate-pulse">
-            <div className="w-16 h-16 rounded-full border-4 border-[#000000]/20 border-t-[#000000] animate-spin flex items-center justify-center">
-              <svg className="w-6 h-6 text-[#000000]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-16 h-16 rounded-full border-4 border-[#7B4F1E]/20 border-t-[#7B4F1E] animate-spin flex items-center justify-center">
+              <svg className="w-6 h-6 text-[#7B4F1E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
@@ -115,7 +115,7 @@ export default function PaymentMethodModal({
                         </div>
                         <p className="text-xs text-gray-400 dark:text-gray-400 mt-0.5">{opt.sub}</p>
                         {opt.id === "book" && (
-                          <p className="text-xs text-[#000000] dark:text-[#d1a77d] font-bold mt-1">
+                          <p className="text-xs text-[#7B4F1E] dark:text-[#bd9961] font-bold mt-1">
                             Deposit Required: {bookProductPrice}
                           </p>
                         )}
@@ -125,12 +125,12 @@ export default function PaymentMethodModal({
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                           selected === opt.id
-                            ? "border-[#000000]"
+                            ? "border-[#7B4F1E]"
                             : "border-gray-300 dark:border-gray-700"
                         }`}
                       >
                         {selected === opt.id && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#000000]" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#7B4F1E]" />
                         )}
                       </div>
                     </label>
@@ -182,7 +182,7 @@ export default function PaymentMethodModal({
             {/* Confirm Button */}
             <button
               onClick={handlePaymentConfirm}
-              className="w-full py-3.5 rounded-xl bg-[#000000] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition cursor-pointer"
+              className="w-full py-3.5 rounded-xl bg-[#7B4F1E] text-white text-sm font-semibold hover:bg-[#6A4219] tracking-widest transition cursor-pointer"
             >
               OKAY
             </button>

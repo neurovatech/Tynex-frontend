@@ -18,6 +18,8 @@ interface ProductItem {
   productSlug: string;
   productBadge: string;
   isTba: boolean;
+  /** Real stock ("In Stock" / "Out of Stock") — only meaningful when the list call sent stockAssort=1, see lib/stock.ts */
+  stockStatus?: string;
   endOfLife?: boolean;
   allowPreOrder?: boolean;
   recognitionBadge?: string;
@@ -84,7 +86,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
             onClick={() => onPageChange(p as number)}
             className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
               p === page
-                ? "bg-[#000000] text-white"
+                ? "bg-[#6D3F0E] text-white"
                 : "border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
             }`}
           >
@@ -141,6 +143,8 @@ function Product() {
       };
       if (sort) params.sort = sort;
       if (search) params.search = search;
+      // Real stock status for the cards (see lib/stock.ts).
+      // params.stockAssort = "1";
 
       return api.get<ProductListResponse>("products", {
         params,
@@ -207,7 +211,7 @@ function Product() {
               />
               <button
                 onClick={handleSearch}
-                className="text-xs font-semibold text-[#000000] dark:text-[#d1a77d] hover:opacity-80 transition-opacity shrink-0"
+                className="text-xs font-semibold text-[#6D3F0E] dark:text-[#d4a97a] hover:opacity-80 transition-opacity shrink-0"
               >
                 Go
               </button>
@@ -217,7 +221,7 @@ function Product() {
             <select
               value={sort}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="text-sm border border-gray-200 dark:border-white/10 rounded-xl px-2 sm:px-3 py-2 bg-white dark:bg-[#1E1B18] text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#000000]/30 transition appearance-none cursor-pointer"
+              className="text-sm border border-gray-200 dark:border-white/10 rounded-xl px-2 sm:px-3 py-2 bg-white dark:bg-[#1E1B18] text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-[#6D3F0E]/30 transition appearance-none cursor-pointer"
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -229,7 +233,7 @@ function Product() {
         {/* ── States ── */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 size={28} className="animate-spin text-[#000000] dark:text-[#d1a77d]" />
+            <Loader2 size={28} className="animate-spin text-[#6D3F0E] dark:text-[#d4a97a]" />
             <p className="text-sm text-gray-400">Loading products...</p>
           </div>
         )}
@@ -239,7 +243,7 @@ function Product() {
             <p className="text-sm text-red-500">Failed to load products. Please try again.</p>
             <button
               onClick={() => setPage(1)}
-              className="text-xs px-4 py-2 rounded-xl bg-[#000000] text-white hover:bg-[#333333] transition-colors"
+              className="text-xs px-4 py-2 rounded-xl bg-[#6D3F0E] text-white hover:bg-[#5a3409] transition-colors"
             >
               Retry
             </button>
@@ -252,7 +256,7 @@ function Product() {
             {search && (
               <button
                 onClick={() => { setSearch(""); setSearchInput(""); setPage(1); }}
-                className="text-xs text-[#000000] dark:text-[#d1a77d] hover:underline"
+                className="text-xs text-[#6D3F0E] dark:text-[#d4a97a] hover:underline"
               >
                 Clear search
               </button>
@@ -288,6 +292,7 @@ function Product() {
                     badge={product.productBadge || undefined}
                     inStock={!product.isTba}
                     isTba={product.isTba}
+                    stockStatus={product.stockStatus}
                     isBestDeal={product.disRate > 0}
                     slug={product.productSlug || product.productUuid}
                     endOfLife={product.endOfLife ?? false}

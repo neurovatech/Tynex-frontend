@@ -4,8 +4,8 @@ import Breadcrumb from "@/components/share/Breadcrumb";
 import { api } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Brands | Tynex",
-  description: "Browse premium tech and gadget brands at Tynex.",
+  title: "Brands | tynex",
+  description: "Browse premium tech and gadget brands at tynex.",
 };
 
 export interface Brand {

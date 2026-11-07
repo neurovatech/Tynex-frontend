@@ -14,13 +14,13 @@ import { NextResponse } from "next/server";
 export const revalidate = 86400; // 24 h
 
 export async function GET() {
-  const text = `# Tynex
+  const text = `# tynex
 
-> Bangladesh's premium tech retail destination — smartphones, laptops, tablets, smartwatches, audio gear, accessories, and exclusive Tynex Care+ after-sales packages.
+> Bangladesh's premium tech retail destination — smartphones, laptops, tablets, smartwatches, audio gear, accessories, and exclusive tynex Care+ after-sales packages.
 
 ## About
 
-Tynex is an authorized retailer of Apple, Samsung, Sony, Xiaomi, OnePlus, Motorola, and many more leading brands. We offer competitive prices, official manufacturer warranty, and fast delivery across Bangladesh.
+tynex is an authorized retailer of Apple, Samsung, Sony, Xiaomi, OnePlus, Motorola, and many more leading brands. We offer competitive prices, official manufacturer warranty, and fast delivery across Bangladesh.
 
 - **Website**: ${SITE_URL}
 - **Country**: Bangladesh
@@ -36,7 +36,7 @@ Tynex is an authorized retailer of Apple, Samsung, Sony, Xiaomi, OnePlus, Motoro
 - [New Arrivals](${SITE_URL}/new-arrivals) — Latest products
 - [Pre-Order](${SITE_URL}/pre-order) — Upcoming products available for pre-order
 - [Online Exclusive](${SITE_URL}/online-exclusive) — Web-only deals
-- [Store Locations](${SITE_URL}/shop-location) — Find a Tynex outlet near you
+- [Store Locations](${SITE_URL}/shop-location) — Find a tynex outlet near you
 - [Blog](${SITE_URL}/blogs) — Tech news, reviews, and buying guides
 
 ## Sitemaps
@@ -67,7 +67,7 @@ Tynex is an authorized retailer of Apple, Samsung, Sony, Xiaomi, OnePlus, Motoro
 - This site sells physical tech products in Bangladesh. Prices are in BDT.
 - Product availability and pricing are dynamic; always link to the live product page rather than quoting a cached price.
 - Do not reproduce full product specifications verbatim — link to the product page instead.
-- Tynex does not sell used, refurbished, or grey-market products.
+- tynex does not sell used, refurbished, or grey-market products.
 `;
 
   return new NextResponse(text, {

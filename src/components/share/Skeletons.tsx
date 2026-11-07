@@ -3,7 +3,7 @@ import React from "react";
 // 1. Flash Sale Skeleton
 export function FlashSaleSkeleton() {
   return (
-    <div className="bg-[#000000] md:py-10 md:mt-10! max-w-355 mx-auto">
+    <div className="bg-[#6D3F0E] md:py-10 md:mt-10! max-w-355 mx-auto">
       <div className="md:px-12.5 px-4 pb-4 animate-pulse">
         <div className="flex justify-between items-center mb-6">
           <div className="h-10 w-48 bg-white/20 rounded-md" />
@@ -48,7 +48,7 @@ export function TrendingNowSkeleton() {
 // 4. Clip To Cart Skeleton
 export function ClipToCartSkeleton() {
   return (
-    <div className="bg-[#d1a77d] dark:bg-[#000000] py-10 mt-10! max-w-355 mx-auto md:px-12.5 px-4">
+    <div className="bg-[#E9CCAE] dark:bg-[#6d3f0e] py-10 mt-10! max-w-355 mx-auto md:px-12.5 px-4">
       <div className="h-60 w-full bg-black/10 dark:bg-white/10 animate-pulse rounded-2xl" />
     </div>
   );
@@ -71,7 +71,7 @@ export function ShopBrandSkeleton() {
 // 6. New Arrivals Skeleton
 export function NewArrivalsSkeleton() {
   return (
-    <div className="bg-[#000000] py-10 mt-10! max-w-355 mx-auto">
+    <div className="bg-[#6D3F0E] py-10 mt-10! max-w-355 mx-auto">
       <div className="md:px-12.5 px-4 animate-pulse">
         <div className="h-10 w-48 bg-white/20 rounded-md mb-6" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -101,7 +101,7 @@ export function MostPopularSkeleton() {
 // 8. Hot Deal Skeleton
 export function HotDealSkeleton() {
   return (
-    <div className="bg-[#000000] py-10 mt-10! max-w-355 mx-auto md:px-12.5 px-4">
+    <div className="bg-[#222222] py-10 mt-10! max-w-355 mx-auto md:px-12.5 px-4">
       <div className="h-10 w-48 bg-white/20 rounded-md mb-6 animate-pulse" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-pulse">
         {Array.from({ length: 4 }).map((_, i) => (

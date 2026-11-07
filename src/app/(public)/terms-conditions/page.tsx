@@ -6,7 +6,7 @@ import TermsPagesCom from "./TermsPagesCom"
 export const metadata: Metadata = {
   title: "Terms and Conditions",
   description:
-    "Read the Terms and Conditions of Tynex. Review the user guidelines, account security policies, information collection rules, and liability statements.",
+    "Read the Terms and Conditions of tynex. Review the user guidelines, account security policies, information collection rules, and liability statements.",
 };
 
 const breadcrumbItems = [

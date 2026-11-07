@@ -1,4 +1,4 @@
-# Tynex — Performance ও Core Web Vitals অডিট (বাংলা)
+# tynex — Performance ও Core Web Vitals অডিট (বাংলা)
 
 > তৈরি: ২৫ সেপ্টেম্বর ২০২৬ · সাইট: `tynex.com.bd` (মোবাইল)
 > ভিত্তি: তোমার দেওয়া PageSpeed Insights screenshot + লাইভ সাইট ও local production build-এ আমার নিজের মাপ।
